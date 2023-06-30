@@ -6,11 +6,11 @@ const About: React.FC = () => {
   return (
     <Container>
       <Main>
-        <Title>About Page</Title>
+        <Title>Team Page</Title>
         <Description>
           <Link href="/">&larr; Go Back</Link>
         </Description>
-        <Counter label='ABOUT'/>
+        <Counter label='TEAM'/>
       </Main>
     </Container>
   )

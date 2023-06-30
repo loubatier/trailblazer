@@ -1,3 +1,5 @@
+'use client'
+
 import Head from 'next/head'
 import {
   Container,
@@ -7,8 +9,14 @@ import {
   CodeTag,
 } from '../components/sharedstyles'
 import Cards from '../components/cards'
+import Counter from '../components/counter'
+import { useCounterStore } from '../lib/stores'
+import useStore from '../lib/stores/useStore'
 
-export default function Home() {
+const Home: React.FC = () => {
+
+  const counterState = useStore(useCounterStore, (state) => state)
+
   return (
     <Container>
       <Head>
@@ -27,7 +35,11 @@ export default function Home() {
         </Description>
 
         <Cards />
+        <div>COUNT: { counterState?.count}</div>
+        <Counter label='HOME'/>
       </Main>
     </Container>
   )
 }
+
+export default Home

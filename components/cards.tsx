@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import Link from 'next/link'
+import { SiBattledotnet } from 'react-icons/si'
 
 const FlexContainer = styled.div`
   display: flex;
@@ -22,8 +23,8 @@ const Card = styled.div`
   &:hover,
   :focus,
   :active {
-    color: #0070f3;
-    border-color: #0070f3;
+    color: ${({ theme }) => theme.colors.secondary};;
+    border-color: ${({ theme }) => theme.colors.secondary};;
   }
 `
 
@@ -32,18 +33,28 @@ const StyledA = styled.a`
   font-size: 1.5rem;
 `
 
-const StyledLink = ({ href, name }) => (
+interface LinkProps {
+  href: string,
+  name: string,
+}
+
+const StyledLink: React.FC<LinkProps> = ({ href, name }) => (
   <Link href={href} passHref legacyBehavior>
-    <StyledA>{name}</StyledA>
+    <StyledA><SiBattledotnet />{name}</StyledA>
   </Link>
 )
 
-export default function Cards() {
+const Cards: React.FC = () => {
   return (
     <FlexContainer>
       <Card>
         <StyledLink href="/about" name="About Page &rarr;" />
       </Card>
+      <Card>
+        <StyledLink href="/team" name="Team Page &rarr;" />
+      </Card>
     </FlexContainer>
   )
 }
+
+export default Cards
