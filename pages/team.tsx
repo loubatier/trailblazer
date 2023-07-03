@@ -1,6 +1,11 @@
-import Link from 'next/link'
-import { Container, Main, Title, Description } from '../components/sharedstyles'
-import Counter from '../components/counter'
+import Link from "next/link";
+import {
+  Container,
+  Main,
+  Title,
+  Description,
+} from "../components/sharedstyles";
+import Counter from "../components/counter";
 
 const About: React.FC = () => {
   return (
@@ -10,10 +15,10 @@ const About: React.FC = () => {
         <Description>
           <Link href="/">&larr; Go Back</Link>
         </Description>
-        <Counter label='TEAM'/>
+        <Counter label="TEAM" />
       </Main>
     </Container>
-  )
-}
+  );
+};
 
-export default About
+export default About;

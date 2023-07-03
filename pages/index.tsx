@@ -1,21 +1,20 @@
-'use client'
+"use client";
 
-import Head from 'next/head'
+import Head from "next/head";
 import {
   Container,
   Main,
   Title,
   Description,
   CodeTag,
-} from '../components/sharedstyles'
-import Cards from '../components/cards'
-import Counter from '../components/counter'
-import { useCounterStore } from '../lib/stores'
-import useStore from '../lib/stores/useStore'
+} from "../components/sharedstyles";
+import Cards from "../components/cards";
+import Counter from "../components/counter";
+import { useCounterStore } from "../lib/stores";
+import useStore from "../lib/stores/useStore";
 
 const Home: React.FC = () => {
-
-  const counterState = useStore(useCounterStore, (state) => state)
+  const counterState = useStore(useCounterStore, (state) => state);
 
   return (
     <Container>
@@ -35,11 +34,11 @@ const Home: React.FC = () => {
         </Description>
 
         <Cards />
-        <div>COUNT: { counterState?.count}</div>
-        <Counter label='HOME'/>
+        <div>COUNT: {counterState?.count}</div>
+        <Counter label="HOME" />
       </Main>
     </Container>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
