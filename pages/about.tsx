@@ -6,8 +6,12 @@ import {
   Description,
 } from "../components/sharedstyles";
 import Counter from "../components/counter";
+import useStore from "../lib/stores/useStore";
+import { useCounterStore } from "../lib/stores";
 
 const About: React.FC = () => {
+  const counterState = useStore(useCounterStore, (state) => state);
+
   return (
     <Container>
       <Main>
@@ -15,6 +19,7 @@ const About: React.FC = () => {
         <Description>
           <Link href="/">&larr; Go Back</Link>
         </Description>
+        <div>COUNT: {counterState?.count}</div>
         <Counter label="ABOUT" />
       </Main>
     </Container>
