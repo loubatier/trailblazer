@@ -1,20 +1,12 @@
 import styled from "styled-components";
-import {
-  ChevronDown,
-  ChevronUp,
-  Eye,
-  EyeOff,
-  GripVertical,
-  X,
-} from "lucide-react";
-import { useRef, useState } from "react";
-import {
-  EMoveDirection,
-  useTimelineStore,
-} from "../lib/stores/useTimelineStore";
+import { Eye, EyeOff, GripVertical, X } from "lucide-react";
+import { useState } from "react";
+import { useTimelineStore } from "../lib/stores/useTimelineStore";
 
 interface IProps {
   rowIndex: number;
+  onDragRowStart: () => void;
+  onDragRowEnd: () => void;
 }
 
 const Root = styled.div`
@@ -94,7 +86,7 @@ const ActionsWrapper = styled.div<{ isOpen: boolean }>`
   align-items: center;
   top: 0;
   right: 0;
-  width: 168px;
+  width: 88px;
   height: 40px;
   background-color: ${({ theme }) => theme.colors.background};
   transform: translateX(100%);
@@ -105,39 +97,44 @@ const Checkbox = styled.input`
   display: none;
 `;
 
-const RowActions: React.FC<IProps> = ({ rowIndex }) => {
-  const {
-    rows,
-    deleteTimelineRow,
-    updateTimelineRowStatus,
-    updateTimelineRowPosition,
-  } = useTimelineStore((state) => state);
+const RowActions: React.FC<IProps> = ({
+  rowIndex,
+  onDragRowStart,
+  onDragRowEnd,
+}) => {
+  const { rows, deleteTimelineRow, updateTimelineRowStatus } = useTimelineStore(
+    (state) => state
+  );
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const isRowActive = rows[rowIndex].isActive;
-  const isFirstRow = rowIndex === 0;
-  const isLastRow = rowIndex === rows.length - 1;
 
-  const openActions = () => {
-    setIsOpen(true);
+  const toggleActions = () => {
+    setIsOpen(!isOpen);
   };
 
-  const closeActions = () => {
-    setIsOpen(false);
+  const handleRowDragStart = (event: React.DragEvent) => {
+    onDragRowStart();
+  };
+
+  const handleRowDragEnd = () => {
+    onDragRowEnd();
   };
 
   return (
     <Root>
-      <ActionsButton onMouseEnter={openActions} onMouseLeave={closeActions}>
-        <GripVertical color={"white"} />
+      <ActionsButton onClick={toggleActions}>
+        <div
+          draggable
+          onDragStart={(e) => handleRowDragStart(e)}
+          onDragEnd={() => handleRowDragEnd()}
+        >
+          <GripVertical color={"white"} />
+        </div>
       </ActionsButton>
       {isOpen && (
-        <ActionsWrapper
-          isOpen={true}
-          onMouseEnter={openActions}
-          onMouseLeave={closeActions}
-        >
+        <ActionsWrapper isOpen={isOpen}>
           <StatusButton
             onClick={() => updateTimelineRowStatus(rowIndex, !isRowActive)}
             isRowActive={isRowActive}
@@ -145,30 +142,6 @@ const RowActions: React.FC<IProps> = ({ rowIndex }) => {
             <Checkbox type="checkbox" checked={isRowActive} readOnly />
             {isRowActive ? <EyeOff color={"white"} /> : <Eye color={"black"} />}
           </StatusButton>
-          <MoveButton
-            onClick={() =>
-              updateTimelineRowPosition(
-                rowIndex,
-                rows[rowIndex],
-                EMoveDirection.DOWN
-              )
-            }
-            isDisabled={isLastRow}
-          >
-            <ChevronDown color={"black"} />
-          </MoveButton>
-          <MoveButton
-            onClick={() =>
-              updateTimelineRowPosition(
-                rowIndex,
-                rows[rowIndex],
-                EMoveDirection.UP
-              )
-            }
-            isDisabled={isFirstRow}
-          >
-            <ChevronUp color={"black"} />
-          </MoveButton>
           <DeleteButton onClick={() => deleteTimelineRow(rowIndex)}>
             <X color={"white"} />
           </DeleteButton>

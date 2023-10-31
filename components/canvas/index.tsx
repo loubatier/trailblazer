@@ -8,6 +8,7 @@ import {
   Rect,
   Stage,
   Text,
+  Line,
 } from "react-konva";
 import CanvasSpell from "./spell";
 import Timeline from "./timeline";
@@ -21,6 +22,9 @@ interface IProps {
   width: number;
   height: number;
   hoveredRow: number;
+  isDraggingRow: boolean;
+  destinationRowIndex: number;
+  ghostRowY: number;
 }
 
 export type Spell = {
@@ -53,7 +57,14 @@ const NEW_SPELL = {
   icon: "https://assets.lorrgs.io/images/spells/spell_monk_revival.jpg",
 };
 
-const Canvas: React.FC<IProps> = ({ width, height, hoveredRow }) => {
+const Canvas: React.FC<IProps> = ({
+  width,
+  height,
+  hoveredRow,
+  isDraggingRow,
+  destinationRowIndex,
+  ghostRowY,
+}) => {
   const {
     zoom,
     spells,
@@ -72,7 +83,6 @@ const Canvas: React.FC<IProps> = ({ width, height, hoveredRow }) => {
   useEffect(() => {
     const handleKeyPress = (e) => {
       const selectedSpellIndex = spells.findIndex((spell) => spell.isSelected);
-      console.log(selectedSpellIndex);
       const hasSelectedSpell = selectedSpellIndex !== -1;
       if (!hasSelectedSpell) return;
       switch (e.key) {
@@ -103,9 +113,8 @@ const Canvas: React.FC<IProps> = ({ width, height, hoveredRow }) => {
     };
   }, [spells]);
 
-  useEffect(() => {
-    console.log(hoveredRow);
-  }, [hoveredRow]);
+  const index = Math.floor((ghostRowY - 40) / 40);
+  const moveRowIndicatorPosY = 40 + 4 + index * 40 + index * 8;
 
   return (
     <Stage
@@ -152,6 +161,26 @@ const Canvas: React.FC<IProps> = ({ width, height, hoveredRow }) => {
               height={40}
             />
           ))}
+          {isDraggingRow && (
+            <>
+              <Rect
+                x={0}
+                y={ghostRowY - 20}
+                fill={"#2A2E34"}
+                width={ENCOUNTER_TIMER * zoom}
+                height={40}
+              />
+              <Line
+                points={[
+                  0,
+                  moveRowIndicatorPosY,
+                  ENCOUNTER_TIMER * zoom,
+                  moveRowIndicatorPosY,
+                ]}
+                stroke="white"
+              />
+            </>
+          )}
         </Group>
       </Layer>
       <Layer>

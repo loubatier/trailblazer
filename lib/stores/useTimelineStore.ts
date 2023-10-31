@@ -65,11 +65,7 @@ interface TimelineStore {
   addTimelineRow: () => void;
   deleteTimelineRow: (i: number) => void;
   updateTimelineRowStatus: (i: number, isActive: boolean) => void;
-  updateTimelineRowPosition: (
-    i: number,
-    row: TimelineRow,
-    direction: EMoveDirection
-  ) => void;
+  updateTimelineRowPosition: (index: number, newIndex: number) => void;
   clear: () => void;
 }
 
@@ -155,35 +151,32 @@ export const useTimelineStore = create<TimelineStore>()(
           ),
         }));
       },
-      updateTimelineRowPosition: (
-        i: number,
-        row: TimelineRow,
-        direction: EMoveDirection
-      ) => {
+      updateTimelineRowPosition: (initialIndex: number, newIndex: number) => {
+        const isHigherIndex = newIndex > initialIndex;
+        const refinedNewIndex = isHigherIndex ? newIndex - 1 : newIndex;
         set((state) => {
-          const newIndex = direction === EMoveDirection.DOWN ? i + 1 : i - 1;
-
           state.spells = state.spells.map((spell) => {
-            if (spell.row === i) {
-              return { ...spell, row: newIndex };
+            if (spell.row === initialIndex) {
+              return { ...spell, row: refinedNewIndex };
             } else if (
-              direction === EMoveDirection.DOWN &&
-              spell.row > i &&
-              spell.row <= newIndex
+              initialIndex < refinedNewIndex &&
+              spell.row > initialIndex &&
+              spell.row <= refinedNewIndex
             ) {
               return { ...spell, row: spell.row - 1 };
             } else if (
-              direction === EMoveDirection.UP &&
-              spell.row < i &&
-              spell.row >= newIndex
+              initialIndex > refinedNewIndex &&
+              spell.row < initialIndex &&
+              spell.row >= refinedNewIndex
             ) {
               return { ...spell, row: spell.row + 1 };
             }
             return spell;
           });
 
-          state.rows.splice(i, 1);
-          state.rows.splice(newIndex, 0, row);
+          // Move the timeline row from initialIndex to refinedNewIndex
+          const [row] = state.rows.splice(initialIndex, 1);
+          state.rows.splice(refinedNewIndex, 0, row);
 
           return {
             ...state,
