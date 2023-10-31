@@ -1,0 +1,86 @@
+{
+  "priest": {
+    "name": "Priest",
+    "name_slug": "priest",
+    "specs": ["priest-discipline", "priest-holy", "priest-shadow"]
+  },
+  "hunter": {
+    "name": "Hunter",
+    "name_slug": "hunter",
+    "specs": ["hunter-beastmastery", "hunter-marksmanship", "hunter-survival"]
+  },
+  "druid": {
+    "name": "Druid",
+    "name_slug": "druid",
+    "specs": [
+      "druid-balance",
+      "druid-restoration",
+      "druid-guardian",
+      "druid-feral"
+    ]
+  },
+  "demonhunter": {
+    "name": "Demon Hunter",
+    "name_slug": "demonhunter",
+    "specs": ["demonhunter-havoc", "demonhunter-vengeance"]
+  },
+  "warlock": {
+    "name": "Warlock",
+    "name_slug": "warlock",
+    "specs": ["warlock-affliction", "warlock-demonology", "warlock-destruction"]
+  },
+  "deathknight": {
+    "name": "Death Knight",
+    "name_slug": "deathknight",
+    "specs": ["deathknight-frost", "deathknight-unholy", "deathknight-blood"]
+  },
+  "rogue": {
+    "name": "Rogue",
+    "name_slug": "rogue",
+    "specs": ["rogue-assassination", "rogue-outlaw", "rogue-subtlety"]
+  },
+  "shaman": {
+    "name": "Shaman",
+    "name_slug": "shaman",
+    "specs": ["shaman-elemental", "shaman-enhancement", "shaman-restoration"]
+  },
+  "warrior": {
+    "name": "Warrior",
+    "name_slug": "warrior",
+    "specs": ["warrior-arms", "warrior-fury", "warrior-protection"]
+  },
+  "monk": {
+    "name": "Monk",
+    "name_slug": "monk",
+    "specs": ["monk-mistweaver", "monk-windwalker", "monk-brewmaster"]
+  },
+  "other": {
+    "name": "Other",
+    "name_slug": "other",
+    "specs": ["other-raid", "other-potions", "other-trinkets", "other-buffs"]
+  },
+  "evoker": {
+    "name": "Evoker",
+    "name_slug": "evoker",
+    "specs": [
+      "evoker-devastation",
+      "evoker-preservation",
+      "evoker-augmentation"
+    ]
+  },
+  "paladin": {
+    "name": "Paladin",
+    "name_slug": "paladin",
+    "specs": ["paladin-protection", "paladin-retribution", "paladin-holy"]
+  },
+  "racials": {
+    "name": "Racials",
+    "name_slug": "racials",
+    "specs": []
+  },
+  "mage": {
+    "name": "Mage",
+    "name_slug": "mage",
+    "specs": ["mage-arcane", "mage-fire", "mage-frost"]
+  }
+}

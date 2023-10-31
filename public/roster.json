@@ -1,0 +1,46 @@
+{
+  "players": [
+    {
+      "name": "Hilderion",
+      "class": "druid",
+      "spec": "druid-restoration",
+      "role": "healer"
+    },
+    {
+      "name": "Flamx",
+      "class": "evoker",
+      "spec": "evoker-preservation",
+      "role": "healer"
+    },
+    {
+      "name": "Smalh",
+      "class": "paladin",
+      "spec": "paladin-holy",
+      "role": "healer"
+    },
+    {
+      "name": "Himu",
+      "class": "priest",
+      "spec": "priest-holy",
+      "role": "healer"
+    },
+    {
+      "name": "Normish",
+      "class": "demonhunter",
+      "spec": "demonhunter-vengeance",
+      "role": "tank"
+    },
+    {
+      "name": "Kors",
+      "class": "evoker",
+      "spec": "evoker-augmentation",
+      "role": "rdps"
+    },
+    {
+      "name": "Flaele",
+      "class": "shaman",
+      "spec": "shaman-enhance",
+      "role": "mdps"
+    }
+  ]
+}

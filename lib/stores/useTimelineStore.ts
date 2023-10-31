@@ -8,8 +8,8 @@ const SPELLS: TimelineSpell[] = [
     cooldown: 120,
     color: "#33937f",
     icon: "https://assets.lorrgs.io/images/spells/ability_evoker_stasis.jpg",
-    x: 0,
 
+    x: 0,
     timing: 0,
     row: 0,
     isSelected: false,
@@ -19,8 +19,8 @@ const SPELLS: TimelineSpell[] = [
     cooldown: 120,
     color: "#33937f",
     icon: "https://assets.lorrgs.io/images/spells/ability_evoker_stasis.jpg",
-    x: 270,
 
+    x: 270,
     timing: 135,
     row: 1,
     isSelected: false,
@@ -30,8 +30,8 @@ const SPELLS: TimelineSpell[] = [
     cooldown: 120,
     color: "#33937f",
     icon: "https://assets.lorrgs.io/images/spells/ability_evoker_stasis.jpg",
-    x: 200,
 
+    x: 200,
     timing: 100,
     row: 2,
     isSelected: false,

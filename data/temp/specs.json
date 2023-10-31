@@ -1,0 +1,434 @@
+{
+  "specs": [
+    {
+      "name": "Protection",
+      "full_name": "Protection Warrior",
+      "full_name_slug": "warrior-protection",
+      "role": "tank",
+      "class": {
+        "name": "Warrior",
+        "name_slug": "warrior"
+      }
+    },
+    {
+      "name": "Protection",
+      "full_name": "Protection Paladin",
+      "full_name_slug": "paladin-protection",
+      "role": "tank",
+      "class": {
+        "name": "Paladin",
+        "name_slug": "paladin"
+      }
+    },
+    {
+      "name": "Blood",
+      "full_name": "Blood Death Knight",
+      "full_name_slug": "deathknight-blood",
+      "role": "tank",
+      "class": {
+        "name": "Death Knight",
+        "name_slug": "deathknight"
+      }
+    },
+    {
+      "name": "Brewmaster",
+      "full_name": "Brewmaster Monk",
+      "full_name_slug": "monk-brewmaster",
+      "role": "tank",
+      "class": {
+        "name": "Monk",
+        "name_slug": "monk"
+      }
+    },
+    {
+      "name": "Guardian",
+      "full_name": "Guardian Druid",
+      "full_name_slug": "druid-guardian",
+      "role": "tank",
+      "class": {
+        "name": "Druid",
+        "name_slug": "druid"
+      }
+    },
+    {
+      "name": "Vengeance",
+      "full_name": "Vengeance Demon Hunter",
+      "full_name_slug": "demonhunter-vengeance",
+      "role": "tank",
+      "class": {
+        "name": "Demon Hunter",
+        "name_slug": "demonhunter"
+      }
+    },
+    {
+      "name": "Holy",
+      "full_name": "Holy Paladin",
+      "full_name_slug": "paladin-holy",
+      "role": "heal",
+      "class": {
+        "name": "Paladin",
+        "name_slug": "paladin"
+      }
+    },
+    {
+      "name": "Discipline",
+      "full_name": "Discipline Priest",
+      "full_name_slug": "priest-discipline",
+      "role": "heal",
+      "class": {
+        "name": "Priest",
+        "name_slug": "priest"
+      }
+    },
+    {
+      "name": "Holy",
+      "full_name": "Holy Priest",
+      "full_name_slug": "priest-holy",
+      "role": "heal",
+      "class": {
+        "name": "Priest",
+        "name_slug": "priest"
+      }
+    },
+    {
+      "name": "Restoration",
+      "full_name": "Restoration Shaman",
+      "full_name_slug": "shaman-restoration",
+      "role": "heal",
+      "class": {
+        "name": "Shaman",
+        "name_slug": "shaman"
+      }
+    },
+    {
+      "name": "Mistweaver",
+      "full_name": "Mistweaver Monk",
+      "full_name_slug": "monk-mistweaver",
+      "role": "heal",
+      "class": {
+        "name": "Monk",
+        "name_slug": "monk"
+      }
+    },
+    {
+      "name": "Restoration",
+      "full_name": "Restoration Druid",
+      "full_name_slug": "druid-restoration",
+      "role": "heal",
+      "class": {
+        "name": "Druid",
+        "name_slug": "druid"
+      }
+    },
+    {
+      "name": "Preservation",
+      "full_name": "Preservation Evoker",
+      "full_name_slug": "evoker-preservation",
+      "role": "heal",
+      "class": {
+        "name": "Evoker",
+        "name_slug": "evoker"
+      }
+    },
+    {
+      "name": "Arms",
+      "full_name": "Arms Warrior",
+      "full_name_slug": "warrior-arms",
+      "role": "mdps",
+      "class": {
+        "name": "Warrior",
+        "name_slug": "warrior"
+      }
+    },
+    {
+      "name": "Fury",
+      "full_name": "Fury Warrior",
+      "full_name_slug": "warrior-fury",
+      "role": "mdps",
+      "class": {
+        "name": "Warrior",
+        "name_slug": "warrior"
+      }
+    },
+    {
+      "name": "Retribution",
+      "full_name": "Retribution Paladin",
+      "full_name_slug": "paladin-retribution",
+      "role": "mdps",
+      "class": {
+        "name": "Paladin",
+        "name_slug": "paladin"
+      }
+    },
+    {
+      "name": "Survival",
+      "full_name": "Survival Hunter",
+      "full_name_slug": "hunter-survival",
+      "role": "mdps",
+      "class": {
+        "name": "Hunter",
+        "name_slug": "hunter"
+      }
+    },
+    {
+      "name": "Assassination",
+      "full_name": "Assassination Rogue",
+      "full_name_slug": "rogue-assassination",
+      "role": "mdps",
+      "class": {
+        "name": "Rogue",
+        "name_slug": "rogue"
+      }
+    },
+    {
+      "name": "Outlaw",
+      "full_name": "Outlaw Rogue",
+      "full_name_slug": "rogue-outlaw",
+      "role": "mdps",
+      "class": {
+        "name": "Rogue",
+        "name_slug": "rogue"
+      }
+    },
+    {
+      "name": "Subtlety",
+      "full_name": "Subtlety Rogue",
+      "full_name_slug": "rogue-subtlety",
+      "role": "mdps",
+      "class": {
+        "name": "Rogue",
+        "name_slug": "rogue"
+      }
+    },
+    {
+      "name": "Frost",
+      "full_name": "Frost Death Knight",
+      "full_name_slug": "deathknight-frost",
+      "role": "mdps",
+      "class": {
+        "name": "Death Knight",
+        "name_slug": "deathknight"
+      }
+    },
+    {
+      "name": "Unholy",
+      "full_name": "Unholy Death Knight",
+      "full_name_slug": "deathknight-unholy",
+      "role": "mdps",
+      "class": {
+        "name": "Death Knight",
+        "name_slug": "deathknight"
+      }
+    },
+    {
+      "name": "Enhancement",
+      "full_name": "Enhancement Shaman",
+      "full_name_slug": "shaman-enhancement",
+      "role": "mdps",
+      "class": {
+        "name": "Shaman",
+        "name_slug": "shaman"
+      }
+    },
+    {
+      "name": "Windwalker",
+      "full_name": "Windwalker Monk",
+      "full_name_slug": "monk-windwalker",
+      "role": "mdps",
+      "class": {
+        "name": "Monk",
+        "name_slug": "monk"
+      }
+    },
+    {
+      "name": "Feral",
+      "full_name": "Feral Druid",
+      "full_name_slug": "druid-feral",
+      "role": "mdps",
+      "class": {
+        "name": "Druid",
+        "name_slug": "druid"
+      }
+    },
+    {
+      "name": "Havoc",
+      "full_name": "Havoc Demon Hunter",
+      "full_name_slug": "demonhunter-havoc",
+      "role": "mdps",
+      "class": {
+        "name": "Demon Hunter",
+        "name_slug": "demonhunter"
+      }
+    },
+    {
+      "name": "Beast Mastery",
+      "full_name": "Beast Mastery Hunter",
+      "full_name_slug": "hunter-beastmastery",
+      "role": "rdps",
+      "class": {
+        "name": "Hunter",
+        "name_slug": "hunter"
+      }
+    },
+    {
+      "name": "Marksmanship",
+      "full_name": "Marksmanship Hunter",
+      "full_name_slug": "hunter-marksmanship",
+      "role": "rdps",
+      "class": {
+        "name": "Hunter",
+        "name_slug": "hunter"
+      }
+    },
+    {
+      "name": "Shadow",
+      "full_name": "Shadow Priest",
+      "full_name_slug": "priest-shadow",
+      "role": "rdps",
+      "class": {
+        "name": "Priest",
+        "name_slug": "priest"
+      }
+    },
+    {
+      "name": "Elemental",
+      "full_name": "Elemental Shaman",
+      "full_name_slug": "shaman-elemental",
+      "role": "rdps",
+      "class": {
+        "name": "Shaman",
+        "name_slug": "shaman"
+      }
+    },
+    {
+      "name": "Arcane",
+      "full_name": "Arcane Mage",
+      "full_name_slug": "mage-arcane",
+      "role": "rdps",
+      "class": {
+        "name": "Mage",
+        "name_slug": "mage"
+      }
+    },
+    {
+      "name": "Fire",
+      "full_name": "Fire Mage",
+      "full_name_slug": "mage-fire",
+      "role": "rdps",
+      "class": {
+        "name": "Mage",
+        "name_slug": "mage"
+      }
+    },
+    {
+      "name": "Frost",
+      "full_name": "Frost Mage",
+      "full_name_slug": "mage-frost",
+      "role": "rdps",
+      "class": {
+        "name": "Mage",
+        "name_slug": "mage"
+      }
+    },
+    {
+      "name": "Affliction",
+      "full_name": "Affliction Warlock",
+      "full_name_slug": "warlock-affliction",
+      "role": "rdps",
+      "class": {
+        "name": "Warlock",
+        "name_slug": "warlock"
+      }
+    },
+    {
+      "name": "Demonology",
+      "full_name": "Demonology Warlock",
+      "full_name_slug": "warlock-demonology",
+      "role": "rdps",
+      "class": {
+        "name": "Warlock",
+        "name_slug": "warlock"
+      }
+    },
+    {
+      "name": "Destruction",
+      "full_name": "Destruction Warlock",
+      "full_name_slug": "warlock-destruction",
+      "role": "rdps",
+      "class": {
+        "name": "Warlock",
+        "name_slug": "warlock"
+      }
+    },
+    {
+      "name": "Balance",
+      "full_name": "Balance Druid",
+      "full_name_slug": "druid-balance",
+      "role": "rdps",
+      "class": {
+        "name": "Druid",
+        "name_slug": "druid"
+      }
+    },
+    {
+      "name": "Augmentation",
+      "full_name": "Augmentation Evoker",
+      "full_name_slug": "evoker-augmentation",
+      "role": "rdps",
+      "class": {
+        "name": "Evoker",
+        "name_slug": "evoker"
+      }
+    },
+    {
+      "name": "Devastation",
+      "full_name": "Devastation Evoker",
+      "full_name_slug": "evoker-devastation",
+      "role": "rdps",
+      "class": {
+        "name": "Evoker",
+        "name_slug": "evoker"
+      }
+    },
+    {
+      "name": "Buffs",
+      "full_name": "Buffs Other",
+      "full_name_slug": "other-buffs",
+      "role": "item",
+      "class": {
+        "name": "Other",
+        "name_slug": "other"
+      }
+    },
+    {
+      "name": "Potions",
+      "full_name": "Potions Other",
+      "full_name_slug": "other-potions",
+      "role": "item",
+      "class": {
+        "name": "Other",
+        "name_slug": "other"
+      }
+    },
+    {
+      "name": "Raid",
+      "full_name": "Raid Other",
+      "full_name_slug": "other-raid",
+      "role": "item",
+      "class": {
+        "name": "Other",
+        "name_slug": "other"
+      }
+    },
+    {
+      "name": "Trinkets",
+      "full_name": "Trinkets Other",
+      "full_name_slug": "other-trinkets",
+      "role": "item",
+      "class": {
+        "name": "Other",
+        "name_slug": "other"
+      }
+    }
+  ]
+}

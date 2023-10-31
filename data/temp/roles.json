@@ -1,0 +1,75 @@
+{
+  "roles": [
+    {
+      "id": 4,
+      "name": "Range",
+      "code": "rdps",
+      "specs": [
+        "hunter-marksmanship",
+        "warlock-affliction",
+        "evoker-devastation",
+        "mage-fire",
+        "mage-frost",
+        "priest-shadow",
+        "warlock-demonology",
+        "warlock-destruction",
+        "shaman-elemental",
+        "evoker-augmentation",
+        "druid-balance",
+        "hunter-beastmastery",
+        "mage-arcane"
+      ],
+      "metrics": ["dps", "bossdps"]
+    },
+    {
+      "id": 2,
+      "name": "Healer",
+      "code": "heal",
+      "specs": [
+        "priest-discipline",
+        "priest-holy",
+        "evoker-preservation",
+        "shaman-restoration",
+        "druid-restoration",
+        "paladin-holy",
+        "monk-mistweaver"
+      ],
+      "metrics": ["dps", "hps", "bossdps"]
+    },
+    {
+      "id": 1,
+      "name": "Tank",
+      "code": "tank",
+      "specs": [
+        "paladin-protection",
+        "demonhunter-vengeance",
+        "deathknight-blood",
+        "monk-brewmaster",
+        "warrior-protection",
+        "druid-guardian"
+      ],
+      "metrics": ["dps", "hps", "bossdps"]
+    },
+    {
+      "id": 3,
+      "name": "Melee",
+      "code": "mdps",
+      "specs": [
+        "demonhunter-havoc",
+        "hunter-survival",
+        "paladin-retribution",
+        "deathknight-unholy",
+        "rogue-assassination",
+        "rogue-outlaw",
+        "rogue-subtlety",
+        "warrior-arms",
+        "deathknight-frost",
+        "shaman-enhancement",
+        "warrior-fury",
+        "monk-windwalker",
+        "druid-feral"
+      ],
+      "metrics": ["dps", "bossdps"]
+    }
+  ]
+}

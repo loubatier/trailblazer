@@ -1,0 +1,61 @@
+{
+  "id": 33,
+  "name": "Aberrus, the Shadowed Crucible",
+  "name_slug": "aberrus-the-shadowed-crucible",
+  "bosses": [
+    {
+      "id": 2688,
+      "name": "Kazzara",
+      "full_name": "Kazzara, the Hellforged",
+      "full_name_slug": "kazzara-the-hellforged"
+    },
+    {
+      "id": 2687,
+      "name": "The Amalgamation Chamber",
+      "full_name": "The Amalgamation Chamber",
+      "full_name_slug": "the-amalgamation-chamber"
+    },
+    {
+      "id": 2693,
+      "name": "The Forgotten Experiments",
+      "full_name": "The Forgotten Experiments",
+      "full_name_slug": "the-forgotten-experiments"
+    },
+    {
+      "id": 2682,
+      "name": "Assault of the Zaqali",
+      "full_name": "Assault of the Zaqali",
+      "full_name_slug": "assault-of-the-zaqali"
+    },
+    {
+      "id": 2680,
+      "name": "Rashok",
+      "full_name": "Rashok, the Elder",
+      "full_name_slug": "rashok-the-elder"
+    },
+    {
+      "id": 2689,
+      "name": "Zskarn",
+      "full_name": "The Vigilant Steward, Zskarn",
+      "full_name_slug": "the-vigilant-steward-zskarn"
+    },
+    {
+      "id": 2683,
+      "name": "Magmorax",
+      "full_name": "Magmorax",
+      "full_name_slug": "magmorax"
+    },
+    {
+      "id": 2684,
+      "name": "Neltharion",
+      "full_name": "Echo of Neltharion",
+      "full_name_slug": "echo-of-neltharion"
+    },
+    {
+      "id": 2685,
+      "name": "Sarkareth",
+      "full_name": "Scalecommander Sarkareth",
+      "full_name_slug": "scalecommander-sarkareth"
+    }
+  ]
+}

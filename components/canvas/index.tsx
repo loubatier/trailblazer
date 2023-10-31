@@ -20,6 +20,7 @@ import {
 interface IProps {
   width: number;
   height: number;
+  hoveredRow: number;
 }
 
 export type Spell = {
@@ -28,6 +29,10 @@ export type Spell = {
   color: string;
   icon: string;
 };
+
+export interface Spells {
+  [key: string]: Spell[];
+}
 
 export type TimelineSpell = Spell & {
   x: number;
@@ -48,12 +53,11 @@ const NEW_SPELL = {
   icon: "https://assets.lorrgs.io/images/spells/spell_monk_revival.jpg",
 };
 
-const Canvas: React.FC<IProps> = ({ width, height }) => {
+const Canvas: React.FC<IProps> = ({ width, height, hoveredRow }) => {
   const {
     zoom,
     spells,
     rows,
-    addTimelineSpell,
     deleteTimelineSpell,
     updateTimelineSpellTiming,
     updateTimelineSpellRow,
@@ -99,6 +103,10 @@ const Canvas: React.FC<IProps> = ({ width, height }) => {
     };
   }, [spells]);
 
+  useEffect(() => {
+    console.log(hoveredRow);
+  }, [hoveredRow]);
+
   return (
     <Stage
       width={width}
@@ -130,17 +138,16 @@ const Canvas: React.FC<IProps> = ({ width, height }) => {
           <Timeline x={0} y={0} timer={ENCOUNTER_TIMER} zoom={zoom} />
           {rows.map(({ isActive }, i) => (
             <Rect
-              onClick={(e) =>
-                addTimelineSpell(
-                  NEW_SPELL,
-                  i,
-                  e.evt.offsetX - timelineOptions.x
-                )
-              }
               key={i}
               x={0}
               y={40 + 8 + i * 40 + i * 8}
-              fill={isActive ? "#23262B" : "#23262B50"}
+              fill={
+                isActive
+                  ? i === hoveredRow
+                    ? "#2A2E34"
+                    : "#23262B"
+                  : "#23262B50"
+              }
               width={ENCOUNTER_TIMER * zoom}
               height={40}
             />
