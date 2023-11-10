@@ -11,7 +11,6 @@ interface IProps {
   y: number;
   spell: TimelineSpell;
   timer: number;
-  isSelected: boolean;
   isRowActive: boolean;
   onClick: () => void;
   onDragMove: (x: number) => void;
@@ -22,7 +21,6 @@ const CanvasSpell: React.FC<IProps> = ({
   y,
   spell,
   timer,
-  isSelected,
   isRowActive,
   onClick,
   onDragMove,

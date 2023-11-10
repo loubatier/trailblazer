@@ -1,29 +1,18 @@
-// src/components/DraggableCanvas.tsx
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Circle,
-  Group,
-  Image as _Image,
-  Layer,
-  Rect,
-  Stage,
-  Text,
-  Line,
-} from "react-konva";
+import { Group, Image as _Image, Layer, Rect, Stage, Line } from "react-konva";
 import CanvasSpell from "./spell";
 import Timeline from "./timeline";
-import { useStore } from "zustand";
 import {
   EMoveDirection,
   useTimelineStore,
 } from "../../lib/stores/useTimelineStore";
+import styled from "styled-components";
 
 interface IProps {
   width: number;
   height: number;
   hoveredRow: number;
   isDraggingRow: boolean;
-  destinationRowIndex: number;
   ghostRowY: number;
 }
 
@@ -50,19 +39,14 @@ export type TimelineRow = {
 };
 
 const ENCOUNTER_TIMER = 345;
-const NEW_SPELL = {
-  duration: 12,
-  cooldown: 180,
-  color: "#00ff98",
-  icon: "https://assets.lorrgs.io/images/spells/spell_monk_revival.jpg",
-};
+
+const Root = styled.div``;
 
 const Canvas: React.FC<IProps> = ({
   width,
   height,
   hoveredRow,
   isDraggingRow,
-  destinationRowIndex,
   ghostRowY,
 }) => {
   const {
@@ -184,7 +168,6 @@ const Canvas: React.FC<IProps> = ({
             y={4 + (timelineSpell.row + 1) * 40 + (timelineSpell.row + 1) * 8}
             spell={timelineSpell}
             timer={ENCOUNTER_TIMER}
-            isSelected={true}
             isRowActive={rows[timelineSpell.row].isActive}
             onClick={() =>
               rows[timelineSpell.row].isActive ? selectTimelineSpell(i) : null

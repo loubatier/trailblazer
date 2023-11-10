@@ -16,6 +16,7 @@ const Root = styled.div`
 
 const TimelineWrapper = styled.div`
   display: flex;
+  overflow: hidden;
 `;
 
 const RowActionsWrapper = styled.div`
@@ -26,7 +27,9 @@ const RowActionsWrapper = styled.div`
   margin-top: 48px;
 `;
 
-const CanvasWrapper = styled.div``;
+const CanvasWrapper = styled.div`
+  width: 100%;
+`;
 
 const TimelineActionsWrapper = styled.div`
   display: flex;
@@ -85,6 +88,8 @@ const OldTimeline: React.FC<IProps> = () => {
   const [ghostRowY, setGhostRowY] = useState<number>(null);
   const [initialRowIndex, setInitialRowIndex] = useState<number>(null);
   const [destinationRowIndex, setDestinationRowIndex] = useState<number>(null);
+
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     async function fetchRosterAndSpells() {
@@ -202,6 +207,22 @@ const OldTimeline: React.FC<IProps> = () => {
     };
   }, [spells, clearTimelineSpellSelection]);
 
+  useEffect(() => {
+    const updateSize = () => {
+      if (canvasRef.current) {
+        setDimensions({
+          width: window.innerWidth - 40 - 2 * 48,
+          height: 40 + rows.length * 8 + rows.length * 40,
+        });
+      }
+    };
+
+    window.addEventListener("resize", updateSize);
+    updateSize();
+
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
+
   return (
     <Root>
       <TimelineActionsWrapper>
@@ -239,11 +260,10 @@ const OldTimeline: React.FC<IProps> = () => {
           onClick={(e) => e.stopPropagation()}
         >
           <Canvas
-            width={1280}
-            height={740}
+            width={dimensions.width}
+            height={dimensions.height}
             hoveredRow={hoveredRow}
             isDraggingRow={isDraggingRow}
-            destinationRowIndex={destinationRowIndex}
             ghostRowY={ghostRowY}
           />
         </CanvasWrapper>

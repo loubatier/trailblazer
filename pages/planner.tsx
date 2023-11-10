@@ -24,8 +24,6 @@ const OldTimeline = dynamic(() => import("../components/old-timeline"), {
 
 const TimelineWrapper = styled.div`
   display: flex;
-  width: 100vw;
-  height: 50vh;
   flex-direction: row;
 `;
 

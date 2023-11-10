@@ -17,8 +17,7 @@ const ActionsButton = styled.button`
   width: 40px;
   height: 40px;
   padding: 0 8px;
-  box-sizing: initial;
-  box-sizing: initial;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -124,14 +123,13 @@ const RowActions: React.FC<IProps> = ({
 
   return (
     <Root>
-      <ActionsButton onClick={toggleActions}>
-        <div
-          draggable
-          onDragStart={(e) => handleRowDragStart(e)}
-          onDragEnd={() => handleRowDragEnd()}
-        >
-          <GripVertical color={"white"} />
-        </div>
+      <ActionsButton
+        draggable
+        onDragStart={(e) => handleRowDragStart(e)}
+        onDragEnd={() => handleRowDragEnd()}
+        onClick={toggleActions}
+      >
+        <GripVertical color={"white"} />
       </ActionsButton>
       {isOpen && (
         <ActionsWrapper isOpen={isOpen}>
