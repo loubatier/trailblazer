@@ -65,8 +65,13 @@ const AddRowButton = styled.button<{ isDisabled: boolean }>`
 const OldTimeline: React.FC<IProps> = () => {
   const canvasRef = useRef<HTMLDivElement>(null);
 
-  const { rows, addTimelineRow, addTimelineSpell, updateTimelineRowPosition } =
-    useTimelineStore((state) => state);
+  const {
+    offset,
+    rows,
+    addTimelineRow,
+    addTimelineSpell,
+    updateTimelineRowPosition,
+  } = useTimelineStore((state) => state);
 
   const [roster, setRoster] = useState<Roster>({ players: [] });
   const [spells, setSpells] = useState<any>([]);
@@ -154,7 +159,7 @@ const OldTimeline: React.FC<IProps> = () => {
       hoveredRow <= rows.length - 1 &&
       rows[hoveredRow].isActive
     ) {
-      addTimelineSpell(spell, hoveredRow, x - 12);
+      addTimelineSpell(spell, hoveredRow, x - 12 - offset);
     }
 
     setHoveredRow(null);

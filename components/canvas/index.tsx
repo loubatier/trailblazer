@@ -66,6 +66,7 @@ const Canvas: React.FC<IProps> = ({
   ghostRowY,
 }) => {
   const {
+    isDragging,
     zoom,
     spells,
     rows,
@@ -73,12 +74,9 @@ const Canvas: React.FC<IProps> = ({
     updateTimelineSpellTiming,
     updateTimelineSpellRow,
     selectTimelineSpell,
+    move,
+    drag,
   } = useTimelineStore((state) => state);
-
-  const [timelineOptions, setTimelineOptions] = useState({
-    x: 0,
-    isDragging: false,
-  });
 
   useEffect(() => {
     const handleKeyPress = (e) => {
@@ -120,7 +118,7 @@ const Canvas: React.FC<IProps> = ({
     <Stage
       width={width}
       height={height}
-      style={{ cursor: timelineOptions.isDragging ? "grabbing" : "grab" }}
+      style={{ cursor: isDragging ? "grabbing" : "grab" }}
       draggable
       dragBoundFunc={(pos) => {
         return {
@@ -129,16 +127,11 @@ const Canvas: React.FC<IProps> = ({
         };
       }}
       onDragStart={() => {
-        setTimelineOptions({
-          ...timelineOptions,
-          isDragging: true,
-        });
+        drag(true);
       }}
       onDragEnd={(e) => {
-        setTimelineOptions({
-          isDragging: false,
-          x: e.target.x(),
-        });
+        move(e.target.x());
+        drag(false);
       }}
     >
       <Layer>
@@ -191,8 +184,6 @@ const Canvas: React.FC<IProps> = ({
             y={4 + (timelineSpell.row + 1) * 40 + (timelineSpell.row + 1) * 8}
             spell={timelineSpell}
             timer={ENCOUNTER_TIMER}
-            timelineOptions={timelineOptions}
-            zoom={zoom}
             isSelected={true}
             isActive={
               timelineSpell.row >= 0 && timelineSpell.row < rows.length

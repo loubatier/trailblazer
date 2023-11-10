@@ -4,14 +4,13 @@ import Konva from "konva";
 import { TimelineSpell } from ".";
 import { Grayscale } from "konva/lib/filters/Grayscale";
 import { Contrast } from "konva/lib/filters/Contrast";
+import { useTimelineStore } from "../../lib/stores/useTimelineStore";
 
 interface IProps {
   x: number;
   y: number;
   spell: TimelineSpell;
   timer: number;
-  timelineOptions: any;
-  zoom: number;
   isSelected: boolean;
   isActive: boolean;
   onClick: () => void;
@@ -23,25 +22,29 @@ const CanvasSpell: React.FC<IProps> = ({
   y,
   spell,
   timer,
-  timelineOptions,
-  zoom,
   isSelected,
   isActive,
   onClick,
   onDragMove,
 }) => {
-  const [spellOptions, setSpellOptions] = useState({ x: x, isDragging: false });
+  const [spellOptions, setSpellOptions] = useState({ x, isDragging: false });
+
+  const timeline = useTimelineStore((state) => state);
+
   const img = new Image();
   img.src = isActive
     ? spell.icon
     : "https://assets.lorrgs.io/images/spells/ability_evoker_rewind.jpg";
 
   const isAboveMinimum = (x: number) => {
-    return x >= 0 + timelineOptions.x;
+    return x >= 0 + timeline.offset;
   };
 
   const isUnderMaximum = (x: number) => {
-    return x + spell.duration * zoom <= timer * zoom + timelineOptions.x;
+    return (
+      x + spell.duration * timeline.zoom <=
+      timer * timeline.zoom + timeline.offset
+    );
   };
 
   const getSpellTiming = (timing) => {
@@ -63,8 +66,10 @@ const CanvasSpell: React.FC<IProps> = ({
           x: isAboveMinimum(pos.x)
             ? isUnderMaximum(pos.x)
               ? pos.x
-              : timer * zoom - spell.duration * zoom + timelineOptions.x
-            : 0 + timelineOptions.x,
+              : timer * timeline.zoom -
+                spell.duration * timeline.zoom +
+                timeline.offset
+            : 0 + timeline.offset,
           y: y,
         };
       }}
@@ -96,19 +101,19 @@ const CanvasSpell: React.FC<IProps> = ({
         <Rect
           x={-4}
           y={-4}
-          width={spell.cooldown * zoom + 8}
+          width={spell.cooldown * timeline.zoom + 8}
           height={40}
           strokeWidth={2}
           stroke={"white"}
         />
       )}
       <Rect
-        width={spell.cooldown * zoom}
+        width={spell.cooldown * timeline.zoom}
         height={32}
         fill={isActive ? `${spell.color}50` : `${spell.color}25`}
       />
       <Rect
-        width={spell.duration * zoom}
+        width={spell.duration * timeline.zoom}
         height={32}
         fill={isActive ? spell.color : `${spell.color}50`}
       />

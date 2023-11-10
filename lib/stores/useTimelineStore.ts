@@ -51,9 +51,12 @@ export enum EMoveDirection {
 }
 
 interface TimelineStore {
+  offset: number;
+  isDragging: boolean;
   zoom: number;
   spells: TimelineSpell[];
   rows: TimelineRow[];
+
   updateTimelineZoom: (z: number) => void;
 
   addTimelineSpell: (spell: Spell, rowIndex: number, x: number) => void;
@@ -66,15 +69,21 @@ interface TimelineStore {
   deleteTimelineRow: (i: number) => void;
   updateTimelineRowStatus: (i: number, isActive: boolean) => void;
   updateTimelineRowPosition: (index: number, newIndex: number) => void;
+
   clear: () => void;
+  move: (x: number) => void;
+  drag: (isDragging: boolean) => void;
 }
 
 export const useTimelineStore = create<TimelineStore>()(
   persist(
     (set) => ({
+      offset: 0,
+      isDragging: false,
       zoom: 3,
       spells: SPELLS,
       rows: ROWS,
+
       updateTimelineZoom: (z: number) =>
         set((state) => ({
           ...state,
@@ -212,7 +221,10 @@ export const useTimelineStore = create<TimelineStore>()(
           };
         });
       },
+
       clear: () => set((state) => ({ ...state, rows: [] })),
+      move: (x: number) => set((state) => ({ ...state, offset: x })),
+      drag: (isDragging: boolean) => set((state) => ({ ...state, isDragging })),
     }),
     {
       name: "timeline-storage",
