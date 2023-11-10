@@ -70,6 +70,7 @@ interface TimelineStore {
   updateTimelineRowStatus: (i: number, isActive: boolean) => void;
   updateTimelineRowPosition: (index: number, newIndex: number) => void;
 
+  clearTimelineSpellSelection: () => void;
   clear: () => void;
   move: (x: number) => void;
   drag: (isDragging: boolean) => void;
@@ -83,6 +84,16 @@ export const useTimelineStore = create<TimelineStore>()(
       zoom: 3,
       spells: SPELLS,
       rows: ROWS,
+
+      clearTimelineSpellSelection: () => {
+        set((state) => ({
+          ...state,
+          spells: state.spells.map((spell) => ({
+            ...spell,
+            isSelected: false,
+          })),
+        }));
+      },
 
       updateTimelineZoom: (z: number) =>
         set((state) => ({

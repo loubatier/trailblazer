@@ -67,14 +67,16 @@ const OldTimeline: React.FC<IProps> = () => {
 
   const {
     offset,
+    spells,
     rows,
+    clearTimelineSpellSelection,
     addTimelineRow,
     addTimelineSpell,
     updateTimelineRowPosition,
   } = useTimelineStore((state) => state);
 
   const [roster, setRoster] = useState<Roster>({ players: [] });
-  const [spells, setSpells] = useState<any>([]);
+  const [rosterSpells, setRosterSpells] = useState<any>([]);
 
   const [isDraggingSpell, setIsDraggingSpell] = useState<boolean>(false);
   const [hoveredRow, setHoveredRow] = useState<number>(null);
@@ -93,7 +95,7 @@ const OldTimeline: React.FC<IProps> = () => {
         const spellsJson = await spells.json();
 
         setRoster(rosterJson);
-        setSpells(spellsJson);
+        setRosterSpells(spellsJson);
       } catch (error) {
         console.error("Error fetching the JSON data:", error);
       }
@@ -119,7 +121,7 @@ const OldTimeline: React.FC<IProps> = () => {
   };
 
   const spellIcons = roster.players
-    .map((player) => getSpellsForPlayer(player, spells))
+    .map((player) => getSpellsForPlayer(player, rosterSpells))
     .reduce((acc, playerSpells) => acc.concat(playerSpells), [])
     .map((spell) => renderSpellIcon(spell));
 
@@ -188,6 +190,18 @@ const OldTimeline: React.FC<IProps> = () => {
   };
   // ---------------------------
 
+  useEffect(() => {
+    const handleWindowClick = () => {
+      const isAnySpellSelected = spells.some((spell) => spell.isSelected);
+      isAnySpellSelected ? clearTimelineSpellSelection() : null;
+    };
+    window.addEventListener("click", handleWindowClick);
+
+    return () => {
+      window.removeEventListener("click", handleWindowClick);
+    };
+  }, [spells, clearTimelineSpellSelection]);
+
   return (
     <Root>
       <TimelineActionsWrapper>
@@ -222,6 +236,7 @@ const OldTimeline: React.FC<IProps> = () => {
           ref={canvasRef}
           onDragOver={isDraggingSpell ? handleCanvasDragOver : null}
           onDrop={isDraggingSpell ? handleCanvasDrop : null}
+          onClick={(e) => e.stopPropagation()}
         >
           <Canvas
             width={1280}

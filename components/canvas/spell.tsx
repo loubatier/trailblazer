@@ -12,7 +12,7 @@ interface IProps {
   spell: TimelineSpell;
   timer: number;
   isSelected: boolean;
-  isActive: boolean;
+  isRowActive: boolean;
   onClick: () => void;
   onDragMove: (x: number) => void;
 }
@@ -23,7 +23,7 @@ const CanvasSpell: React.FC<IProps> = ({
   spell,
   timer,
   isSelected,
-  isActive,
+  isRowActive,
   onClick,
   onDragMove,
 }) => {
@@ -32,7 +32,7 @@ const CanvasSpell: React.FC<IProps> = ({
   const timeline = useTimelineStore((state) => state);
 
   const img = new Image();
-  img.src = isActive
+  img.src = isRowActive
     ? spell.icon
     : "https://assets.lorrgs.io/images/spells/ability_evoker_rewind.jpg";
 
@@ -60,7 +60,7 @@ const CanvasSpell: React.FC<IProps> = ({
       x={x}
       y={y}
       style={{ cursor: spellOptions.isDragging ? "grabbing" : "grab" }}
-      draggable={isActive}
+      draggable={isRowActive}
       dragBoundFunc={(pos) => {
         return {
           x: isAboveMinimum(pos.x)
@@ -110,12 +110,12 @@ const CanvasSpell: React.FC<IProps> = ({
       <Rect
         width={spell.cooldown * timeline.zoom}
         height={32}
-        fill={isActive ? `${spell.color}50` : `${spell.color}25`}
+        fill={isRowActive ? `${spell.color}50` : `${spell.color}25`}
       />
       <Rect
         width={spell.duration * timeline.zoom}
         height={32}
-        fill={isActive ? spell.color : `${spell.color}50`}
+        fill={isRowActive ? spell.color : `${spell.color}50`}
       />
       <KonvaImage
         image={img}

@@ -185,11 +185,7 @@ const Canvas: React.FC<IProps> = ({
             spell={timelineSpell}
             timer={ENCOUNTER_TIMER}
             isSelected={true}
-            isActive={
-              timelineSpell.row >= 0 && timelineSpell.row < rows.length
-                ? rows[timelineSpell.row].isActive
-                : false
-            }
+            isRowActive={rows[timelineSpell.row].isActive}
             onClick={() =>
               rows[timelineSpell.row].isActive ? selectTimelineSpell(i) : null
             }
