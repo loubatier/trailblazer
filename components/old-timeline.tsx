@@ -188,10 +188,6 @@ const OldTimeline: React.FC<IProps> = () => {
   };
   // ---------------------------
 
-  useEffect(() => {
-    console.log({ destinationRowIndex });
-  }, [destinationRowIndex]);
-
   return (
     <Root>
       <TimelineActionsWrapper>

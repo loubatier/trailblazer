@@ -204,17 +204,28 @@ export const useTimelineStore = create<TimelineStore>()(
       },
       updateTimelineSpellRow: (i: number, direction: EMoveDirection) => {
         set((state) => {
+          // Find the next active row in the specified direction
+          const findNextActiveRow = (currentRowIndex: number): number => {
+            if (direction === EMoveDirection.DOWN) {
+              for (let j = currentRowIndex + 1; j < state.rows.length; j++) {
+                if (state.rows[j].isActive) return j;
+              }
+            } else {
+              // EMoveDirection.UP
+              for (let j = currentRowIndex - 1; j >= 0; j--) {
+                if (state.rows[j].isActive) return j;
+              }
+            }
+            return currentRowIndex; // Return current row index if no active row is found
+          };
+
           return {
             ...state,
-            rows: state.rows,
             spells: state.spells.map((spell, index) =>
               index === i
                 ? {
                     ...spell,
-                    row:
-                      direction === EMoveDirection.DOWN
-                        ? spell.row + 1
-                        : spell.row - 1,
+                    row: findNextActiveRow(spell.row),
                   }
                 : spell
             ),
