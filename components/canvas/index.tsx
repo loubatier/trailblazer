@@ -144,7 +144,6 @@ const Canvas: React.FC<IProps> = ({
       <Layer>
         {/* TODO: Might be easier to set this to 0 but would mean setting rows x to -4 so off canvas */}
         <Group>
-          <Timeline x={0} y={0} timer={ENCOUNTER_TIMER} zoom={zoom} />
           {rows.map(({ isActive }, i) => (
             <Rect
               key={i}
@@ -181,6 +180,7 @@ const Canvas: React.FC<IProps> = ({
               />
             </>
           )}
+          <Timeline x={0} y={0} timer={ENCOUNTER_TIMER} zoom={zoom} />
         </Group>
       </Layer>
       <Layer>

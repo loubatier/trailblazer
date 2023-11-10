@@ -22,6 +22,7 @@ const RowActionsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  height: fit-content;
   margin-top: 48px;
 `;
 
