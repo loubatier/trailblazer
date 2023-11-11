@@ -195,33 +195,32 @@ const OldTimeline: React.FC<IProps> = () => {
   };
   // ---------------------------
 
-  useEffect(() => {
-    const handleWindowClick = () => {
-      const isAnySpellSelected = spells.some((spell) => spell.isSelected);
-      isAnySpellSelected ? clearTimelineSpellSelection() : null;
-    };
-    window.addEventListener("click", handleWindowClick);
+  const handleWindowClick = () => {
+    const isAnySpellSelected = spells.some((spell) => spell.isSelected);
+    isAnySpellSelected ? clearTimelineSpellSelection() : null;
+  };
 
-    return () => {
-      window.removeEventListener("click", handleWindowClick);
-    };
+  useEffect(() => {
+    window.addEventListener("click", handleWindowClick);
+    return () => window.removeEventListener("click", handleWindowClick);
   }, [spells, clearTimelineSpellSelection]);
 
+  const handleWindowResize = () => {
+    setDimensions({
+      width: window.innerWidth - 40 - 2 * 48,
+      height: 40 + rows.length * 8 + rows.length * 40,
+    });
+  };
+
   useEffect(() => {
-    const updateSize = () => {
-      if (canvasRef.current) {
-        setDimensions({
-          width: window.innerWidth - 40 - 2 * 48,
-          height: 40 + rows.length * 8 + rows.length * 40,
-        });
-      }
-    };
-
-    window.addEventListener("resize", updateSize);
-    updateSize();
-
-    return () => window.removeEventListener("resize", updateSize);
+    handleWindowResize();
+    window.addEventListener("resize", handleWindowResize);
+    return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
+
+  useEffect(() => {
+    handleWindowResize();
+  }, [rows]);
 
   return (
     <Root>
