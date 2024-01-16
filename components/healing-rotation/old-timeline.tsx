@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { useTimelineStore } from "../lib/stores/useTimelineStore";
+import { useTimelineStore } from "../../lib/stores/useTimelineStore";
 import Canvas from "./canvas";
 import { ListPlus } from "lucide-react";
 import RowActions from "./row-actions";
 import Zoom from "./zoom";
-import { Roster } from "../models/player";
+import { Roster } from "../../data/models/player";
 
 interface IProps {}
 
@@ -85,9 +85,9 @@ const OldTimeline: React.FC<IProps> = () => {
   const [hoveredRow, setHoveredRow] = useState<number>(null);
 
   const [isDraggingRow, setIsDraggingRow] = useState<boolean>(false);
-  const [ghostRowY, setGhostRowY] = useState<number>(null);
-  const [initialRowIndex, setInitialRowIndex] = useState<number>(null);
-  const [destinationRowIndex, setDestinationRowIndex] = useState<number>(null);
+  const [ghostRowY, setGhostRowY] = useState<number>(0);
+  const [initialRowIndex, setInitialRowIndex] = useState<number>(0);
+  const [destinationRowIndex, setDestinationRowIndex] = useState<number>(0);
 
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 

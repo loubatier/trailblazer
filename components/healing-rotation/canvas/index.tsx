@@ -5,7 +5,7 @@ import Timeline from "./timeline";
 import {
   EMoveDirection,
   useTimelineStore,
-} from "../../lib/stores/useTimelineStore";
+} from "../../../lib/stores/useTimelineStore";
 import styled from "styled-components";
 
 interface IProps {
@@ -147,12 +147,7 @@ const Canvas: React.FC<IProps> = ({
                 height={40}
               />
               <Line
-                points={[
-                  0,
-                  moveRowIndicatorPosY,
-                  ENCOUNTER_TIMER * zoom,
-                  moveRowIndicatorPosY,
-                ]}
+                points={[0, ghostRowY, ENCOUNTER_TIMER * zoom, ghostRowY]}
                 stroke="white"
               />
             </>

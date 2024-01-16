@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Eye, EyeOff, GripVertical, X } from "lucide-react";
 import { useState } from "react";
-import { useTimelineStore } from "../lib/stores/useTimelineStore";
+import { useTimelineStore } from "../../lib/stores/useTimelineStore";
 
 interface IProps {
   rowIndex: number;
@@ -87,7 +87,7 @@ const ActionsWrapper = styled.div<{ isOpen: boolean }>`
   right: 0;
   width: 88px;
   height: 40px;
-  background-color: ${({ theme }) => theme.colors.background};
+  background-color: ${({ theme }) => theme.colors.application_background};
   transform: translateX(100%);
   z-index: ${({ isOpen }) => (isOpen ? 1 : 0)};
 `;

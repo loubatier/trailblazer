@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { useCounterStore } from "../lib/stores";
-import { useTimelineStore } from "../lib/stores/useTimelineStore";
+import { useCounterStore } from "../../lib/stores";
+import { useTimelineStore } from "../../lib/stores/useTimelineStore";
 
 interface IProps {}
 

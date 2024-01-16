@@ -18,9 +18,12 @@ import {
   MoveHorizontal,
 } from "lucide-react";
 
-const OldTimeline = dynamic(() => import("../components/old-timeline"), {
-  ssr: false,
-});
+const OldTimeline = dynamic(
+  () => import("../components/healing-rotation/old-timeline"),
+  {
+    ssr: false,
+  }
+);
 
 const TimelineWrapper = styled.div`
   display: flex;

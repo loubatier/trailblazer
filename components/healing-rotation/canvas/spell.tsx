@@ -4,7 +4,7 @@ import Konva from "konva";
 import { TimelineSpell } from ".";
 import { Grayscale } from "konva/lib/filters/Grayscale";
 import { Contrast } from "konva/lib/filters/Contrast";
-import { useTimelineStore } from "../../lib/stores/useTimelineStore";
+import { useTimelineStore } from "../../../lib/stores/useTimelineStore";
 
 interface IProps {
   x: number;

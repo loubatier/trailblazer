@@ -2,9 +2,7 @@ import styled from "styled-components";
 
 const Container = styled.div``;
 
-const Main = styled.main`
-  padding: 5rem 0;
-`;
+const Main = styled.main``;
 
 const Title = styled.h1`
   margin: 0;

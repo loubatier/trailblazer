@@ -1,6 +1,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Spell, TimelineRow, TimelineSpell } from "../../components/canvas";
+import {
+  Spell,
+  TimelineRow,
+  TimelineSpell,
+} from "../../components/healing-rotation/canvas";
 
 const SPELLS: TimelineSpell[] = [
   {

@@ -5,9 +5,8 @@ const FlexContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  max-width: 800px;
-  margin-top: 3rem;
-  margin-bottom: 3rem;
+  width: fit-content;
+  margin: 36px auto;
 `;
 
 const Card = styled.div`
