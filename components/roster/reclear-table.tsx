@@ -117,7 +117,7 @@ const getVaultAmountColor = (value: number): string => {
 };
 
 const replaceWhitespaceWithUnderscore = (input: string): string => {
-  return input.replace(/\s/g, "_").toLowerCase();
+  return input.replace(/\s/g, "_");
 };
 
 // Component to fetch and display raid data
@@ -163,7 +163,7 @@ const ReclearTable: React.FC<IProps> = ({ raid }) => {
                   <img
                     src={`/bosses/${replaceWhitespaceWithUnderscore(
                       encounter.name
-                    )}.png`}
+                    ).toLowerCase()}.png`}
                     alt={encounter.name}
                     width={68}
                     height={90}
@@ -185,7 +185,7 @@ const ReclearTable: React.FC<IProps> = ({ raid }) => {
                   <img
                     src={`/classes/${replaceWhitespaceWithUnderscore(
                       player.class
-                    )}.webp`}
+                    ).toLowerCase()}.webp`}
                     alt={`${player.class} icon`}
                     width={24}
                     height={24}
