@@ -117,7 +117,7 @@ const getVaultAmountColor = (value: number): string => {
 };
 
 const replaceWhitespaceWithUnderscore = (input: string): string => {
-  return input.replace(/\s/g, "_");
+  return input.replace(/\s/g, "_").toLowerCase();
 };
 
 // Component to fetch and display raid data
