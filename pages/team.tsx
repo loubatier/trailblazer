@@ -8,7 +8,7 @@ import {
 import styled from "styled-components";
 import { ArrowRightToLine, Copy } from "lucide-react";
 import { captureComponent } from "../lib/screenshot";
-import ReclearTable from "../components/roster/reclear-table";
+import ReclearTable from "../components/reclear-table";
 import { useState } from "react";
 
 const Roster = styled.div`

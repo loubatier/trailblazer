@@ -1,4 +1,10 @@
-import { Character, ESignupStatus, Encounter, Signup } from "../models/roster";
+import {
+  Character,
+  ECharacterRole,
+  ESignupStatus,
+  Encounter,
+  Signup,
+} from "../models/roster";
 
 const getRandomCharacter = (): Character => {
   return {
@@ -6,7 +12,7 @@ const getRandomCharacter = (): Character => {
     name: "Hilderion",
     realm: "Ysondre",
     class: "Druid",
-    role: "Healer",
+    role: ECharacterRole.Heal,
   };
 };
 

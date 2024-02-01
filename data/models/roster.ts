@@ -20,7 +20,14 @@ export interface Signup {
   comment: string;
   selected: boolean;
   class: string; // Duplicated with Character.class
-  role: string; // Duplicated with Character.role
+  role: ECharacterRole; // Duplicated with Character.role
+}
+
+export interface Roster {
+  tank: Signup[];
+  heal: Signup[];
+  melee: Signup[];
+  ranged: Signup[];
 }
 
 export enum ESignupStatus {
@@ -49,5 +56,12 @@ export interface Character {
   name: string;
   realm: string;
   class: string;
-  role: string;
+  role: ECharacterRole;
+}
+
+export enum ECharacterRole {
+  Tank = "Tank",
+  Heal = "Heal",
+  Melee = "Melee",
+  Ranged = "Ranged",
 }
