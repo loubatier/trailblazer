@@ -1,13 +1,4 @@
-import Link from "next/link";
-import {
-  Container,
-  Main,
-  Title,
-  Description,
-} from "../components/sharedstyles";
-// import Timeline from "../components/timeline";
-import styled from "styled-components";
-import dynamic from "next/dynamic";
+import React from "react";
 import {
   ChevronDownSquare,
   ChevronUpSquare,
@@ -17,6 +8,15 @@ import {
   MousePointerClick,
   MoveHorizontal,
 } from "lucide-react";
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import styled from "styled-components";
+import {
+  Container,
+  Description,
+  Main,
+  Title,
+} from "../components/sharedstyles";
 
 const OldTimeline = dynamic(
   () => import("../components/healing-rotation/old-timeline"),

@@ -1,13 +1,12 @@
+import React from "react";
 import { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
-import { useTimelineStore } from "../../lib/stores/useTimelineStore";
-import Canvas from "./canvas";
 import { ListPlus } from "lucide-react";
+import styled from "styled-components";
+import { Player, Roster } from "../../data/models/player";
+import { useTimelineStore } from "../../lib/stores/useTimelineStore";
+import Canvas, { TimelineSpell } from "./canvas";
 import RowActions from "./row-actions";
 import Zoom from "./zoom";
-import { Roster } from "../../data/models/player";
-
-interface IProps {}
 
 const Root = styled.div`
   flex: 1 0 500px;
@@ -65,7 +64,7 @@ const AddRowButton = styled.button<{ isDisabled: boolean }>`
   }
 `;
 
-const OldTimeline: React.FC<IProps> = () => {
+const OldTimeline: React.FC = () => {
   const canvasRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -79,7 +78,7 @@ const OldTimeline: React.FC<IProps> = () => {
   } = useTimelineStore((state) => state);
 
   const [roster, setRoster] = useState<Roster>({ players: [] });
-  const [rosterSpells, setRosterSpells] = useState<any>([]);
+  const [rosterSpells, setRosterSpells] = useState([]);
 
   const [isDraggingSpell, setIsDraggingSpell] = useState<boolean>(false);
   const [hoveredRow, setHoveredRow] = useState<number>(null);
@@ -109,11 +108,14 @@ const OldTimeline: React.FC<IProps> = () => {
     fetchRosterAndSpells();
   }, []);
 
-  const getSpellsForPlayer = (player: any, spells: any): any[] => {
+  const getSpellsForPlayer = (
+    player: Player,
+    spells: TimelineSpell[]
+  ): TimelineSpell[] => {
     return spells[player.spec] || [];
   };
 
-  const renderSpellIcon = (spell: any): JSX.Element => {
+  const renderSpellIcon = (spell: TimelineSpell): JSX.Element => {
     return (
       <SpellIcon
         draggable
@@ -139,7 +141,10 @@ const OldTimeline: React.FC<IProps> = () => {
     );
   };
 
-  const handleSpellDragStart = (event: React.DragEvent, spell: any) => {
+  const handleSpellDragStart = (
+    event: React.DragEvent,
+    spell: TimelineSpell
+  ) => {
     event.dataTransfer.setData("spell", JSON.stringify(spell));
     setIsDraggingSpell(true);
   };

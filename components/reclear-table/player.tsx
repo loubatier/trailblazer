@@ -1,8 +1,9 @@
+import React from "react";
+import { lowerCase } from "lodash";
+import { CalendarX2, Sofa } from "lucide-react";
 import styled from "styled-components";
 import { EClassColor, RosterPlayer } from "../../data/models/roster";
-import { lowerCase } from "lodash";
 import { replaceWhitespaceWithUnderscore } from "../../lib/utils";
-import { CalendarX2, Sofa } from "lucide-react";
 
 interface IProps {
   player: RosterPlayer;
@@ -51,7 +52,6 @@ const Root = styled.div<{ color: string; isDisabled: boolean }>`
 const Player: React.FC<IProps> = ({ player, status }) => {
   const isBenchedOrAbsent = status === "benched" || status === "absent";
 
-  console.log("PLAYER", player);
   return (
     <Root
       color={EClassColor[replaceWhitespaceWithUnderscore(player.class)]}

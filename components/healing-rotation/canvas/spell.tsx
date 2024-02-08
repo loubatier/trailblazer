@@ -1,10 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Group, Image as KonvaImage, Rect, Text } from "react-konva";
-import Konva from "konva";
-import { TimelineSpell } from ".";
+import React, { useState } from "react";
 import { Grayscale } from "konva/lib/filters/Grayscale";
-import { Contrast } from "konva/lib/filters/Contrast";
+import { Group, Image as KonvaImage, Rect, Text } from "react-konva";
 import { useTimelineStore } from "../../../lib/stores/useTimelineStore";
+import { TimelineSpell } from ".";
 
 interface IProps {
   x: number;

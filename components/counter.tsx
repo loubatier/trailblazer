@@ -1,3 +1,4 @@
+import React from "react";
 import { useCounterStore } from "../lib/stores";
 
 interface IProps {

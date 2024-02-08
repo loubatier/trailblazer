@@ -16,7 +16,7 @@ const copyImageToClipboard = async (blob: Blob) => {
   try {
     const item = new ClipboardItem({ "image/png": blob });
     await navigator.clipboard.write([item]);
-    console.log("Image copied to clipboard");
+    console.info("Image copied to clipboard");
   } catch (error) {
     console.error("Error copying image to clipboard", error);
   }

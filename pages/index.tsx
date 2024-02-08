@@ -1,21 +1,9 @@
-"use client";
-
+import React from "react";
 import Head from "next/head";
-import {
-  Container,
-  Main,
-  Title,
-  Description,
-  CodeTag,
-} from "../components/sharedstyles";
 import Cards from "../components/cards";
-import Counter from "../components/counter";
-import { useCounterStore } from "../lib/stores";
-import useStore from "../lib/stores/useStore";
+import { Container, Main, Title } from "../components/sharedstyles";
 
 const Home: React.FC = () => {
-  const counterState = useStore(useCounterStore, (state) => state);
-
   return (
     <Container>
       <Head>

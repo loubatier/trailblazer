@@ -1,12 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Group, Image as _Image, Layer, Rect, Stage, Line } from "react-konva";
-import CanvasSpell from "./spell";
-import Timeline from "./timeline";
+import React, { useEffect } from "react";
+import { Group, Layer, Line, Rect, Stage } from "react-konva";
 import {
   EMoveDirection,
   useTimelineStore,
 } from "../../../lib/stores/useTimelineStore";
-import styled from "styled-components";
+import CanvasSpell from "./spell";
+import Timeline from "./timeline";
 
 interface IProps {
   width: number;
@@ -39,8 +38,6 @@ export type TimelineRow = {
 };
 
 const ENCOUNTER_TIMER = 345;
-
-const Root = styled.div``;
 
 const Canvas: React.FC<IProps> = ({
   width,
@@ -95,8 +92,8 @@ const Canvas: React.FC<IProps> = ({
     };
   }, [spells]);
 
-  const index = Math.floor((ghostRowY - 40) / 40);
-  const moveRowIndicatorPosY = 40 + 4 + index * 40 + index * 8;
+  // const index = Math.floor((ghostRowY - 40) / 40);
+  // const moveRowIndicatorPosY = 40 + 4 + index * 40 + index * 8;
 
   return (
     <Stage

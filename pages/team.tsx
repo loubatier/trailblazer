@@ -1,16 +1,16 @@
+import React, { FC, useState } from "react";
+import { isEmpty } from "lodash";
+import { ArrowRightToLine, Copy } from "lucide-react";
 import Link from "next/link";
+import styled from "styled-components";
+import ReclearTable from "../components/reclear-table";
 import {
   Container,
+  Description,
   Main,
   Title,
-  Description,
 } from "../components/sharedstyles";
-import styled from "styled-components";
-import { ArrowRightToLine, Copy } from "lucide-react";
 import { captureComponent } from "../lib/screenshot";
-import ReclearTable from "../components/reclear-table";
-import { useState } from "react";
-import { isEmpty } from "lodash";
 
 const Roster = styled.div`
   display: flex;
@@ -90,7 +90,7 @@ const ScreenshotButton = styled.button<{ isDisabled: boolean }>`
   pointer-events: ${({ isDisabled }) => (isDisabled ? "none" : "all")};
 `;
 
-const Team: React.FC = () => {
+const Team: FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [raidId, setRaidId] = useState<string>("");
 

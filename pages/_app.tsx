@@ -1,12 +1,8 @@
+import React from "react";
 import type { AppProps } from "next/app";
-import { ThemeProvider, DefaultTheme } from "styled-components";
-import GlobalStyle from "../components/globalstyles";
-import { useRouter } from "next/router";
-import { useTransition } from "react-spring";
-import { animated } from "@react-spring/web";
-import { useEffect, useState } from "react";
-import TransitionLayout from "../layouts/transitionLayout";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { DefaultTheme, ThemeProvider } from "styled-components";
+import GlobalStyle from "../components/globalstyles";
 
 const theme: DefaultTheme = {
   colors: {

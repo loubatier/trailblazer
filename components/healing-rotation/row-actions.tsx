@@ -1,6 +1,6 @@
-import styled from "styled-components";
+import React, { useState } from "react";
 import { Eye, EyeOff, GripVertical, X } from "lucide-react";
-import { useState } from "react";
+import styled from "styled-components";
 import { useTimelineStore } from "../../lib/stores/useTimelineStore";
 
 interface IProps {
@@ -61,22 +61,22 @@ const DeleteButton = styled.button`
   }
 `;
 
-const MoveButton = styled.button<{ isDisabled: boolean }>`
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background-color: #ffffff;
-  cursor: pointer;
-  opacity: ${({ isDisabled }) => (isDisabled ? "0.5" : "1")};
-  pointer-events: ${({ isDisabled }) => (isDisabled ? "none" : "all")};
+// const MoveButton = styled.button<{ isDisabled: boolean }>`
+//   width: 40px;
+//   height: 40px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   border: none;
+//   background-color: #ffffff;
+//   cursor: pointer;
+//   opacity: ${({ isDisabled }) => (isDisabled ? "0.5" : "1")};
+//   pointer-events: ${({ isDisabled }) => (isDisabled ? "none" : "all")};
 
-  svg {
-    flex-shrink: 0;
-  }
-`;
+//   svg {
+//     flex-shrink: 0;
+//   }
+// `;
 
 const ActionsWrapper = styled.div<{ isOpen: boolean }>`
   position: absolute;
@@ -113,7 +113,7 @@ const RowActions: React.FC<IProps> = ({
     setIsOpen(!isOpen);
   };
 
-  const handleRowDragStart = (event: React.DragEvent) => {
+  const handleRowDragStart = () => {
     onDragRowStart();
   };
 
@@ -125,7 +125,7 @@ const RowActions: React.FC<IProps> = ({
     <Root>
       <ActionsButton
         draggable
-        onDragStart={(e) => handleRowDragStart(e)}
+        onDragStart={() => handleRowDragStart()}
         onDragEnd={() => handleRowDragEnd()}
         onClick={toggleActions}
       >

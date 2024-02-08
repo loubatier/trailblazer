@@ -3,10 +3,10 @@ import {
   ECharacterRole,
   ESignupStatus,
   Encounter,
+  Roster,
   RosterPlayer,
   Selection,
   Signup,
-  Roster,
 } from "../data/models/roster";
 
 export const getPlayerFromSignup = (signup: Signup): RosterPlayer => {
@@ -16,9 +16,9 @@ export const getPlayerFromSignup = (signup: Signup): RosterPlayer => {
   };
 };
 
-export const getPlayerFromSelection = (selection: Selection): RosterPlayer => {
-  return null;
-};
+// export const getPlayerFromSelection = (selection: Selection): RosterPlayer => {
+//   return null;
+// };
 
 export const replaceWhitespaceWithUnderscore = (input: string): string => {
   return input.replace(/\s/g, "_");

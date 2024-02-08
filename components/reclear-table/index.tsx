@@ -1,8 +1,9 @@
-import { useQuery } from "react-query";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Encounter, Roster, Signup } from "../../data/models/roster";
+import { map } from "lodash";
+import { useQuery } from "react-query";
 import styled from "styled-components";
+import { Encounter, Roster, Signup } from "../../data/models/roster";
 import {
   getAllAbsentSignups,
   getAllNonSelectedForEncounter,
@@ -11,9 +12,8 @@ import {
   hasOnlyOneEnabledEncounter,
   replaceWhitespaceWithUnderscore,
 } from "../../lib/utils";
-import PlayerGroup from "./player-group";
-import { map, size } from "lodash";
 import Player from "./player";
+import PlayerGroup from "./player-group";
 
 interface IProps {
   raidId: string;

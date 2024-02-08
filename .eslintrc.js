@@ -15,8 +15,14 @@ module.exports = {
       },
       files: [".eslintrc.{js,cjs}"],
       parserOptions: {
+        project: "./tsconfig.json",
         sourceType: "script",
       },
+      extends: [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:prettier/recommended",
+        "next",
+      ],
       rules: {
         // Cherry-picked rules that fit our conventions
         "@typescript-eslint/no-use-before-define": "error",
@@ -52,7 +58,12 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module",
   },
-  plugins: ["@typescript-eslint", "react", "eslint-plugin-import-helpers"],
+  plugins: [
+    "@typescript-eslint",
+    "eslint-plugin-import-helpers",
+    "react",
+    "prettier",
+  ],
   rules: {
     complexity: ["error", 20],
     "prefer-const": "warn",
@@ -75,13 +86,14 @@ module.exports = {
         },
       },
     ],
+    // "prettier/prettier": "error",
     "no-console": [
       "error",
       {
         allow: ["warn", "error", "info", "debug", "trace"],
       },
     ],
-    "no-mixed-operators": "error",
+    // "no-mixed-operators": "error",
     "no-restricted-imports": [
       "error",
       {

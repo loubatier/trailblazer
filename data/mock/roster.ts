@@ -16,7 +16,7 @@ const getRandomCharacter = (): Character => {
   };
 };
 
-export const getRandomSignups = (amount: number = 5): Signup[] => {
+export const getRandomSignups = (amount = 5): Signup[] => {
   const rules = [];
   for (let i = 0; i < amount; i++) {
     rules.push({
@@ -31,7 +31,7 @@ export const getRandomSignups = (amount: number = 5): Signup[] => {
   return rules;
 };
 
-const getRandomSelections = (amount: number = 5): Selection[] => {
+const getRandomSelections = (amount = 5): Selection[] => {
   const selections = [];
   for (let i = 0; i < amount; i++) {
     selections.push({
@@ -45,7 +45,7 @@ const getRandomSelections = (amount: number = 5): Selection[] => {
   return selections;
 };
 
-export const getRandomEncounters = (amount: number = 5): Encounter[] => {
+export const getRandomEncounters = (amount = 5): Encounter[] => {
   const encounters = [];
   for (let i = 0; i < amount; i++) {
     encounters.push({

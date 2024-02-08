@@ -1,5 +1,6 @@
-import styled from "styled-components";
+import React from "react";
 import Link from "next/link";
+import styled from "styled-components";
 
 const FlexContainer = styled.div`
   display: flex;
@@ -16,7 +17,9 @@ const Card = styled.div`
   text-decoration: none;
   border: 1px solid black;
   border-radius: 10px;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
   margin: 0 1rem 0 0;
 
   &:hover,

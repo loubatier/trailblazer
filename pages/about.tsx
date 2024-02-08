@@ -1,13 +1,14 @@
+import React from "react";
 import Link from "next/link";
+import Counter from "../components/counter";
 import {
   Container,
+  Description,
   Main,
   Title,
-  Description,
 } from "../components/sharedstyles";
-import Counter from "../components/counter";
-import useStore from "../lib/stores/useStore";
 import { useCounterStore } from "../lib/stores";
+import useStore from "../lib/stores/useStore";
 
 const About: React.FC = () => {
   const counterState = useStore(useCounterStore, (state) => state);

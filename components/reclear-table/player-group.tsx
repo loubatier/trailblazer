@@ -1,12 +1,11 @@
 import React from "react";
+import { map } from "lodash";
 import styled from "styled-components";
-import { EClassColor, Encounter, Signup } from "../../data/models/roster";
+import { Encounter, Signup } from "../../data/models/roster";
 import {
   getVaultAmountColor,
   isPlayerSelectedForEncounter,
-  replaceWhitespaceWithUnderscore,
 } from "../../lib/utils";
-import { lowerCase, map } from "lodash";
 import Player from "./player";
 
 interface IProps {

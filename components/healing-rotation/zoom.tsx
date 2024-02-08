@@ -1,8 +1,6 @@
+import React from "react";
 import styled from "styled-components";
-import { useCounterStore } from "../../lib/stores";
 import { useTimelineStore } from "../../lib/stores/useTimelineStore";
-
-interface IProps {}
 
 const ZoomInput = styled.input`
   -webkit-appearance: none;
@@ -38,7 +36,7 @@ const ZoomInput = styled.input`
   }
 `;
 
-const Zoom: React.FC<IProps> = () => {
+const Zoom: React.FC = () => {
   const { zoom, updateTimelineZoom } = useTimelineStore((state) => state);
 
   return (
