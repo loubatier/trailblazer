@@ -6,14 +6,6 @@ export interface Encounter {
   selections: Selection[];
 }
 
-export interface Selection {
-  character_id: number;
-  selected: boolean;
-  class: string; // Hunter
-  role: string; // Ranged
-  wishlist_score: number;
-}
-
 export interface Signup {
   character: Character;
   status: ESignupStatus;
@@ -21,6 +13,28 @@ export interface Signup {
   selected: boolean;
   class: string; // Duplicated with Character.class
   role: ECharacterRole; // Duplicated with Character.role
+}
+
+export interface Character {
+  id: number;
+  name: string;
+  realm: string;
+  class: string;
+  role: ECharacterRole;
+}
+
+export interface Selection {
+  character_id: number;
+  selected: boolean;
+  class: string; // Hunter
+  role: ECharacterRole; // Ranged
+  wishlist_score: number;
+}
+
+// TODO: Find a way to merge with the Player type from timeline tool
+export interface RosterPlayer {
+  name: string;
+  class: string;
 }
 
 export interface Roster {
@@ -49,14 +63,6 @@ export enum EClassColor {
   Shaman = "#0070DD",
   Warlock = "#8788EE",
   Warrior = "#C69B6D",
-}
-
-export interface Character {
-  id: number;
-  name: string;
-  realm: string;
-  class: string;
-  role: ECharacterRole;
 }
 
 export enum ECharacterRole {

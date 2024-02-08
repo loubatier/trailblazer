@@ -7,6 +7,7 @@ import {
   replaceWhitespaceWithUnderscore,
 } from "../../lib/utils";
 import { lowerCase, map } from "lodash";
+import Player from "./player";
 
 interface IProps {
   className?: string;
@@ -24,23 +25,6 @@ const PlayerRow = styled.div`
   display: flex;
   flex-direction: row;
   gap: 1px;
-`;
-
-const Player = styled.div<{ color: string }>`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 12px;
-  width: 200px;
-  height: 48px;
-  padding-left: 12px;
-  background-color: ${({ theme }) => theme.colors.content_background};
-  border-left: 4px solid ${({ color }) => color};
-
-  p {
-    font-size: 16px;
-    font-weight: bold;
-  }
 `;
 
 const StatusRows = styled.div`
@@ -82,22 +66,8 @@ const PlayerGroup: React.FC<IProps> = ({ className, players, encounters }) => {
         }, 0);
 
         return (
-          <PlayerRow>
-            <Player
-              key={player.character.id}
-              color={EClassColor[replaceWhitespaceWithUnderscore(player.class)]}
-            >
-              <img
-                src={`/classes/${replaceWhitespaceWithUnderscore(
-                  lowerCase(player.class)
-                )}.webp`}
-                alt={`${player.class} icon`}
-                width={24}
-                height={24}
-              />
-
-              <p>{player.character.name}</p>
-            </Player>
+          <PlayerRow key={player.character.id}>
+            <Player player={player.character} />
             <StatusRows>
               {encounters.map((encounter, i) => {
                 const isSelected = isPlayerSelectedForEncounter(
