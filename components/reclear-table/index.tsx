@@ -6,6 +6,7 @@ import styled from "styled-components";
 import {
   getAllAbsentSignups,
   getAllNonSelectedForEncounter,
+  getRosterFromEncounter,
   getRosterFromSignups,
   hasOnlyOneEnabledEncounter,
   replaceWhitespaceWithUnderscore,
@@ -15,7 +16,7 @@ import { map, size } from "lodash";
 import Player from "./player";
 
 interface IProps {
-  raid: string;
+  raidId: string;
 }
 
 const EncountersWrapper = styled.div`
@@ -29,7 +30,9 @@ const StyledPlayerGroup = styled(PlayerGroup)`
   margin-bottom: 24px;
 `;
 
-const SingleEncounterWrapper = styled.div`
+const SingleEncounterWrapper = styled.div``;
+
+const RosterWrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 24px;
@@ -38,13 +41,24 @@ const SingleEncounterWrapper = styled.div`
 const Column = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 24px;
 `;
 
-const ReclearTable: React.FC<IProps> = ({ raid }) => {
-  const [signups, setSignups] = useState<Signup[]>(null);
-  const [roster, setRoster] = useState<Roster>(null);
-  const [encounters, setEncounters] = useState<Encounter[]>([]);
+const PlayerWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+`;
+
+const EncounterPortrait = styled.img`
+  margin-bottom: 24px;
+`;
+
+const ReclearTable: React.FC<IProps> = ({ raidId }) => {
+  const [signups, setSignups] = useState<Signup[]>();
+  const [roster, setRoster] = useState<Roster>();
+  const [encounters, setEncounters] = useState<Encounter[]>();
+  const [isSingleEncounter, setIsSingleEncounter] = useState<boolean>();
 
   const {
     data,
@@ -53,10 +67,11 @@ const ReclearTable: React.FC<IProps> = ({ raid }) => {
     data: { signups: Signup[]; encounters: Encounter[] };
     isLoading: boolean;
   } = useQuery(
-    ["raidData", raid],
-    () => axios.get(`/api/wowaudit-proxy?raid=${raid}`).then((res) => res.data),
+    ["raidData", raidId],
+    () =>
+      axios.get(`/api/wowaudit-proxy?raid=${raidId}`).then((res) => res.data),
     {
-      enabled: !!raid,
+      enabled: !!raidId,
       retry: false,
     }
   );
@@ -64,12 +79,25 @@ const ReclearTable: React.FC<IProps> = ({ raid }) => {
   useEffect(() => {
     if (data) {
       setSignups(data.signups);
-      setRoster(getRosterFromSignups(data.signups));
       setEncounters(data.encounters);
     }
   }, [data]);
 
-  console.log(encounters);
+  useEffect(() => {
+    if (signups && encounters) {
+      const { hasOnlyOne, encounter } = hasOnlyOneEnabledEncounter(
+        data.encounters
+      );
+
+      setIsSingleEncounter(hasOnlyOne);
+
+      if (hasOnlyOne) {
+        setRoster(getRosterFromEncounter(signups, encounter));
+      } else {
+        setRoster(getRosterFromSignups(signups));
+      }
+    }
+  }, [signups, encounters]);
 
   return (
     <div>
@@ -77,15 +105,42 @@ const ReclearTable: React.FC<IProps> = ({ raid }) => {
 
       {roster && (
         <>
-          {hasOnlyOneEnabledEncounter(encounters) ? (
+          {isSingleEncounter ? (
             <SingleEncounterWrapper>
-              <Column>
-                <div>
-                  {map(roster.tank, (player) => (
+              <EncounterPortrait
+                src={`/bosses/${replaceWhitespaceWithUnderscore(
+                  encounters[7].name
+                ).toLowerCase()}_landscape.png`}
+                alt={encounters[7].name}
+                height={90}
+              />
+              <RosterWrapper>
+                <Column>
+                  <PlayerWrapper>
+                    {map(roster.tank, (player) => (
+                      <Player player={player.character} />
+                    ))}
+                  </PlayerWrapper>
+                  <PlayerWrapper>
+                    {map(roster.heal, (player) => (
+                      <Player player={player.character} />
+                    ))}
+                  </PlayerWrapper>
+                </Column>
+
+                <PlayerWrapper>
+                  {map(roster.melee, (player) => (
                     <Player player={player.character} />
                   ))}
-                </div>
-                <div>
+                </PlayerWrapper>
+
+                <PlayerWrapper>
+                  {map(roster.ranged, (player) => (
+                    <Player player={player.character} />
+                  ))}
+                </PlayerWrapper>
+
+                <PlayerWrapper>
                   {map(getAllAbsentSignups(signups), (player) => (
                     <Player player={player.character} status="absent" />
                   ))}
@@ -98,23 +153,8 @@ const ReclearTable: React.FC<IProps> = ({ raid }) => {
                       <Player player={player} status="benched" />
                     )
                   )}
-                </div>
-              </Column>
-              <div>
-                {map(roster.heal, (player) => (
-                  <Player player={player.character} />
-                ))}
-              </div>
-              <div>
-                {map(roster.melee, (player) => (
-                  <Player player={player.character} />
-                ))}
-              </div>
-              <div>
-                {map(roster.ranged, (player) => (
-                  <Player player={player.character} />
-                ))}
-              </div>
+                </PlayerWrapper>
+              </RosterWrapper>
             </SingleEncounterWrapper>
           ) : (
             <>
@@ -123,6 +163,7 @@ const ReclearTable: React.FC<IProps> = ({ raid }) => {
                   (encounter) =>
                     encounter.enabled && (
                       <img
+                        key={encounter.id}
                         src={`/bosses/${replaceWhitespaceWithUnderscore(
                           encounter.name
                         ).toLowerCase()}.png`}
@@ -136,7 +177,7 @@ const ReclearTable: React.FC<IProps> = ({ raid }) => {
               </EncountersWrapper>
 
               {roster &&
-                Object.entries(roster).map(([group, players]) => (
+                map(Object.entries(roster), ([group, players]) => (
                   <StyledPlayerGroup
                     key={group}
                     players={players}

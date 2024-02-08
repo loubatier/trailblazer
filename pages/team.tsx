@@ -10,6 +10,7 @@ import { ArrowRightToLine, Copy } from "lucide-react";
 import { captureComponent } from "../lib/screenshot";
 import ReclearTable from "../components/reclear-table";
 import { useState } from "react";
+import { isEmpty } from "lodash";
 
 const Roster = styled.div`
   display: flex;
@@ -77,8 +78,8 @@ const Input = styled.input`
 
 const ScreenshotButton = styled.button<{ isDisabled: boolean }>`
   flex-shrink: 0;
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,12 +90,18 @@ const ScreenshotButton = styled.button<{ isDisabled: boolean }>`
   pointer-events: ${({ isDisabled }) => (isDisabled ? "none" : "all")};
 `;
 
-const About: React.FC = () => {
+const Team: React.FC = () => {
+  const [inputValue, setInputValue] = useState<string>("");
   const [raidId, setRaidId] = useState<string>("");
 
-  // Handle change in input
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRaidId(e.target.value);
+    setInputValue(e.target.value);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      setRaidId(inputValue);
+    }
   };
 
   return (
@@ -116,19 +123,27 @@ const About: React.FC = () => {
           </ScreenshotButton>
           <InputWrapper>
             <Input
-              type="email"
-              placeholder="Raid ID"
-              onChange={(e) => handleInputChange(e)}
+              type="text"
+              placeholder="wowaudit raidId"
+              value={inputValue}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyPress}
             ></Input>
           </InputWrapper>
+          <ScreenshotButton
+            isDisabled={isEmpty(inputValue)}
+            onClick={() => setRaidId(inputValue)}
+          >
+            <ArrowRightToLine />
+          </ScreenshotButton>
         </Actions>
 
         <Roster id="reclear-roster">
-          <ReclearTable raid={raidId} />
+          <ReclearTable raidId={raidId} />
         </Roster>
       </Main>
     </Container>
   );
 };
 
-export default About;
+export default Team;

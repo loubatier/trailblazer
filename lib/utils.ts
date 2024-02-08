@@ -36,16 +36,16 @@ export const getAllNonSelectedForEncounter = (
     .filter((selection) => !selection.selected)
     .map((selection) => selection.character_id);
 
-  // Step 2: Filter out non-selected signups and transform into RosterPlayer format.
   const nonSelectedRosterPlayers = signups
     .filter(
       (signup) =>
         nonSelectedCharacterIds.includes(signup.character.id) &&
-        !signup.selected
+        !signup.selected &&
+        signup.status !== ESignupStatus.ABSENT
     )
     .map((signup) => ({
       name: signup.character.name,
-      class: signup.character.class, // Assuming you want the class from the Character object
+      class: signup.character.class,
     }));
 
   return nonSelectedRosterPlayers;
@@ -53,9 +53,14 @@ export const getAllNonSelectedForEncounter = (
 
 export const hasOnlyOneEnabledEncounter = (
   encounters: Encounter[]
-): boolean => {
+): { hasOnlyOne: boolean; encounter?: Encounter } => {
   const enabledEncounters = filter(encounters, { enabled: true });
-  return enabledEncounters.length === 1;
+
+  return {
+    hasOnlyOne: enabledEncounters.length === 1,
+    encounter:
+      enabledEncounters.length === 1 ? enabledEncounters[0] : undefined,
+  };
 };
 
 export const isPlayerSelectedForAnyEncounter = (
@@ -105,6 +110,27 @@ export const getRosterFromSignups = (signups: Signup[]): Roster => {
     .reduce<Roster>(
       (acc, signup) => {
         acc[getRosterKeyFromCharacterRole(signup.role)].push(signup);
+        return acc;
+      },
+      { tank: [], heal: [], melee: [], ranged: [] }
+    );
+};
+
+export const getRosterFromEncounter = (
+  signups: Signup[],
+  encounter: Encounter
+): Roster => {
+  return encounter.selections
+    .filter((selection) => selection.selected)
+    .reduce<Roster>(
+      (acc, selection) => {
+        const matchingSignup = signups.find(
+          (signup) => signup.character.id === selection.character_id
+        );
+        if (matchingSignup) {
+          const key = getRosterKeyFromCharacterRole(matchingSignup.role);
+          acc[key].push(matchingSignup);
+        }
         return acc;
       },
       { tank: [], heal: [], melee: [], ranged: [] }
