@@ -58,7 +58,9 @@ const ReclearTable: React.FC<IProps> = ({ raidId }) => {
   const [signups, setSignups] = useState<Signup[]>();
   const [roster, setRoster] = useState<Roster>();
   const [encounters, setEncounters] = useState<Encounter[]>();
-  const [isSingleEncounter, setIsSingleEncounter] = useState<boolean>();
+
+  const [hasOnlyOneEncounter, setHasOnlyOneEncounter] = useState<boolean>();
+  const [loneEncounter, setLoneEncounter] = useState<Encounter>();
 
   const {
     data,
@@ -89,7 +91,8 @@ const ReclearTable: React.FC<IProps> = ({ raidId }) => {
         data.encounters
       );
 
-      setIsSingleEncounter(hasOnlyOne);
+      setHasOnlyOneEncounter(hasOnlyOne);
+      setLoneEncounter(encounter);
 
       if (hasOnlyOne) {
         setRoster(getRosterFromEncounter(signups, encounter));
@@ -105,52 +108,72 @@ const ReclearTable: React.FC<IProps> = ({ raidId }) => {
 
       {roster && (
         <>
-          {isSingleEncounter ? (
+          {hasOnlyOneEncounter ? (
             <SingleEncounterWrapper>
               <EncounterPortrait
                 src={`/bosses/${replaceWhitespaceWithUnderscore(
-                  encounters[7].name
+                  loneEncounter.name
                 ).toLowerCase()}_landscape.png`}
-                alt={encounters[7].name}
+                alt={loneEncounter.name}
                 height={90}
               />
               <RosterWrapper>
                 <Column>
                   <PlayerWrapper>
                     {map(roster.tank, (player) => (
-                      <Player player={player.character} />
+                      <Player
+                        key={player.character.name}
+                        player={player.character}
+                      />
                     ))}
                   </PlayerWrapper>
                   <PlayerWrapper>
                     {map(roster.heal, (player) => (
-                      <Player player={player.character} />
+                      <Player
+                        key={player.character.name}
+                        player={player.character}
+                      />
                     ))}
                   </PlayerWrapper>
                 </Column>
 
                 <PlayerWrapper>
                   {map(roster.melee, (player) => (
-                    <Player player={player.character} />
+                    <Player
+                      key={player.character.name}
+                      player={player.character}
+                    />
                   ))}
                 </PlayerWrapper>
 
                 <PlayerWrapper>
                   {map(roster.ranged, (player) => (
-                    <Player player={player.character} />
+                    <Player
+                      key={player.character.name}
+                      player={player.character}
+                    />
                   ))}
                 </PlayerWrapper>
 
                 <PlayerWrapper>
                   {map(getAllAbsentSignups(signups), (player) => (
-                    <Player player={player.character} status="absent" />
+                    <Player
+                      key={player.character.name}
+                      player={player.character}
+                      status="absent"
+                    />
                   ))}
                   {map(
                     getAllNonSelectedForEncounter(
-                      encounters[7].selections,
+                      loneEncounter.selections,
                       signups
                     ),
                     (player) => (
-                      <Player player={player} status="benched" />
+                      <Player
+                        key={player.name}
+                        player={player}
+                        status="benched"
+                      />
                     )
                   )}
                 </PlayerWrapper>
