@@ -6,6 +6,7 @@ import {
   RosterPlayer,
   Selection,
   Signup,
+  Roster,
 } from "../data/models/roster";
 
 export const getPlayerFromSignup = (signup: Signup): RosterPlayer => {
@@ -97,3 +98,15 @@ export const getVaultAmountColor = (value: number): string => {
 
 export const getRosterKeyFromCharacterRole = (role: ECharacterRole): string =>
   role.toLowerCase();
+
+export const getRosterFromSignups = (signups: Signup[]): Roster => {
+  return signups
+    .filter((signup) => signup.status === ESignupStatus.PRESENT)
+    .reduce<Roster>(
+      (acc, signup) => {
+        acc[getRosterKeyFromCharacterRole(signup.role)].push(signup);
+        return acc;
+      },
+      { tank: [], heal: [], melee: [], ranged: [] }
+    );
+};

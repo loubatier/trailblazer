@@ -1,17 +1,12 @@
 import { useQuery } from "react-query";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  ESignupStatus,
-  Encounter,
-  Roster,
-  Signup,
-} from "../../data/models/roster";
+import { Encounter, Roster, Signup } from "../../data/models/roster";
 import styled from "styled-components";
 import {
   getAllAbsentSignups,
   getAllNonSelectedForEncounter,
-  getRosterKeyFromCharacterRole,
+  getRosterFromSignups,
   hasOnlyOneEnabledEncounter,
   replaceWhitespaceWithUnderscore,
 } from "../../lib/utils";
@@ -46,18 +41,6 @@ const Column = styled.div`
   justify-content: space-between;
 `;
 
-const generateRosterFromSignups = (signups: Signup[]): Roster => {
-  return signups
-    .filter((signup) => signup.status === ESignupStatus.PRESENT)
-    .reduce<Roster>(
-      (acc, signup) => {
-        acc[getRosterKeyFromCharacterRole(signup.role)].push(signup);
-        return acc;
-      },
-      { tank: [], heal: [], melee: [], ranged: [] }
-    );
-};
-
 const ReclearTable: React.FC<IProps> = ({ raid }) => {
   const [signups, setSignups] = useState<Signup[]>(null);
   const [roster, setRoster] = useState<Roster>(null);
@@ -81,7 +64,7 @@ const ReclearTable: React.FC<IProps> = ({ raid }) => {
   useEffect(() => {
     if (data) {
       setSignups(data.signups);
-      setRoster(generateRosterFromSignups(data.signups));
+      setRoster(getRosterFromSignups(data.signups));
       setEncounters(data.encounters);
     }
   }, [data]);
@@ -95,46 +78,44 @@ const ReclearTable: React.FC<IProps> = ({ raid }) => {
       {roster && (
         <>
           {hasOnlyOneEnabledEncounter(encounters) ? (
-            <>
-              <SingleEncounterWrapper>
-                <Column>
-                  <div>
-                    {map(roster.tank, (player) => (
-                      <Player player={player.character} />
-                    ))}
-                  </div>
-                  <div>
-                    {map(getAllAbsentSignups(signups), (player) => (
-                      <Player player={player.character} status="absent" />
-                    ))}
-                    {map(
-                      getAllNonSelectedForEncounter(
-                        encounters[7].selections,
-                        signups
-                      ),
-                      (player) => (
-                        <Player player={player} status="benched" />
-                      )
-                    )}
-                  </div>
-                </Column>
+            <SingleEncounterWrapper>
+              <Column>
                 <div>
-                  {map(roster.heal, (player) => (
+                  {map(roster.tank, (player) => (
                     <Player player={player.character} />
                   ))}
                 </div>
                 <div>
-                  {map(roster.melee, (player) => (
-                    <Player player={player.character} />
+                  {map(getAllAbsentSignups(signups), (player) => (
+                    <Player player={player.character} status="absent" />
                   ))}
+                  {map(
+                    getAllNonSelectedForEncounter(
+                      encounters[7].selections,
+                      signups
+                    ),
+                    (player) => (
+                      <Player player={player} status="benched" />
+                    )
+                  )}
                 </div>
-                <div>
-                  {map(roster.ranged, (player) => (
-                    <Player player={player.character} />
-                  ))}
-                </div>
-              </SingleEncounterWrapper>
-            </>
+              </Column>
+              <div>
+                {map(roster.heal, (player) => (
+                  <Player player={player.character} />
+                ))}
+              </div>
+              <div>
+                {map(roster.melee, (player) => (
+                  <Player player={player.character} />
+                ))}
+              </div>
+              <div>
+                {map(roster.ranged, (player) => (
+                  <Player player={player.character} />
+                ))}
+              </div>
+            </SingleEncounterWrapper>
           ) : (
             <>
               <EncountersWrapper>
@@ -154,22 +135,14 @@ const ReclearTable: React.FC<IProps> = ({ raid }) => {
                 <img src={`/vault.png`} alt={`vault`} width={68} height={90} />
               </EncountersWrapper>
 
-              <StyledPlayerGroup
-                players={roster.tank}
-                encounters={encounters}
-              />
-              <StyledPlayerGroup
-                players={roster.heal}
-                encounters={encounters}
-              />
-              <StyledPlayerGroup
-                players={roster.melee}
-                encounters={encounters}
-              />
-              <StyledPlayerGroup
-                players={roster.ranged}
-                encounters={encounters}
-              />
+              {roster &&
+                Object.entries(roster).map(([group, players]) => (
+                  <StyledPlayerGroup
+                    key={group}
+                    players={players}
+                    encounters={encounters}
+                  />
+                ))}
             </>
           )}
         </>

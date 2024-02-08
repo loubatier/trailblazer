@@ -1,5 +1,4 @@
 import html2canvas from "html2canvas";
-import { Dispatch, SetStateAction } from "react";
 
 export const captureComponent = async (componentId: string) => {
   const element = document.getElementById(componentId);
