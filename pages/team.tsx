@@ -3,7 +3,7 @@ import { isEmpty } from "lodash";
 import { ArrowRightToLine, Copy } from "lucide-react";
 import Link from "next/link";
 import styled from "styled-components";
-import ReclearTable from "../components/reclear-table";
+import RosterTable from "../components/roster-table";
 import {
   Container,
   Description,
@@ -12,14 +12,12 @@ import {
 } from "../components/sharedstyles";
 import { captureComponent } from "../lib/screenshot";
 
-const Roster = styled.div`
+const RosterWrapper = styled.div`
   display: flex;
-  flex-direction: column;
   width: 100%;
-  align-items: center;
+  justify-content: center;
   margin: auto;
   padding: 40px 0;
-  background-color: ${({ theme }) => theme.colors.application_background};
 `;
 
 const Actions = styled.div`
@@ -116,7 +114,7 @@ const Team: FC = () => {
           <ScreenshotButton
             isDisabled={false}
             onClick={() => {
-              captureComponent("reclear-roster");
+              captureComponent("roster-table");
             }}
           >
             <Copy />
@@ -138,9 +136,9 @@ const Team: FC = () => {
           </ScreenshotButton>
         </Actions>
 
-        <Roster id="reclear-roster">
-          <ReclearTable raidId={raidId} />
-        </Roster>
+        <RosterWrapper>
+          <RosterTable raidId={raidId} />
+        </RosterWrapper>
       </Main>
     </Container>
   );

@@ -19,6 +19,13 @@ interface IProps {
   raidId: string;
 }
 
+const Root = styled.div`
+  padding: 48px;
+  background-color: ${({ theme }) => theme.colors.application_background};
+`;
+
+const EncounterWrapper = styled.div``;
+
 const EncountersWrapper = styled.div`
   display: flex;
   gap: 1px;
@@ -29,8 +36,6 @@ const EncountersWrapper = styled.div`
 const StyledPlayerGroup = styled(PlayerGroup)`
   margin-bottom: 24px;
 `;
-
-const SingleEncounterWrapper = styled.div``;
 
 const RosterWrapper = styled.div`
   display: flex;
@@ -54,7 +59,7 @@ const EncounterPortrait = styled.img`
   margin-bottom: 24px;
 `;
 
-const ReclearTable: React.FC<IProps> = ({ raidId }) => {
+const RosterTable: React.FC<IProps> = ({ raidId }) => {
   const [signups, setSignups] = useState<Signup[]>();
   const [roster, setRoster] = useState<Roster>();
   const [encounters, setEncounters] = useState<Encounter[]>();
@@ -103,13 +108,13 @@ const ReclearTable: React.FC<IProps> = ({ raidId }) => {
   }, [signups, encounters]);
 
   return (
-    <div>
+    <Root id="roster-table">
       {isLoading && <p>IS LOADING</p>}
 
       {roster && (
         <>
           {hasOnlyOneEncounter ? (
-            <SingleEncounterWrapper>
+            <EncounterWrapper>
               <EncounterPortrait
                 src={`/bosses/${replaceWhitespaceWithUnderscore(
                   loneEncounter.name
@@ -178,7 +183,7 @@ const ReclearTable: React.FC<IProps> = ({ raidId }) => {
                   )}
                 </PlayerWrapper>
               </RosterWrapper>
-            </SingleEncounterWrapper>
+            </EncounterWrapper>
           ) : (
             <>
               <EncountersWrapper>
@@ -211,8 +216,8 @@ const ReclearTable: React.FC<IProps> = ({ raidId }) => {
           )}
         </>
       )}
-    </div>
+    </Root>
   );
 };
 
-export default ReclearTable;
+export default RosterTable;
