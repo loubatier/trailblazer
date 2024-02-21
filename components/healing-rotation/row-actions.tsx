@@ -61,23 +61,6 @@ const DeleteButton = styled.button`
   }
 `;
 
-// const MoveButton = styled.button<{ isDisabled: boolean }>`
-//   width: 40px;
-//   height: 40px;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   border: none;
-//   background-color: #ffffff;
-//   cursor: pointer;
-//   opacity: ${({ isDisabled }) => (isDisabled ? "0.5" : "1")};
-//   pointer-events: ${({ isDisabled }) => (isDisabled ? "none" : "all")};
-
-//   svg {
-//     flex-shrink: 0;
-//   }
-// `;
-
 const ActionsWrapper = styled.div<{ isOpen: boolean }>`
   position: absolute;
   display: flex;
@@ -122,6 +105,7 @@ const RowActions = ({ rowIndex, onDragRowStart, onDragRowEnd }: IProps) => {
       <ActionsButton
         draggable
         onDragStart={() => handleRowDragStart()}
+        onDragOver={(e) => e.preventDefault()}
         onDragEnd={() => handleRowDragEnd()}
         onClick={toggleActions}
       >

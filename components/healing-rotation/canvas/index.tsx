@@ -92,8 +92,9 @@ const Canvas = ({
     };
   }, [spells]);
 
-  // const index = Math.floor((ghostRowY - 40) / 40);
-  // const moveRowIndicatorPosY = 40 + 4 + index * 40 + index * 8;
+  // ghostRowY has the 48 from header + base margin included in it
+  const index = Math.round(Math.max(ghostRowY - 48 - 20, 1) / 49);
+  const moveRowIndicatorPosY = 40 + 4 + index * 40 + index * 8;
 
   return (
     <Stage
@@ -134,6 +135,7 @@ const Canvas = ({
               height={40}
             />
           ))}
+
           {isDraggingRow && (
             <>
               <Rect
@@ -144,7 +146,12 @@ const Canvas = ({
                 height={40}
               />
               <Line
-                points={[0, ghostRowY, ENCOUNTER_TIMER * zoom, ghostRowY]}
+                points={[
+                  0,
+                  moveRowIndicatorPosY,
+                  ENCOUNTER_TIMER * zoom,
+                  moveRowIndicatorPosY,
+                ]}
                 stroke="white"
               />
             </>

@@ -185,7 +185,7 @@ const OldTimeline = () => {
     const y = event.clientY - canvasRef.current.getBoundingClientRect().top;
 
     setGhostRowY(y);
-    setDestinationRowIndex(Math.floor((ghostRowY - 40) / 40));
+    setDestinationRowIndex(Math.round(Math.max(ghostRowY - 48 - 20, 1) / 49));
   };
 
   const handleRowActionsDrop = (event: React.DragEvent) => {
