@@ -14,7 +14,7 @@ interface IProps {
   onDragMove: (x: number) => void;
 }
 
-const CanvasSpell: React.FC<IProps> = ({
+const CanvasSpell = ({
   x,
   y,
   spell,
@@ -22,7 +22,7 @@ const CanvasSpell: React.FC<IProps> = ({
   isRowActive,
   onClick,
   onDragMove,
-}) => {
+}: IProps) => {
   const [spellOptions, setSpellOptions] = useState({ x, isDragging: false });
 
   const timeline = useTimelineStore((state) => state);

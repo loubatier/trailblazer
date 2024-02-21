@@ -32,7 +32,7 @@ const Curtain = styled.div<{ transitionStage: string }>`
   left: 0;
 `;
 
-const TransitionLayout: React.FC<IProps> = ({ children }) => {
+const TransitionLayout = ({ children }: IProps) => {
   const [displayChildren, setDisplayChildren] = useState(children);
   const [transitionStage, setTransitionStage] = useState(
     ETransitionStage.FADE_OUT

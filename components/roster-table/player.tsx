@@ -49,7 +49,7 @@ const Root = styled.div<{ color: string; isDisabled: boolean }>`
   }
 `;
 
-const Player: React.FC<IProps> = ({ player, status }) => {
+const Player = ({ player, status }: IProps) => {
   const isBenchedOrAbsent = status === "benched" || status === "absent";
 
   return (

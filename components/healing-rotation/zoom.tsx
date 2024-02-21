@@ -36,7 +36,7 @@ const ZoomInput = styled.input`
   }
 `;
 
-const Zoom: React.FC = () => {
+const Zoom = () => {
   const { zoom, updateTimelineZoom } = useTimelineStore((state) => state);
 
   return (

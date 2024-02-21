@@ -39,13 +39,13 @@ export type TimelineRow = {
 
 const ENCOUNTER_TIMER = 345;
 
-const Canvas: React.FC<IProps> = ({
+const Canvas = ({
   width,
   height,
   hoveredRow,
   isDraggingRow,
   ghostRowY,
-}) => {
+}: IProps) => {
   const {
     isDragging,
     zoom,

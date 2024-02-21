@@ -24,13 +24,12 @@ const Root = styled.div`
   background-color: ${({ theme }) => theme.colors.application_background};
 `;
 
-const EncounterWrapper = styled.div``;
+const SingleEncounterWrapper = styled.div``;
 
-const EncountersWrapper = styled.div`
+const EncounterPortraitsWrapper = styled.div`
   display: flex;
   gap: 1px;
   margin-left: 201px;
-  margin-bottom: 24px;
 `;
 
 const StyledPlayerGroup = styled(PlayerGroup)`
@@ -59,7 +58,7 @@ const EncounterPortrait = styled.img`
   margin-bottom: 24px;
 `;
 
-const RosterTable: React.FC<IProps> = ({ raidId }) => {
+const RosterTable = ({ raidId }: IProps) => {
   const [signups, setSignups] = useState<Signup[]>();
   const [roster, setRoster] = useState<Roster>();
   const [encounters, setEncounters] = useState<Encounter[]>();
@@ -114,7 +113,7 @@ const RosterTable: React.FC<IProps> = ({ raidId }) => {
       {roster && (
         <>
           {hasOnlyOneEncounter ? (
-            <EncounterWrapper>
+            <SingleEncounterWrapper>
               <EncounterPortrait
                 src={`/bosses/${replaceWhitespaceWithUnderscore(
                   loneEncounter.name
@@ -141,56 +140,61 @@ const RosterTable: React.FC<IProps> = ({ raidId }) => {
                     ))}
                   </PlayerWrapper>
                 </Column>
-
-                <PlayerWrapper>
-                  {map(roster.melee, (player) => (
-                    <Player
-                      key={player.character.name}
-                      player={player.character}
-                    />
-                  ))}
-                </PlayerWrapper>
-
-                <PlayerWrapper>
-                  {map(roster.ranged, (player) => (
-                    <Player
-                      key={player.character.name}
-                      player={player.character}
-                    />
-                  ))}
-                </PlayerWrapper>
-
-                <PlayerWrapper>
-                  {map(getAllAbsentSignups(signups), (player) => (
-                    <Player
-                      key={player.character.name}
-                      player={player.character}
-                      status="absent"
-                    />
-                  ))}
-                  {map(
-                    getAllNonSelectedForEncounter(
-                      loneEncounter.selections,
-                      signups
-                    ),
-                    (player) => (
+                <Column>
+                  <PlayerWrapper>
+                    {map(roster.melee, (player) => (
                       <Player
-                        key={player.name}
-                        player={player}
-                        status="benched"
+                        key={player.character.name}
+                        player={player.character}
                       />
-                    )
-                  )}
-                </PlayerWrapper>
+                    ))}
+                  </PlayerWrapper>
+                </Column>
+
+                <Column>
+                  <PlayerWrapper>
+                    {map(roster.ranged, (player) => (
+                      <Player
+                        key={player.character.name}
+                        player={player.character}
+                      />
+                    ))}
+                  </PlayerWrapper>
+                </Column>
+
+                <Column>
+                  <PlayerWrapper>
+                    {map(getAllAbsentSignups(signups), (player) => (
+                      <Player
+                        key={player.character.name}
+                        player={player.character}
+                        status="absent"
+                      />
+                    ))}
+                    {map(
+                      getAllNonSelectedForEncounter(
+                        loneEncounter.selections,
+                        signups
+                      ),
+                      (player) => (
+                        <Player
+                          key={player.name}
+                          player={player}
+                          status="benched"
+                        />
+                      )
+                    )}
+                  </PlayerWrapper>
+                </Column>
               </RosterWrapper>
-            </EncounterWrapper>
+            </SingleEncounterWrapper>
           ) : (
             <>
-              <EncountersWrapper>
+              <EncounterPortraitsWrapper>
                 {encounters.map(
                   (encounter) =>
                     encounter.enabled && (
-                      <img
+                      <EncounterPortrait
                         key={encounter.id}
                         src={`/bosses/${replaceWhitespaceWithUnderscore(
                           encounter.name
@@ -202,7 +206,7 @@ const RosterTable: React.FC<IProps> = ({ raidId }) => {
                     )
                 )}
                 <img src={`/vault.png`} alt={`vault`} width={68} height={90} />
-              </EncountersWrapper>
+              </EncounterPortraitsWrapper>
 
               {roster &&
                 map(Object.entries(roster), ([group, players]) => (

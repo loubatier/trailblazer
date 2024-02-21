@@ -12,11 +12,10 @@ const FlexContainer = styled.div`
 
 const Card = styled.div`
   display: flex;
-  padding: 1.5rem;
-  color: inherit;
+  color: black;
   text-decoration: none;
-  border: 1px solid black;
-  border-radius: 10px;
+  border: 1px solid white;
+  background-color: white;
   transition:
     color 0.15s ease,
     border-color 0.15s ease;
@@ -25,6 +24,7 @@ const Card = styled.div`
   &:hover,
   :focus,
   :active {
+    cursor: pointer;
     color: ${({ theme }) => theme.colors.secondary};
     border-color: ${({ theme }) => theme.colors.secondary};
   }
@@ -32,6 +32,7 @@ const Card = styled.div`
 
 const StyledA = styled.a`
   font-size: 1.5rem;
+  padding: 1.5rem;
 `;
 
 interface LinkProps {
@@ -45,14 +46,11 @@ const StyledLink: React.FC<LinkProps> = ({ href, name }) => (
   </Link>
 );
 
-const Cards: React.FC = () => {
+const Cards = () => {
   return (
     <FlexContainer>
       <Card>
-        <StyledLink href="/about" name="About Page &rarr;" />
-      </Card>
-      <Card>
-        <StyledLink href="/team" name="Team Page &rarr;" />
+        <StyledLink href="/team" name="Roster Page &rarr;" />
       </Card>
       <Card>
         <StyledLink href="/planner" name="Planner Page &rarr;" />

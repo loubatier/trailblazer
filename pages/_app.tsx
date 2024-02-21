@@ -15,7 +15,7 @@ const theme: DefaultTheme = {
 
 const queryClient = new QueryClient();
 
-export default function App({ Component, pageProps }: AppProps) {
+const App = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -29,4 +29,6 @@ export default function App({ Component, pageProps }: AppProps) {
       </ThemeProvider>
     </>
   );
-}
+};
+
+export default App;

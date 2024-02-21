@@ -96,11 +96,7 @@ const Checkbox = styled.input`
   display: none;
 `;
 
-const RowActions: React.FC<IProps> = ({
-  rowIndex,
-  onDragRowStart,
-  onDragRowEnd,
-}) => {
+const RowActions = ({ rowIndex, onDragRowStart, onDragRowEnd }: IProps) => {
   const { rows, deleteTimelineRow, updateTimelineRowStatus } = useTimelineStore(
     (state) => state
   );

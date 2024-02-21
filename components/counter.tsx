@@ -5,16 +5,16 @@ interface IProps {
   label: string;
 }
 
-const Counter: React.FC<IProps> = () => {
+const Counter = ({ label }: IProps) => {
   const increase = useCounterStore((state) => state.increase);
   const decrease = useCounterStore((state) => state.decrease);
   const reset = useCounterStore((state) => state.reset);
 
   return (
     <div>
-      <button onClick={() => increase()}>Increase</button>
-      <button onClick={() => decrease()}>Decrease</button>
-      <button onClick={() => reset()}>Reset</button>
+      <button onClick={() => increase()}>Increase {label}</button>
+      <button onClick={() => decrease()}>Decrease {label}</button>
+      <button onClick={() => reset()}>Reset {label}</button>
     </div>
   );
 };

@@ -50,7 +50,7 @@ const InfoTitle = styled.p`
   border-left: 3px solid white;
 `;
 
-const Planner: React.FC = () => {
+const Planner = () => {
   return (
     <Container>
       <Main>

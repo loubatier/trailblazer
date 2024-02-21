@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { useState } from "react";
 import { isEmpty } from "lodash";
 import { ArrowRightToLine, Copy } from "lucide-react";
 import Link from "next/link";
@@ -17,7 +17,6 @@ const RosterWrapper = styled.div`
   width: 100%;
   justify-content: center;
   margin: auto;
-  padding: 40px 0;
 `;
 
 const Actions = styled.div`
@@ -88,7 +87,7 @@ const ScreenshotButton = styled.button<{ isDisabled: boolean }>`
   pointer-events: ${({ isDisabled }) => (isDisabled ? "none" : "all")};
 `;
 
-const Team: FC = () => {
+const Roster = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [raidId, setRaidId] = useState<string>("");
 
@@ -105,7 +104,7 @@ const Team: FC = () => {
   return (
     <Container>
       <Main>
-        <Title>Team Page</Title>
+        <Title>Roster Page</Title>
         <Description>
           <Link href="/">&larr; Go Back</Link>
         </Description>
@@ -144,4 +143,4 @@ const Team: FC = () => {
   );
 };
 
-export default Team;
+export default Roster;

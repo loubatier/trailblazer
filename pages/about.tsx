@@ -10,7 +10,7 @@ import {
 import { useCounterStore } from "../lib/stores";
 import useStore from "../lib/stores/useStore";
 
-const About: React.FC = () => {
+const About = () => {
   const counterState = useStore(useCounterStore, (state) => state);
 
   return (

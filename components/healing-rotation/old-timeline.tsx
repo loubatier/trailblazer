@@ -64,7 +64,7 @@ const AddRowButton = styled.button<{ isDisabled: boolean }>`
   }
 `;
 
-const OldTimeline: React.FC = () => {
+const OldTimeline = () => {
   const canvasRef = useRef<HTMLDivElement>(null);
 
   const {

@@ -8,7 +8,7 @@ interface IProps {
   zoom: number;
 }
 
-const Timeline: React.FC<IProps> = ({ x, y, timer, zoom }) => {
+const Timeline = ({ x, y, timer, zoom }: IProps) => {
   const lines = [];
   for (let seconds = 0; seconds <= timer * zoom; seconds += 10 * zoom) {
     const xPos = seconds;

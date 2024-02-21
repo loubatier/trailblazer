@@ -26,7 +26,7 @@ const PlayerRow = styled.div`
   gap: 1px;
 `;
 
-const StatusRows = styled.div`
+const StatusBoxesWrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 1px;
@@ -55,7 +55,7 @@ const NumberBox = styled.div<{ color: string }>`
   background-color: ${({ color }) => color};
 `;
 
-const PlayerGroup: React.FC<IProps> = ({ className, players, encounters }) => {
+const PlayerGroup = ({ className, players, encounters }: IProps) => {
   return (
     <Root className={className}>
       {map(players, (player) => {
@@ -67,7 +67,7 @@ const PlayerGroup: React.FC<IProps> = ({ className, players, encounters }) => {
         return (
           <PlayerRow key={player.character.id}>
             <Player player={player.character} />
-            <StatusRows>
+            <StatusBoxesWrapper>
               {encounters.map((encounter, i) => {
                 const isSelected = isPlayerSelectedForEncounter(
                   player,
@@ -84,7 +84,7 @@ const PlayerGroup: React.FC<IProps> = ({ className, players, encounters }) => {
               <NumberBox color={getVaultAmountColor(selectedCount)}>
                 {selectedCount}
               </NumberBox>
-            </StatusRows>
+            </StatusBoxesWrapper>
           </PlayerRow>
         );
       })}
