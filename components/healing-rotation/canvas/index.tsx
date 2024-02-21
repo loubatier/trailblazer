@@ -6,6 +6,12 @@ import {
 } from "../../../lib/stores/useTimelineStore";
 import CanvasSpell from "./spell";
 import Timeline from "./timeline";
+import {
+  MARGIN_HEIGHT,
+  ROW_HEIGHT,
+  TIMELINE_HEIGHT,
+  calculateRowDestinationIndex,
+} from "../old-timeline";
 
 interface IProps {
   width: number;
@@ -93,7 +99,7 @@ const Canvas = ({
   }, [spells]);
 
   // ghostRowY has the 48 from header + base margin included in it
-  const index = Math.round(Math.max(ghostRowY - 48 - 20, 1) / 49);
+  const index = calculateRowDestinationIndex(ghostRowY);
   const moveRowIndicatorPosY = 40 + 4 + index * 40 + index * 8;
 
   return (
