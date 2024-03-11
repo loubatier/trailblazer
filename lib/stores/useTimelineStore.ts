@@ -67,7 +67,7 @@ interface TimelineStore {
   deleteTimelineSpell: (i: number) => void;
   selectTimelineSpell: (i: number) => void;
   updateTimelineSpellTiming: (i: number, x: number) => void;
-  updateTimelineSpellRow: (i: number, direction: EMoveDirection) => void;
+  updateTimelineSpellRow: (i: number, rowIndex: number) => void;
 
   addTimelineRow: () => void;
   deleteTimelineRow: (i: number) => void;
@@ -217,35 +217,21 @@ export const useTimelineStore = create<TimelineStore>()(
           ),
         }));
       },
-      updateTimelineSpellRow: (i: number, direction: EMoveDirection) => {
-        set((state) => {
-          // Find the next active row in the specified direction
-          const findNextActiveRow = (currentRowIndex: number): number => {
-            if (direction === EMoveDirection.DOWN) {
-              for (let j = currentRowIndex + 1; j < state.rows.length; j++) {
-                if (state.rows[j].isActive) return j;
-              }
-            } else {
-              // EMoveDirection.UP
-              for (let j = currentRowIndex - 1; j >= 0; j--) {
-                if (state.rows[j].isActive) return j;
-              }
+      updateTimelineSpellRow: (i: number, destinationRowIndex: number) => {
+        set((state) => ({
+          ...state,
+          spells: state.spells.map((spell, index) => {
+            if (index === i) {
+              // Ensure destinationRowIndex is within the bounds of the rows array
+              const validDestinationRowIndex = Math.min(
+                state.rows.length - 1,
+                Math.max(0, destinationRowIndex)
+              );
+              return { ...spell, row: validDestinationRowIndex };
             }
-            return currentRowIndex; // Return current row index if no active row is found
-          };
-
-          return {
-            ...state,
-            spells: state.spells.map((spell, index) =>
-              index === i
-                ? {
-                    ...spell,
-                    row: findNextActiveRow(spell.row),
-                  }
-                : spell
-            ),
-          };
-        });
+            return spell;
+          }),
+        }));
       },
 
       clear: () => set((state) => ({ ...state, rows: [] })),

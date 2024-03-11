@@ -1,17 +1,17 @@
 import React, { useEffect } from "react";
+import Konva from "konva";
 import { Group, Layer, Line, Rect, Stage } from "react-konva";
+import { useIsKeyPressed } from "../../../lib/hooks/useIsKeyPressed";
 import {
   EMoveDirection,
   useTimelineStore,
 } from "../../../lib/stores/useTimelineStore";
+import {
+  calculateRowDestinationIndex,
+  calculateSpellDestinationRowIndex,
+} from "../old-timeline";
 import CanvasSpell from "./spell";
 import Timeline from "./timeline";
-import {
-  MARGIN_HEIGHT,
-  ROW_HEIGHT,
-  TIMELINE_HEIGHT,
-  calculateRowDestinationIndex,
-} from "../old-timeline";
 
 interface IProps {
   width: number;
@@ -19,6 +19,7 @@ interface IProps {
   hoveredRow: number;
   isDraggingRow: boolean;
   ghostRowY: number;
+  setHoveredRow: (index: number) => void;
 }
 
 export type Spell = {
@@ -51,6 +52,7 @@ const Canvas = ({
   hoveredRow,
   isDraggingRow,
   ghostRowY,
+  setHoveredRow,
 }: IProps) => {
   const {
     isDragging,
@@ -97,8 +99,23 @@ const Canvas = ({
       document.removeEventListener("keydown", handleKeyPress);
     };
   }, [spells]);
+  // __________________ MOVE SPELL WITH SHIFT PRESSED
+  const isShiftPressed = useIsKeyPressed("Shift");
 
-  // ghostRowY has the 48 from header + base margin included in it
+  const handleTimelineSpellShiftMove = (
+    e: Konva.KonvaEventObject<DragEvent>,
+    spellIndex: number
+  ) => {
+    setHoveredRow(calculateSpellDestinationRowIndex(e.target.y()));
+    updateTimelineSpellTiming(spellIndex, e.target.x());
+  };
+
+  const handleTimeLineSpellDragEnd = (spellIndex: number) => {
+    updateTimelineSpellRow(spellIndex, hoveredRow);
+    setHoveredRow(null);
+  };
+  // __________________
+
   const index = calculateRowDestinationIndex(ghostRowY);
   const moveRowIndicatorPosY = 40 + 4 + index * 40 + index * 8;
 
@@ -177,7 +194,12 @@ const Canvas = ({
             onClick={() =>
               rows[timelineSpell.row].isActive ? selectTimelineSpell(i) : null
             }
-            onDragMove={(x) => updateTimelineSpellTiming(i, x)}
+            onDragMove={(e) =>
+              isShiftPressed
+                ? handleTimelineSpellShiftMove(e, i)
+                : updateTimelineSpellTiming(i, e.target.x())
+            }
+            onDragEnd={() => handleTimeLineSpellDragEnd(i)}
           />
         ))}
       </Layer>

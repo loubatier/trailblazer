@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
-export const useIsKeyPressed = (key: string): { isKeyPressed: boolean } => {
+type PressableKeys = "Shift" | "Alt";
+
+export const useIsKeyPressed = (key: PressableKeys): boolean => {
   const [isKeyPressed, setIsKeyPressed] = useState<boolean>(false);
 
   useEffect(() => {
@@ -25,5 +27,5 @@ export const useIsKeyPressed = (key: string): { isKeyPressed: boolean } => {
     };
   }, [key]);
 
-  return { isKeyPressed };
+  return isKeyPressed;
 };

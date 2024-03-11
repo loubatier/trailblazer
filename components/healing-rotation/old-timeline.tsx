@@ -7,7 +7,6 @@ import { useTimelineStore } from "../../lib/stores/useTimelineStore";
 import Canvas, { TimelineSpell } from "./canvas";
 import RowActions from "./row-actions";
 import Zoom from "./zoom";
-import { useIsKeyPressed } from "../../lib/hooks/useIsKeyPressed";
 
 const Root = styled.div`
   flex: 1 0 500px;
@@ -73,6 +72,14 @@ export const MARGIN_HEIGHT = 8;
 export const calculateRowDestinationIndex = (y: number) => {
   return Math.round(
     Math.max(y - TIMELINE_HEIGHT, 1) / (ROW_HEIGHT + MARGIN_HEIGHT)
+  );
+};
+
+export const calculateSpellDestinationRowIndex = (y: number) => {
+  const yPosWithoutHeader = y - 40;
+  const initialDestinationRowIndex = Math.floor(yPosWithoutHeader / 40);
+  return Math.floor(
+    (yPosWithoutHeader - (initialDestinationRowIndex + 1) * 8) / 40
   );
 };
 
@@ -145,13 +152,6 @@ const OldTimeline = () => {
     .map((spell) => renderSpellIcon(spell));
 
   // --------------------------- DRAG SPELL
-  const calculateSpellDestinationRowIndex = (y: number) => {
-    const yPosWithoutHeader = y - 40;
-    const initialDestinationRowIndex = Math.floor(yPosWithoutHeader / 40);
-    return Math.floor(
-      (yPosWithoutHeader - (initialDestinationRowIndex + 1) * 8) / 40
-    );
-  };
 
   const handleSpellDragStart = (
     event: React.DragEvent,
@@ -168,7 +168,6 @@ const OldTimeline = () => {
   const handleCanvasDragOver = (event: React.DragEvent) => {
     event.preventDefault();
     const y = event.clientY - canvasRef.current.getBoundingClientRect().top;
-
     setHoveredRow(calculateSpellDestinationRowIndex(y));
   };
 
@@ -238,8 +237,6 @@ const OldTimeline = () => {
     handleWindowResize();
   }, [rows]);
 
-  const { isKeyPressed: isShiftPressed } = useIsKeyPressed("Shift");
-
   return (
     <Root>
       <TimelineActionsWrapper>
@@ -251,7 +248,6 @@ const OldTimeline = () => {
       </TimelineActionsWrapper>
 
       <TimelineWrapper>
-        <>{isShiftPressed ? "HEY" : "HO"}</>
         <RowActionsWrapper
           onDragOver={isDraggingRow ? handleRowActionsDragOver : null}
           onDrop={isDraggingRow ? handleRowActionsDrop : null}
@@ -283,6 +279,7 @@ const OldTimeline = () => {
             hoveredRow={hoveredRow}
             isDraggingRow={isDraggingRow}
             ghostRowY={ghostRowY}
+            setHoveredRow={(i) => setHoveredRow(i)}
           />
         </CanvasWrapper>
       </TimelineWrapper>
