@@ -4,12 +4,7 @@ import { ArrowRightToLine, Copy } from "lucide-react";
 import Link from "next/link";
 import styled from "styled-components";
 import RosterTable from "../components/roster-table";
-import {
-  Container,
-  Description,
-  Main,
-  Title,
-} from "../components/sharedstyles";
+import { Description, Main, Title } from "../components/sharedstyles";
 import { captureComponent } from "../lib/screenshot";
 
 const RosterWrapper = styled.div`
@@ -102,44 +97,42 @@ const Roster = () => {
   };
 
   return (
-    <Container>
-      <Main>
-        <Title>Roster Page</Title>
-        <Description>
-          <Link href="/">&larr; Go Back</Link>
-        </Description>
+    <Main>
+      <Title>Roster Page</Title>
+      <Description>
+        <Link href="/">&larr; Go Back</Link>
+      </Description>
 
-        <Actions>
-          <ScreenshotButton
-            isDisabled={false}
-            onClick={() => {
-              captureComponent("roster-table");
-            }}
-          >
-            <Copy />
-          </ScreenshotButton>
-          <InputWrapper>
-            <Input
-              type="text"
-              placeholder="wowaudit raidId"
-              value={inputValue}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyPress}
-            ></Input>
-          </InputWrapper>
-          <ScreenshotButton
-            isDisabled={isEmpty(inputValue)}
-            onClick={() => setRaidId(inputValue)}
-          >
-            <ArrowRightToLine />
-          </ScreenshotButton>
-        </Actions>
+      <Actions>
+        <ScreenshotButton
+          isDisabled={false}
+          onClick={() => {
+            captureComponent("roster-table");
+          }}
+        >
+          <Copy />
+        </ScreenshotButton>
+        <InputWrapper>
+          <Input
+            type="text"
+            placeholder="wowaudit raidId"
+            value={inputValue}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyPress}
+          ></Input>
+        </InputWrapper>
+        <ScreenshotButton
+          isDisabled={isEmpty(inputValue)}
+          onClick={() => setRaidId(inputValue)}
+        >
+          <ArrowRightToLine />
+        </ScreenshotButton>
+      </Actions>
 
-        <RosterWrapper>
-          <RosterTable raidId={raidId} />
-        </RosterWrapper>
-      </Main>
-    </Container>
+      <RosterWrapper>
+        <RosterTable raidId={raidId} />
+      </RosterWrapper>
+    </Main>
   );
 };
 

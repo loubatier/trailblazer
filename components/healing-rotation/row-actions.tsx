@@ -15,7 +15,7 @@ const Root = styled.div`
 
 const ActionsButton = styled.button`
   width: 40px;
-  height: 40px;
+  height: 48px;
   padding: 0 8px;
   box-sizing: border-box;
   display: flex;

@@ -16,10 +16,6 @@ export const getPlayerFromSignup = (signup: Signup): RosterPlayer => {
   };
 };
 
-// export const getPlayerFromSelection = (selection: Selection): RosterPlayer => {
-//   return null;
-// };
-
 export const replaceWhitespaceWithUnderscore = (input: string): string => {
   return input.replace(/\s/g, "_");
 };

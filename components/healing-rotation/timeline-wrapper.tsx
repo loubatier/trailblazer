@@ -13,7 +13,7 @@ const Root = styled.div`
   padding: 0 48px;
 `;
 
-const TimelineWrapper = styled.div`
+const TimelineContentWrapper = styled.div`
   display: flex;
   overflow: hidden;
   margin-top: 24px;
@@ -22,9 +22,8 @@ const TimelineWrapper = styled.div`
 const RowActionsWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
   height: fit-content;
-  margin-top: 48px;
+  margin-top: 44px;
 `;
 
 const CanvasWrapper = styled.div`
@@ -69,6 +68,7 @@ export const TIMELINE_HEIGHT = 48;
 export const ROW_HEIGHT = 40;
 export const MARGIN_HEIGHT = 8;
 
+// --------------------------- Move this to utils in a folder dedicated to planner functions
 export const calculateRowDestinationIndex = (y: number) => {
   return Math.round(
     Math.max(y - TIMELINE_HEIGHT, 1) / (ROW_HEIGHT + MARGIN_HEIGHT)
@@ -82,8 +82,9 @@ export const calculateSpellDestinationRowIndex = (y: number) => {
     (yPosWithoutHeader - (initialDestinationRowIndex + 1) * 8) / 40
   );
 };
+// ---------------------------
 
-const OldTimeline = () => {
+const TimelineWrapper = () => {
   const canvasRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -127,6 +128,8 @@ const OldTimeline = () => {
     fetchRosterAndSpells();
   }, []);
 
+  // --------------------------- useRosterSpells / usePlayerSpells
+  // Switch between the 2 given we have selected the Everyone or specific player option on dropdown
   const getSpellsForPlayer = (
     player: Player,
     spells: TimelineSpell[]
@@ -150,9 +153,9 @@ const OldTimeline = () => {
     .map((player) => getSpellsForPlayer(player, rosterSpells))
     .reduce((acc, playerSpells) => acc.concat(playerSpells), [])
     .map((spell) => renderSpellIcon(spell));
+  // ---------------------------
 
-  // --------------------------- DRAG SPELL
-
+  // --------------------------- useDragSpell
   const handleSpellDragStart = (
     event: React.DragEvent,
     spell: TimelineSpell
@@ -190,7 +193,7 @@ const OldTimeline = () => {
   };
   // ---------------------------
 
-  // --------------------------- DRAG ROW
+  // --------------------------- useDragRow
   const handleRowActionsDragOver = (event: React.DragEvent) => {
     const y = event.clientY - canvasRef.current.getBoundingClientRect().top;
 
@@ -212,7 +215,7 @@ const OldTimeline = () => {
 
   const handleWindowClick = () => {
     const isAnySpellSelected = spells.some((spell) => spell.isSelected);
-    isAnySpellSelected ? clearTimelineSpellSelection() : null;
+    isAnySpellSelected && clearTimelineSpellSelection();
   };
 
   useEffect(() => {
@@ -247,7 +250,7 @@ const OldTimeline = () => {
         <SpellsWrapper>{spellIcons}</SpellsWrapper>
       </TimelineActionsWrapper>
 
-      <TimelineWrapper>
+      <TimelineContentWrapper>
         <RowActionsWrapper
           onDragOver={isDraggingRow ? handleRowActionsDragOver : null}
           onDrop={isDraggingRow ? handleRowActionsDrop : null}
@@ -282,9 +285,9 @@ const OldTimeline = () => {
             setHoveredRow={(i) => setHoveredRow(i)}
           />
         </CanvasWrapper>
-      </TimelineWrapper>
+      </TimelineContentWrapper>
     </Root>
   );
 };
 
-export default OldTimeline;
+export default TimelineWrapper;

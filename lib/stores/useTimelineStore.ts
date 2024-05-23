@@ -49,11 +49,6 @@ const ROWS: TimelineRow[] = [
   { isActive: true },
 ];
 
-export enum EMoveDirection {
-  DOWN,
-  UP,
-}
-
 interface TimelineStore {
   offset: number;
   isDragging: boolean;

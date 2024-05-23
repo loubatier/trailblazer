@@ -2,14 +2,11 @@ import React, { useEffect } from "react";
 import Konva from "konva";
 import { Group, Layer, Line, Rect, Stage } from "react-konva";
 import { useIsKeyPressed } from "../../../lib/hooks/useIsKeyPressed";
-import {
-  EMoveDirection,
-  useTimelineStore,
-} from "../../../lib/stores/useTimelineStore";
+import { useTimelineStore } from "../../../lib/stores/useTimelineStore";
 import {
   calculateRowDestinationIndex,
   calculateSpellDestinationRowIndex,
-} from "../old-timeline";
+} from "../timeline-wrapper";
 import CanvasSpell from "./spell";
 import Timeline from "./timeline";
 
@@ -75,18 +72,6 @@ const Canvas = ({
       switch (e.key) {
         case "Backspace":
           deleteTimelineSpell(selectedSpellIndex);
-          break;
-        case "ArrowUp":
-          e.preventDefault();
-          spells[selectedSpellIndex].row > 0
-            ? updateTimelineSpellRow(selectedSpellIndex, EMoveDirection.UP)
-            : null;
-          break;
-        case "ArrowDown":
-          e.preventDefault();
-          spells[selectedSpellIndex].row < rows.length - 1
-            ? updateTimelineSpellRow(selectedSpellIndex, EMoveDirection.DOWN)
-            : null;
           break;
         default:
           break;
