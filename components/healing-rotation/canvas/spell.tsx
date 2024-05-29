@@ -29,7 +29,6 @@ const CanvasSpell = ({
   const [spellOptions, setSpellOptions] = useState({ x, isDragging: false });
 
   const isShiftPressed = useIsKeyPressed("Shift");
-  const isAltPressed = useIsKeyPressed("Alt");
 
   const hasShadow = false;
 
@@ -93,7 +92,7 @@ const CanvasSpell = ({
       style={{ cursor: spellOptions.isDragging ? "grabbing" : "grab" }}
       draggable={isRowActive}
       dragBoundFunc={(pos) => {
-        return isShiftPressed || isAltPressed
+        return isShiftPressed
           ? keyPressedDragBoundFunc(pos)
           : baseDragBoundFunc(pos);
       }}

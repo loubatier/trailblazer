@@ -60,8 +60,8 @@ const Canvas = ({
     updateTimelineSpellTiming,
     updateTimelineSpellRow,
     selectTimelineSpell,
-    move,
-    drag,
+    moveTimeline,
+    toggleTimelineDrag,
   } = useTimelineStore((state) => state);
 
   useEffect(() => {
@@ -117,11 +117,11 @@ const Canvas = ({
         };
       }}
       onDragStart={() => {
-        drag(true);
+        toggleTimelineDrag(true);
       }}
       onDragEnd={(e) => {
-        move(e.target.x());
-        drag(false);
+        moveTimeline(e.target.x());
+        toggleTimelineDrag(false);
       }}
     >
       <Layer>

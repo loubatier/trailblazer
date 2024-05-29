@@ -70,9 +70,9 @@ interface TimelineStore {
   updateTimelineRowPosition: (index: number, newIndex: number) => void;
 
   clearTimelineSpellSelection: () => void;
-  clear: () => void;
-  move: (x: number) => void;
-  drag: (isDragging: boolean) => void;
+  clearTimeline: () => void;
+  moveTimeline: (x: number) => void;
+  toggleTimelineDrag: (isDragging: boolean) => void;
 }
 
 export const useTimelineStore = create<TimelineStore>()(
@@ -103,6 +103,7 @@ export const useTimelineStore = create<TimelineStore>()(
             x: spell.timing * z,
           })),
         })),
+
       selectTimelineSpell: (i: number) => {
         set((state) => {
           const spells = state.spells.map((spell, index) =>
@@ -112,6 +113,7 @@ export const useTimelineStore = create<TimelineStore>()(
           );
 
           const selectedSpell = spells.find((spell) => spell.isSelected);
+
           if (selectedSpell) {
             spells.splice(spells.indexOf(selectedSpell), 1);
             spells.push(selectedSpell);
@@ -123,6 +125,7 @@ export const useTimelineStore = create<TimelineStore>()(
           };
         });
       },
+
       addTimelineSpell: (spell: Spell, rowIndex: number, x: number) => {
         set((state) => ({
           ...state,
@@ -138,18 +141,21 @@ export const useTimelineStore = create<TimelineStore>()(
           ],
         }));
       },
+
       deleteTimelineSpell: (i: number) => {
         set((state) => ({
           ...state,
           spells: state.spells.filter((_, index) => index !== i),
         }));
       },
+
       addTimelineRow: () => {
         set((state) => ({
           ...state,
           rows: [...state.rows, { isActive: true }],
         }));
       },
+
       deleteTimelineRow: (i: number) => {
         set((state) => ({
           ...state,
@@ -162,6 +168,7 @@ export const useTimelineStore = create<TimelineStore>()(
           rows: state.rows.filter((_, index) => i !== index),
         }));
       },
+
       updateTimelineRowStatus: (i: number, isActive: boolean) => {
         set((state) => ({
           ...state,
@@ -170,9 +177,11 @@ export const useTimelineStore = create<TimelineStore>()(
           ),
         }));
       },
+
       updateTimelineRowPosition: (initialIndex: number, newIndex: number) => {
         const isHigherIndex = newIndex > initialIndex;
         const refinedNewIndex = isHigherIndex ? newIndex - 1 : newIndex;
+
         set((state) => {
           state.spells = state.spells.map((spell) => {
             if (spell.row === initialIndex) {
@@ -204,6 +213,7 @@ export const useTimelineStore = create<TimelineStore>()(
           };
         });
       },
+
       updateTimelineSpellTiming: (i: number, x: number) => {
         set((state) => ({
           ...state,
@@ -212,6 +222,7 @@ export const useTimelineStore = create<TimelineStore>()(
           ),
         }));
       },
+
       updateTimelineSpellRow: (i: number, destinationRowIndex: number) => {
         set((state) => ({
           ...state,
@@ -229,9 +240,10 @@ export const useTimelineStore = create<TimelineStore>()(
         }));
       },
 
-      clear: () => set((state) => ({ ...state, rows: [] })),
-      move: (x: number) => set((state) => ({ ...state, offset: x })),
-      drag: (isDragging: boolean) => set((state) => ({ ...state, isDragging })),
+      clearTimeline: () => set((state) => ({ ...state, rows: [] })),
+      moveTimeline: (x: number) => set((state) => ({ ...state, offset: x })),
+      toggleTimelineDrag: (isDragging: boolean) =>
+        set((state) => ({ ...state, isDragging })),
     }),
     {
       name: "timeline-storage",
