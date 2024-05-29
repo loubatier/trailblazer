@@ -69,7 +69,7 @@ const ActionsWrapper = styled.div<{ isOpen: boolean }>`
   top: 0;
   right: 0;
   width: 88px;
-  height: 40px;
+  height: 48px;
   background-color: ${({ theme }) => theme.colors.application_background};
   transform: translateX(100%);
   z-index: ${({ isOpen }) => (isOpen ? 1 : 0)};
