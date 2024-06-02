@@ -87,7 +87,6 @@ export const calculateSpellDestinationRowIndex = (y: number) => {
       TIMELINE_ROW_HEIGHT
   );
 
-  console.log({ initialDestinationRowIndex, finalDestinationRowIndex });
   return finalDestinationRowIndex;
 };
 // ---------------------------
@@ -207,7 +206,7 @@ const TimelineWrapper = () => {
     const y = event.clientY - canvasRef.current.getBoundingClientRect().top;
 
     setGhostRowY(y);
-    setDestinationRowIndex(calculateRowDestinationIndex(y));
+    setDestinationRowIndex(calculateDestinationRowIndex(y));
   };
 
   const handleRowActionsDrop = (event: React.DragEvent) => {
