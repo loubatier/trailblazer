@@ -23,7 +23,7 @@ const RowActionsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   height: fit-content;
-  margin-top: 44px;
+  margin-top: 40px;
 `;
 
 const CanvasWrapper = styled.div`
@@ -64,23 +64,31 @@ const AddRowButton = styled.button<{ isDisabled: boolean }>`
   }
 `;
 
-export const TIMELINE_HEIGHT = 48;
-export const ROW_HEIGHT = 40;
-export const MARGIN_HEIGHT = 8;
+export const GRADUATED_TIMELINE_HEIGHT = 40;
+export const TIMELINE_ROW_HEIGHT = 40;
+export const BASE_SPACING = 8;
 
 // --------------------------- Move this to utils in a folder dedicated to planner functions
-export const calculateRowDestinationIndex = (y: number) => {
+export const calculateDestinationRowIndex = (y: number) => {
   return Math.round(
-    Math.max(y - TIMELINE_HEIGHT, 1) / (ROW_HEIGHT + MARGIN_HEIGHT)
+    Math.max(y - GRADUATED_TIMELINE_HEIGHT, 1) /
+      (TIMELINE_ROW_HEIGHT + BASE_SPACING)
   );
 };
 
 export const calculateSpellDestinationRowIndex = (y: number) => {
-  const yPosWithoutHeader = y - 40;
-  const initialDestinationRowIndex = Math.floor(yPosWithoutHeader / 40);
-  return Math.floor(
-    (yPosWithoutHeader - (initialDestinationRowIndex + 1) * 8) / 40
+  const yPosWithoutHeader =
+    y - GRADUATED_TIMELINE_HEIGHT - 32 - TIMELINE_ROW_HEIGHT - 32 + 16;
+
+  const initialDestinationRowIndex = yPosWithoutHeader / TIMELINE_ROW_HEIGHT;
+
+  const finalDestinationRowIndex = Math.floor(
+    (yPosWithoutHeader - initialDestinationRowIndex * BASE_SPACING) /
+      TIMELINE_ROW_HEIGHT
   );
+
+  console.log({ initialDestinationRowIndex, finalDestinationRowIndex });
+  return finalDestinationRowIndex;
 };
 // ---------------------------
 
@@ -90,6 +98,7 @@ const TimelineWrapper = () => {
   const {
     offset,
     spells,
+    bossRow,
     rows,
     clearTimelineSpellSelection,
     addTimelineRow,
@@ -226,7 +235,7 @@ const TimelineWrapper = () => {
   const handleWindowResize = () => {
     setDimensions({
       width: window.innerWidth - 40 - 2 * 48,
-      height: 40 + rows.length * 8 + rows.length * 40,
+      height: 40 + 32 + 40 + 32 + rows.length * 8 + rows.length * 40,
     });
   };
 
@@ -255,10 +264,12 @@ const TimelineWrapper = () => {
           onDragOver={isDraggingRow ? handleRowActionsDragOver : null}
           onDrop={isDraggingRow ? handleRowActionsDrop : null}
         >
-          {rows.map((_, i) => (
+          <RowActions type={bossRow.type} row={bossRow} />
+          {rows.map((row, i) => (
             <RowActions
               key={`row-actions-${i}`}
-              rowIndex={i}
+              type={row.type}
+              row={row}
               onDragRowStart={() => {
                 setInitialRowIndex(i);
                 setIsDraggingRow(true);

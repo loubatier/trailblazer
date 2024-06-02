@@ -4,11 +4,15 @@ import { Group, Layer, Line, Rect, Stage } from "react-konva";
 import { useIsKeyPressed } from "../../../lib/hooks/useIsKeyPressed";
 import { useTimelineStore } from "../../../lib/stores/useTimelineStore";
 import {
-  calculateRowDestinationIndex,
+  BASE_SPACING,
+  GRADUATED_TIMELINE_HEIGHT,
+  TIMELINE_ROW_HEIGHT,
+  calculateDestinationRowIndex,
   calculateSpellDestinationRowIndex,
 } from "../timeline-wrapper";
+import GraduatedTimeline from "./graduated-timeline";
+import CanvasRow from "./row";
 import CanvasSpell from "./spell";
-import Timeline from "./timeline";
 
 interface IProps {
   width: number;
@@ -37,9 +41,17 @@ export type TimelineSpell = Spell & {
   isSelected: boolean;
 };
 
+export enum ETimelineRowType {
+  BASE = "base",
+  BOSS = "boss",
+}
+
 export type TimelineRow = {
+  type: ETimelineRowType;
   isActive: boolean;
 };
+
+export type BossTimelineRow = TimelineRow & { type: ETimelineRowType.BOSS };
 
 const ENCOUNTER_TIMER = 345;
 
@@ -55,6 +67,7 @@ const Canvas = ({
     isDragging,
     zoom,
     spells,
+    bossRow,
     rows,
     deleteTimelineSpell,
     updateTimelineSpellTiming,
@@ -101,8 +114,12 @@ const Canvas = ({
   };
   // __________________
 
-  const index = calculateRowDestinationIndex(ghostRowY);
-  const moveRowIndicatorPosY = 40 + 4 + index * 40 + index * 8;
+  const index = calculateDestinationRowIndex(ghostRowY);
+  const moveRowIndicatorPosY =
+    TIMELINE_ROW_HEIGHT +
+    BASE_SPACING / 2 +
+    index * TIMELINE_ROW_HEIGHT +
+    index * BASE_SPACING;
 
   return (
     <Stage
@@ -126,21 +143,24 @@ const Canvas = ({
     >
       <Layer>
         {/* TODO: Might be easier to set this to 0 but would mean setting rows x to -4 so off canvas */}
-        <Group>
-          {rows.map(({ isActive }, i) => (
-            <Rect
+        <GraduatedTimeline x={0} y={0} timer={ENCOUNTER_TIMER} zoom={zoom} />
+        <Group y={GRADUATED_TIMELINE_HEIGHT}>
+          <CanvasRow
+            index={null}
+            type={bossRow.type}
+            width={ENCOUNTER_TIMER * zoom}
+            isActive={bossRow.isActive}
+            isHovered={false}
+          />
+
+          {rows.map(({ type, isActive }, i) => (
+            <CanvasRow
               key={i}
-              x={0}
-              y={40 + 8 + i * 40 + i * 8}
-              fill={
-                isActive
-                  ? i === hoveredRow
-                    ? "#2A2E34"
-                    : "#23262B"
-                  : "#23262B50"
-              }
+              index={i}
+              type={type}
               width={ENCOUNTER_TIMER * zoom}
-              height={40}
+              isActive={isActive}
+              isHovered={i === hoveredRow}
             />
           ))}
 
@@ -148,10 +168,10 @@ const Canvas = ({
             <>
               <Rect
                 x={0}
-                y={ghostRowY - 20}
+                y={ghostRowY - TIMELINE_ROW_HEIGHT / 2}
                 fill={"#2A2E34"}
                 width={ENCOUNTER_TIMER * zoom}
-                height={40}
+                height={TIMELINE_ROW_HEIGHT}
               />
               <Line
                 points={[
@@ -164,7 +184,6 @@ const Canvas = ({
               />
             </>
           )}
-          <Timeline x={0} y={0} timer={ENCOUNTER_TIMER} zoom={zoom} />
         </Group>
       </Layer>
       <Layer>
@@ -172,7 +191,14 @@ const Canvas = ({
           <CanvasSpell
             key={i}
             x={timelineSpell.x}
-            y={4 + (timelineSpell.row + 1) * 40 + (timelineSpell.row + 1) * 8}
+            y={
+              32 +
+              TIMELINE_ROW_HEIGHT +
+              32 -
+              BASE_SPACING / 2 +
+              (timelineSpell.row + 1) * TIMELINE_ROW_HEIGHT +
+              (timelineSpell.row + 1) * BASE_SPACING
+            }
             spell={timelineSpell}
             timer={ENCOUNTER_TIMER}
             isRowActive={rows[timelineSpell.row].isActive}

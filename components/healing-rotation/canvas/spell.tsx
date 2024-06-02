@@ -3,6 +3,11 @@ import Konva from "konva";
 import { Group, Image as KonvaImage, Rect, Text } from "react-konva";
 import { useIsKeyPressed } from "../../../lib/hooks/useIsKeyPressed";
 import { useTimelineStore } from "../../../lib/stores/useTimelineStore";
+import {
+  BASE_SPACING,
+  GRADUATED_TIMELINE_HEIGHT,
+  TIMELINE_ROW_HEIGHT,
+} from "../timeline-wrapper";
 import { TimelineSpell } from ".";
 
 interface IProps {
@@ -30,32 +35,38 @@ const CanvasSpell = ({
 
   const isShiftPressed = useIsKeyPressed("Shift");
 
-  const hasShadow = false;
-
-  const { zoom, offset } = useTimelineStore((state) => state);
+  const { zoom, offset, rows } = useTimelineStore((state) => state);
 
   const img = new Image();
   img.src = isRowActive
     ? spell.icon
     : "https://assets.lorrgs.io/images/spells/ability_evoker_rewind.jpg";
 
-  const isAboveMinimum = (x: number) => {
+  const isAboveXMinimum = (x: number) => {
     return x >= 0 + offset;
   };
 
-  const isUnderMaximum = (x: number) => {
+  const isUnderXMaximum = (x: number) => {
     return x + spell.duration * zoom <= timer * zoom + offset;
   };
 
-  const shadowProps = {
-    shadowColor: "black",
-    shadowBlur: 10,
-    shadowOffsetX: 10,
-    shadowOffsetY: 10,
-    shadowOpacity: 0.5,
+  const isAboveYMinimum = (y: number) => {
+    return y >= GRADUATED_TIMELINE_HEIGHT + 32 + TIMELINE_ROW_HEIGHT + 32 - 16;
   };
 
-  const getSpellTiming = (timing) => {
+  const isUnderYMaximum = (y: number) => {
+    return (
+      y <=
+      32 +
+        TIMELINE_ROW_HEIGHT +
+        32 +
+        rows.length * BASE_SPACING +
+        rows.length * TIMELINE_ROW_HEIGHT -
+        BASE_SPACING / 2
+    );
+  };
+
+  const getSpellTiming = (timing: number) => {
     const minutes = Math.floor(timing / 60);
     const secondsRemaining = Math.floor(timing % 60);
     return `${String(minutes).padStart(2, "0")}:${String(
@@ -65,8 +76,8 @@ const CanvasSpell = ({
 
   const baseDragBoundFunc = (pos) => {
     return {
-      x: isAboveMinimum(pos.x)
-        ? isUnderMaximum(pos.x)
+      x: isAboveXMinimum(pos.x)
+        ? isUnderXMaximum(pos.x)
           ? pos.x
           : timer * zoom - spell.duration * zoom + offset
         : 0 + offset,
@@ -76,12 +87,21 @@ const CanvasSpell = ({
 
   const keyPressedDragBoundFunc = (pos) => {
     return {
-      x: isAboveMinimum(pos.x)
-        ? isUnderMaximum(pos.x)
+      x: isAboveXMinimum(pos.x)
+        ? isUnderXMaximum(pos.x)
           ? pos.x
           : timer * zoom - spell.duration * zoom + offset
         : 0 + offset,
-      y: pos.y,
+      y: isAboveYMinimum(pos.y)
+        ? isUnderYMaximum(pos.y)
+          ? pos.y
+          : 32 +
+            TIMELINE_ROW_HEIGHT +
+            32 +
+            rows.length * BASE_SPACING +
+            rows.length * TIMELINE_ROW_HEIGHT -
+            BASE_SPACING / 2
+        : 0 + GRADUATED_TIMELINE_HEIGHT + 32 + TIMELINE_ROW_HEIGHT + 32 - 16,
     };
   };
 
@@ -125,8 +145,8 @@ const CanvasSpell = ({
         <Rect
           x={-4}
           y={-4}
-          width={spell.cooldown * zoom + 8}
-          height={40}
+          width={spell.cooldown * zoom + BASE_SPACING}
+          height={TIMELINE_ROW_HEIGHT}
           strokeWidth={2}
           stroke={"white"}
         />
@@ -135,7 +155,6 @@ const CanvasSpell = ({
         width={spell.cooldown * zoom}
         height={32}
         fill={isRowActive ? `${spell.color}50` : `${spell.color}25`}
-        {...(hasShadow ? shadowProps : {})}
       />
       <Rect
         width={spell.duration * zoom}

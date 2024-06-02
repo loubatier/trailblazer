@@ -2,20 +2,23 @@ import React, { useState } from "react";
 import { Eye, EyeOff, GripVertical, X } from "lucide-react";
 import styled from "styled-components";
 import { useTimelineStore } from "../../lib/stores/useTimelineStore";
+import { ETimelineRowType, TimelineRow } from "./canvas";
 
 interface IProps {
-  rowIndex: number;
-  onDragRowStart: () => void;
-  onDragRowEnd: () => void;
+  row: TimelineRow;
+  type: ETimelineRowType;
+  onDragRowStart?: () => void;
+  onDragRowEnd?: () => void;
 }
 
-const Root = styled.div`
+const Root = styled.div<{ isBossRow: boolean }>`
   position: relative;
+  margin: ${({ isBossRow }) => (isBossRow ? "32px 0" : "0 0 8px")};
 `;
 
 const ActionsButton = styled.button`
   width: 40px;
-  height: 48px;
+  height: 40px;
   padding: 0 8px;
   box-sizing: border-box;
   display: flex;
@@ -79,14 +82,14 @@ const Checkbox = styled.input`
   display: none;
 `;
 
-const RowActions = ({ rowIndex, onDragRowStart, onDragRowEnd }: IProps) => {
+const RowActions = ({ row, type, onDragRowStart, onDragRowEnd }: IProps) => {
   const { rows, deleteTimelineRow, updateTimelineRowStatus } = useTimelineStore(
     (state) => state
   );
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const isRowActive = rows[rowIndex].isActive;
+  const isRowActive = row.isActive;
 
   const toggleActions = () => {
     setIsOpen(!isOpen);
@@ -100,10 +103,13 @@ const RowActions = ({ rowIndex, onDragRowStart, onDragRowEnd }: IProps) => {
     onDragRowEnd();
   };
 
+  const isBossRow = type === ETimelineRowType.BOSS;
+  const rowIndex = rows.indexOf(row);
+
   return (
-    <Root>
+    <Root isBossRow={isBossRow}>
       <ActionsButton
-        draggable
+        draggable={!isBossRow}
         onDragStart={() => handleRowDragStart()}
         onDragOver={(e) => e.preventDefault()}
         onDragEnd={() => handleRowDragEnd()}
@@ -111,20 +117,27 @@ const RowActions = ({ rowIndex, onDragRowStart, onDragRowEnd }: IProps) => {
       >
         <GripVertical color={"white"} />
       </ActionsButton>
-      {isOpen && (
-        <ActionsWrapper isOpen={isOpen}>
-          <StatusButton
-            onClick={() => updateTimelineRowStatus(rowIndex, !isRowActive)}
-            isRowActive={isRowActive}
-          >
-            <Checkbox type="checkbox" checked={isRowActive} readOnly />
-            {isRowActive ? <EyeOff color={"white"} /> : <Eye color={"black"} />}
-          </StatusButton>
-          <DeleteButton onClick={() => deleteTimelineRow(rowIndex)}>
-            <X color={"white"} />
-          </DeleteButton>
-        </ActionsWrapper>
-      )}
+      {isOpen &&
+        (isBossRow ? (
+          <>BOSS</>
+        ) : (
+          <ActionsWrapper isOpen={isOpen}>
+            <StatusButton
+              onClick={() => updateTimelineRowStatus(rowIndex, !isRowActive)}
+              isRowActive={isRowActive}
+            >
+              <Checkbox type="checkbox" checked={isRowActive} readOnly />
+              {isRowActive ? (
+                <EyeOff color={"white"} />
+              ) : (
+                <Eye color={"black"} />
+              )}
+            </StatusButton>
+            <DeleteButton onClick={() => deleteTimelineRow(rowIndex)}>
+              <X color={"white"} />
+            </DeleteButton>
+          </ActionsWrapper>
+        ))}
     </Root>
   );
 };

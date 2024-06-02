@@ -8,8 +8,11 @@ interface IProps {
   zoom: number;
 }
 
-const Timeline = ({ x, y, timer, zoom }: IProps) => {
+const LINE_HEIGHT = 40;
+
+const GraduatedTimeline = ({ x, y, timer, zoom }: IProps) => {
   const lines = [];
+
   for (let seconds = 0; seconds <= timer * zoom; seconds += 10 * zoom) {
     const xPos = seconds;
     const isThirdLine = seconds % (30 * zoom) === 0;
@@ -17,7 +20,7 @@ const Timeline = ({ x, y, timer, zoom }: IProps) => {
       <Line
         key={xPos}
         x={xPos}
-        y={40}
+        y={LINE_HEIGHT}
         points={[0, 0, 0, isThirdLine ? -20 * 2 : -20]}
         closed
         stroke="white"
@@ -28,9 +31,9 @@ const Timeline = ({ x, y, timer, zoom }: IProps) => {
 
   return (
     <Group x={x} y={y}>
-      <Rect width={timer * zoom} height={40} fill={"#1c1e20"} />
+      <Rect width={timer * zoom} height={LINE_HEIGHT} fill={"#1c1e20"} />
       <Line
-        points={[0, 40, timer * zoom, 40]}
+        points={[0, LINE_HEIGHT, timer * zoom, LINE_HEIGHT]}
         closed
         stroke="white"
         strokeWidth={0.5}
@@ -40,4 +43,4 @@ const Timeline = ({ x, y, timer, zoom }: IProps) => {
   );
 };
 
-export default Timeline;
+export default GraduatedTimeline;

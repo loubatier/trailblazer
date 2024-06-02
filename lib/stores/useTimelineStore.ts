@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import {
+  BossTimelineRow,
+  ETimelineRowType,
   Spell,
   TimelineRow,
   TimelineSpell,
@@ -42,11 +44,16 @@ const SPELLS: TimelineSpell[] = [
   },
 ];
 
+const BOSS_ROW: BossTimelineRow = {
+  type: ETimelineRowType.BOSS,
+  isActive: true,
+};
+
 const ROWS: TimelineRow[] = [
-  { isActive: true },
-  { isActive: false },
-  { isActive: true },
-  { isActive: true },
+  { type: ETimelineRowType.BASE, isActive: true },
+  { type: ETimelineRowType.BASE, isActive: true },
+  { type: ETimelineRowType.BASE, isActive: false },
+  { type: ETimelineRowType.BASE, isActive: true },
 ];
 
 interface TimelineStore {
@@ -54,6 +61,7 @@ interface TimelineStore {
   isDragging: boolean;
   zoom: number;
   spells: TimelineSpell[];
+  bossRow: BossTimelineRow;
   rows: TimelineRow[];
 
   updateTimelineZoom: (z: number) => void;
@@ -82,6 +90,7 @@ export const useTimelineStore = create<TimelineStore>()(
       isDragging: false,
       zoom: 3,
       spells: SPELLS,
+      bossRow: BOSS_ROW,
       rows: ROWS,
 
       clearTimelineSpellSelection: () => {
@@ -152,7 +161,10 @@ export const useTimelineStore = create<TimelineStore>()(
       addTimelineRow: () => {
         set((state) => ({
           ...state,
-          rows: [...state.rows, { isActive: true }],
+          rows: [
+            ...state.rows,
+            { type: ETimelineRowType.BASE, isActive: true },
+          ],
         }));
       },
 
@@ -228,12 +240,7 @@ export const useTimelineStore = create<TimelineStore>()(
           ...state,
           spells: state.spells.map((spell, index) => {
             if (index === i) {
-              // Ensure destinationRowIndex is within the bounds of the rows array
-              const validDestinationRowIndex = Math.min(
-                state.rows.length - 1,
-                Math.max(0, destinationRowIndex)
-              );
-              return { ...spell, row: validDestinationRowIndex };
+              return { ...spell, row: destinationRowIndex };
             }
             return spell;
           }),
