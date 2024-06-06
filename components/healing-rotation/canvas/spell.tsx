@@ -15,8 +15,8 @@ interface IProps {
   y: number;
   spell: TimelineSpell;
   timer: number;
-  isRowActive: boolean;
   onClick: () => void;
+  onDragStart: () => void;
   onDragMove: (e: Konva.KonvaEventObject<DragEvent>) => void;
   onDragEnd: () => void;
 }
@@ -26,19 +26,17 @@ const CanvasSpell = ({
   y,
   spell,
   timer,
-  isRowActive,
   onClick,
+  onDragStart,
   onDragMove,
   onDragEnd,
 }: IProps) => {
   const [spellOptions, setSpellOptions] = useState({ x, isDragging: false });
-
   const isShiftPressed = useIsKeyPressed("Shift");
-
   const { zoom, offset, rows } = useTimelineStore((state) => state);
 
   const img = new Image();
-  img.src = isRowActive
+  img.src = spell.isActive
     ? spell.icon
     : "https://assets.lorrgs.io/images/spells/ability_evoker_rewind.jpg";
 
@@ -110,7 +108,7 @@ const CanvasSpell = ({
       x={x}
       y={y}
       style={{ cursor: spellOptions.isDragging ? "grabbing" : "grab" }}
-      draggable={isRowActive}
+      draggable={spell.isActive}
       dragBoundFunc={(pos) => {
         return isShiftPressed
           ? keyPressedDragBoundFunc(pos)
@@ -122,6 +120,7 @@ const CanvasSpell = ({
           ...spellOptions,
           isDragging: true,
         });
+        isShiftPressed && onDragStart();
       }}
       onDragMove={(e) => {
         e.cancelBubble = true;
@@ -154,15 +153,15 @@ const CanvasSpell = ({
       <Rect
         width={spell.cooldown * zoom}
         height={32}
-        fill={isRowActive ? `${spell.color}50` : `${spell.color}25`}
+        fill={spell.isActive ? `${spell.color}50` : `${spell.color}25`}
       />
       <Rect
         width={spell.duration * zoom}
         height={32}
-        fill={isRowActive ? spell.color : `${spell.color}50`}
+        fill={spell.isActive ? spell.color : `${spell.color}50`}
       />
       <KonvaImage image={img} width={24} height={24} y={4} x={4} />
-      <Text text={getSpellTiming(spell.timing)} y={10} x={36} fill="white" />
+      <Text text={getSpellTiming(spell.timing)} y={10} x={32} fill="white" />
     </Group>
   );
 };

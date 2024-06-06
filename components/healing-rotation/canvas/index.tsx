@@ -38,6 +38,7 @@ export type TimelineSpell = Spell & {
   x: number;
   timing: number;
   row: number;
+  isActive: boolean;
   isSelected: boolean;
 };
 
@@ -97,8 +98,15 @@ const Canvas = ({
       document.removeEventListener("keydown", handleKeyPress);
     };
   }, [spells]);
+
   // __________________ MOVE SPELL WITH SHIFT PRESSED
   const isShiftPressed = useIsKeyPressed("Shift");
+
+  const handleTimeLineSpellDragStart = (spellIndex: number) => {
+    // NOTE: We set temporary spell row to -10 to avoid flickering to happen in the canvas visible scope
+    // Setting it to null causes a flicker of the spell at the top of the rows
+    updateTimelineSpellRow(spellIndex, -10);
+  };
 
   const handleTimelineSpellShiftMove = (
     e: Konva.KonvaEventObject<DragEvent>,
@@ -189,24 +197,22 @@ const Canvas = ({
         </Group>
       </Layer>
       <Layer>
-        {spells.map((timelineSpell, i) => (
+        {spells.map((spell, i) => (
           <CanvasSpell
             key={i}
-            x={timelineSpell.x}
+            x={spell.x}
             y={
               32 +
               TIMELINE_ROW_HEIGHT +
               32 -
               BASE_SPACING / 2 +
-              (timelineSpell.row + 1) * TIMELINE_ROW_HEIGHT +
-              (timelineSpell.row + 1) * BASE_SPACING
+              (spell.row + 1) * TIMELINE_ROW_HEIGHT +
+              (spell.row + 1) * BASE_SPACING
             }
-            spell={timelineSpell}
+            spell={spell}
             timer={ENCOUNTER_TIMER}
-            isRowActive={rows[timelineSpell.row].isActive}
-            onClick={() =>
-              rows[timelineSpell.row].isActive ? selectTimelineSpell(i) : null
-            }
+            onClick={() => (spell.isActive ? selectTimelineSpell(i) : null)}
+            onDragStart={() => handleTimeLineSpellDragStart(i)}
             onDragMove={(e) =>
               isShiftPressed
                 ? handleTimelineSpellShiftMove(e, i)

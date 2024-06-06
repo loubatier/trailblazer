@@ -18,6 +18,7 @@ const SPELLS: TimelineSpell[] = [
     x: 0,
     timing: 0,
     row: 0,
+    isActive: true,
     isSelected: false,
   },
   {
@@ -29,6 +30,7 @@ const SPELLS: TimelineSpell[] = [
     x: 270,
     timing: 135,
     row: 1,
+    isActive: true,
     isSelected: false,
   },
   {
@@ -40,6 +42,7 @@ const SPELLS: TimelineSpell[] = [
     x: 200,
     timing: 100,
     row: 2,
+    isActive: false,
     isSelected: false,
   },
 ];
@@ -103,20 +106,20 @@ export const useTimelineStore = create<TimelineStore>()(
         }));
       },
 
-      updateTimelineZoom: (z: number) =>
+      updateTimelineZoom: (zoom: number) =>
         set((state) => ({
           ...state,
-          zoom: z,
+          zoom,
           spells: state.spells.map((spell) => ({
             ...spell,
-            x: spell.timing * z,
+            x: spell.timing * zoom,
           })),
         })),
 
-      selectTimelineSpell: (i: number) => {
+      selectTimelineSpell: (spellIndex: number) => {
         set((state) => {
-          const spells = state.spells.map((spell, index) =>
-            index === i
+          const spells = state.spells.map((spell, i) =>
+            i === spellIndex
               ? { ...spell, isSelected: !spell.isSelected }
               : { ...spell, isSelected: false }
           );
@@ -145,16 +148,17 @@ export const useTimelineStore = create<TimelineStore>()(
               row: rowIndex,
               x,
               timing: x / state.zoom,
+              isActive: state.rows[rowIndex].isActive,
               isSelected: false,
             },
           ],
         }));
       },
 
-      deleteTimelineSpell: (i: number) => {
+      deleteTimelineSpell: (rowIndex: number) => {
         set((state) => ({
           ...state,
-          spells: state.spells.filter((_, index) => index !== i),
+          spells: state.spells.filter((_, i) => i !== rowIndex),
         }));
       },
 
@@ -168,46 +172,54 @@ export const useTimelineStore = create<TimelineStore>()(
         }));
       },
 
-      deleteTimelineRow: (i: number) => {
+      deleteTimelineRow: (rowIndex: number) => {
         set((state) => ({
           ...state,
           spells: state.spells
-            .filter((spell) => spell.row !== i)
+            .filter((spell) => spell.row !== rowIndex)
             .map((spell) => ({
               ...spell,
-              row: spell.row > i ? spell.row - 1 : spell.row,
+              row: spell.row > rowIndex ? spell.row - 1 : spell.row,
             })),
-          rows: state.rows.filter((_, index) => i !== index),
+          rows: state.rows.filter((_, i) => rowIndex !== i),
         }));
       },
 
-      updateTimelineRowStatus: (i: number, isActive: boolean) => {
+      updateTimelineRowStatus: (rowIndex: number, isActive: boolean) => {
         set((state) => ({
           ...state,
-          rows: state.rows.map((row, index) =>
-            index === i ? { ...row, isActive } : row
+          rows: state.rows.map((row, i) =>
+            i === rowIndex ? { ...row, isActive } : row
+          ),
+          spells: state.spells.map((spell) =>
+            spell.row === rowIndex ? { ...spell, isActive } : spell
           ),
         }));
       },
 
-      updateTimelineRowPosition: (initialIndex: number, newIndex: number) => {
-        const isHigherIndex = newIndex > initialIndex;
-        const refinedNewIndex = isHigherIndex ? newIndex - 1 : newIndex;
+      updateTimelineRowPosition: (
+        initialRowIndex: number,
+        newRowIndex: number
+      ) => {
+        const isHigherIndex = newRowIndex > initialRowIndex;
+        const refinedNewRowIndex = isHigherIndex
+          ? newRowIndex - 1
+          : newRowIndex;
 
         set((state) => {
           state.spells = state.spells.map((spell) => {
-            if (spell.row === initialIndex) {
-              return { ...spell, row: refinedNewIndex };
+            if (spell.row === initialRowIndex) {
+              return { ...spell, row: refinedNewRowIndex };
             } else if (
-              initialIndex < refinedNewIndex &&
-              spell.row > initialIndex &&
-              spell.row <= refinedNewIndex
+              initialRowIndex < refinedNewRowIndex &&
+              spell.row > initialRowIndex &&
+              spell.row <= refinedNewRowIndex
             ) {
               return { ...spell, row: spell.row - 1 };
             } else if (
-              initialIndex > refinedNewIndex &&
-              spell.row < initialIndex &&
-              spell.row >= refinedNewIndex
+              initialRowIndex > refinedNewRowIndex &&
+              spell.row < initialRowIndex &&
+              spell.row >= refinedNewRowIndex
             ) {
               return { ...spell, row: spell.row + 1 };
             }
@@ -215,8 +227,8 @@ export const useTimelineStore = create<TimelineStore>()(
           });
 
           // Move the timeline row from initialIndex to refinedNewIndex
-          const [row] = state.rows.splice(initialIndex, 1);
-          state.rows.splice(refinedNewIndex, 0, row);
+          const [row] = state.rows.splice(initialRowIndex, 1);
+          state.rows.splice(refinedNewRowIndex, 0, row);
 
           return {
             ...state,
@@ -226,25 +238,40 @@ export const useTimelineStore = create<TimelineStore>()(
         });
       },
 
-      updateTimelineSpellTiming: (i: number, x: number) => {
+      updateTimelineSpellTiming: (spellIndex: number, x: number) => {
         set((state) => ({
           ...state,
-          spells: state.spells.map((spell, index) =>
-            index === i ? { ...spell, x, timing: x / state.zoom } : spell
+          spells: state.spells.map((spell, i) =>
+            i === spellIndex ? { ...spell, x, timing: x / state.zoom } : spell
           ),
         }));
       },
 
-      updateTimelineSpellRow: (i: number, destinationRowIndex: number) => {
-        set((state) => ({
-          ...state,
-          spells: state.spells.map((spell, index) => {
-            if (index === i) {
-              return { ...spell, row: destinationRowIndex };
+      updateTimelineSpellRow: (
+        spellIndex: number,
+        destinationRowIndex: number
+      ) => {
+        set((state) => {
+          const isValidRowIndex =
+            destinationRowIndex >= 0 && destinationRowIndex < state.rows.length;
+
+          const updatedSpells = state.spells.map((spell, i) => {
+            if (i === spellIndex) {
+              return {
+                ...spell,
+                row: destinationRowIndex,
+                isActive: isValidRowIndex
+                  ? state.rows[destinationRowIndex].isActive
+                  : spell.isActive,
+              };
             }
             return spell;
-          }),
-        }));
+          });
+
+          return {
+            spells: updatedSpells,
+          };
+        });
       },
 
       clearTimeline: () => set((state) => ({ ...state, rows: [] })),
