@@ -77,17 +77,18 @@ export const calculateDestinationRowIndex = (y: number) => {
 };
 
 export const calculateSpellDestinationRowIndex = (y: number) => {
+  // Both 32 is for spacing around boss row
+  // 16 is to compensate for limit of Y drag
+  // 4 is to make sure the switch between a destination row and another
+  // is made at the middle of the 8px space between rows
   const yPosWithoutHeader =
-    y - GRADUATED_TIMELINE_HEIGHT - 32 - TIMELINE_ROW_HEIGHT - 32 + 16;
+    y - GRADUATED_TIMELINE_HEIGHT - 32 - TIMELINE_ROW_HEIGHT - 32 + 16 + 4;
 
-  const initialDestinationRowIndex = yPosWithoutHeader / TIMELINE_ROW_HEIGHT;
-
-  const finalDestinationRowIndex = Math.floor(
-    (yPosWithoutHeader - initialDestinationRowIndex * BASE_SPACING) /
-      TIMELINE_ROW_HEIGHT
+  const initialDestinationRowIndex = Math.floor(
+    yPosWithoutHeader / (TIMELINE_ROW_HEIGHT + BASE_SPACING)
   );
 
-  return finalDestinationRowIndex;
+  return initialDestinationRowIndex;
 };
 // ---------------------------
 
@@ -234,7 +235,13 @@ const TimelineWrapper = () => {
   const handleWindowResize = () => {
     setDimensions({
       width: window.innerWidth - 40 - 2 * 48,
-      height: 40 + 32 + 40 + 32 + rows.length * 8 + rows.length * 40,
+      height:
+        GRADUATED_TIMELINE_HEIGHT +
+        32 +
+        TIMELINE_ROW_HEIGHT +
+        32 +
+        rows.length * 8 +
+        rows.length * 40,
     });
   };
 
