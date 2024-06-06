@@ -5,6 +5,7 @@ import { useIsKeyPressed } from "../../../lib/hooks/useIsKeyPressed";
 import { useTimelineStore } from "../../../lib/stores/useTimelineStore";
 import {
   BASE_SPACING,
+  BOSS_TIMELINE_ROW_HEIGHT,
   GRADUATED_TIMELINE_HEIGHT,
   TIMELINE_ROW_HEIGHT,
   calculateDestinationRowIndex,
@@ -57,9 +58,7 @@ export type BossTimelineRow = TimelineRow & { type: ETimelineRowType.BOSS };
 const ENCOUNTER_TIMER = 345;
 
 const calculateSpellPositionY = (spellRow: number) =>
-  32 +
-  TIMELINE_ROW_HEIGHT +
-  32 -
+  BOSS_TIMELINE_ROW_HEIGHT -
   BASE_SPACING / 2 +
   (spellRow + 1) * TIMELINE_ROW_HEIGHT +
   (spellRow + 1) * BASE_SPACING;
@@ -131,9 +130,7 @@ const Canvas = ({
 
   const index = calculateDestinationRowIndex(ghostRowY);
   const moveRowIndicatorPosY =
-    32 +
-    TIMELINE_ROW_HEIGHT +
-    32 -
+    BOSS_TIMELINE_ROW_HEIGHT -
     BASE_SPACING / 2 +
     index * TIMELINE_ROW_HEIGHT +
     index * BASE_SPACING;

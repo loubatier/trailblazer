@@ -1,6 +1,10 @@
 import React from "react";
 import { Rect } from "react-konva";
-import { BASE_SPACING, TIMELINE_ROW_HEIGHT } from "../timeline-wrapper";
+import {
+  BASE_SPACING,
+  BOSS_TIMELINE_ROW_HEIGHT,
+  TIMELINE_ROW_HEIGHT,
+} from "../timeline-wrapper";
 import { ETimelineRowType } from ".";
 
 interface IProps {
@@ -16,9 +20,7 @@ const CanvasRow = ({ width, type, index, isActive, isHovered }: IProps) => {
   const fill = isActive ? (isHovered ? "#2A2E34" : "#23262B") : "#23262B50";
   const bossRowY = 32;
   const rowY =
-    32 +
-    TIMELINE_ROW_HEIGHT +
-    32 +
+    BOSS_TIMELINE_ROW_HEIGHT +
     index * TIMELINE_ROW_HEIGHT +
     index * BASE_SPACING;
 

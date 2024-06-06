@@ -6,6 +6,7 @@ import { useIsKeyPressed } from "../../../lib/hooks/useIsKeyPressed";
 import { useTimelineStore } from "../../../lib/stores/useTimelineStore";
 import {
   BASE_SPACING,
+  BOSS_TIMELINE_ROW_HEIGHT,
   GRADUATED_TIMELINE_HEIGHT,
   TIMELINE_ROW_HEIGHT,
 } from "../timeline-wrapper";
@@ -50,15 +51,13 @@ const CanvasSpell = ({
   };
 
   const isAboveYMinimum = (y: number) => {
-    return y >= GRADUATED_TIMELINE_HEIGHT + 32 + TIMELINE_ROW_HEIGHT + 32 - 16;
+    return y >= GRADUATED_TIMELINE_HEIGHT + BOSS_TIMELINE_ROW_HEIGHT - 16;
   };
 
   const isUnderYMaximum = (y: number) => {
     return (
       y <=
-      32 +
-        TIMELINE_ROW_HEIGHT +
-        32 +
+      BOSS_TIMELINE_ROW_HEIGHT +
         rows.length * BASE_SPACING +
         rows.length * TIMELINE_ROW_HEIGHT -
         BASE_SPACING / 2
@@ -94,20 +93,18 @@ const CanvasSpell = ({
       y: isAboveYMinimum(pos.y)
         ? isUnderYMaximum(pos.y)
           ? pos.y
-          : 32 +
-            TIMELINE_ROW_HEIGHT +
-            32 +
+          : BOSS_TIMELINE_ROW_HEIGHT +
             rows.length * BASE_SPACING +
             rows.length * TIMELINE_ROW_HEIGHT -
             BASE_SPACING / 2
-        : 0 + GRADUATED_TIMELINE_HEIGHT + 32 + TIMELINE_ROW_HEIGHT + 32 - 16,
+        : 0 + GRADUATED_TIMELINE_HEIGHT + BOSS_TIMELINE_ROW_HEIGHT - 16,
     };
   };
 
   return (
     <Group
       x={x}
-      y={!isNil(spell.row) ? y : -10000}
+      y={!isNil(spell.row) ? y : -10000} // NOTE: We offset the spell out of the view to avoid displaying a flicker
       style={{ cursor: spellOptions.isDragging ? "grabbing" : "grab" }}
       draggable={spell.isActive}
       dragBoundFunc={(pos) => {

@@ -65,13 +65,14 @@ const AddRowButton = styled.button<{ isDisabled: boolean }>`
 `;
 
 export const GRADUATED_TIMELINE_HEIGHT = 40;
+export const BOSS_TIMELINE_ROW_HEIGHT = 32 + 40 + 32;
 export const TIMELINE_ROW_HEIGHT = 40;
 export const BASE_SPACING = 8;
 
 // --------------------------- Move this to utils in a folder dedicated to planner functions
 export const calculateDestinationRowIndex = (y: number) => {
   const yPosWithoutHeader =
-    y - GRADUATED_TIMELINE_HEIGHT - 32 - TIMELINE_ROW_HEIGHT - 32;
+    y - GRADUATED_TIMELINE_HEIGHT - BOSS_TIMELINE_ROW_HEIGHT;
 
   const destinationRowIndex = Math.ceil(
     yPosWithoutHeader / (TIMELINE_ROW_HEIGHT + BASE_SPACING)
@@ -89,9 +90,7 @@ export const calculateSpellDestinationRowIndex = (y: number) => {
   const yPosWithoutHeader =
     y -
     GRADUATED_TIMELINE_HEIGHT -
-    32 -
-    TIMELINE_ROW_HEIGHT -
-    32 +
+    BOSS_TIMELINE_ROW_HEIGHT +
     16 +
     BASE_SPACING / 2;
 
@@ -252,9 +251,7 @@ const TimelineWrapper = () => {
       width: window.innerWidth - 40 - 2 * 48,
       height:
         GRADUATED_TIMELINE_HEIGHT +
-        32 +
-        TIMELINE_ROW_HEIGHT +
-        32 +
+        BOSS_TIMELINE_ROW_HEIGHT +
         rows.length * 8 +
         rows.length * 40,
     });
