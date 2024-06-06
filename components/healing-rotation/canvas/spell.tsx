@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Konva from "konva";
+import { isNil } from "lodash";
 import { Group, Image as KonvaImage, Rect, Text } from "react-konva";
 import { useIsKeyPressed } from "../../../lib/hooks/useIsKeyPressed";
 import { useTimelineStore } from "../../../lib/stores/useTimelineStore";
@@ -106,7 +107,7 @@ const CanvasSpell = ({
   return (
     <Group
       x={x}
-      y={y}
+      y={!isNil(spell.row) ? y : -10000}
       style={{ cursor: spellOptions.isDragging ? "grabbing" : "grab" }}
       draggable={spell.isActive}
       dragBoundFunc={(pos) => {

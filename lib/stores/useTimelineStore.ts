@@ -1,3 +1,4 @@
+import { isNil } from "lodash";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import {
@@ -260,9 +261,10 @@ export const useTimelineStore = create<TimelineStore>()(
               return {
                 ...spell,
                 row: destinationRowIndex,
-                isActive: isValidRowIndex
-                  ? state.rows[destinationRowIndex].isActive
-                  : spell.isActive,
+                isActive:
+                  isValidRowIndex && !isNil(destinationRowIndex)
+                    ? state.rows[destinationRowIndex].isActive
+                    : spell.isActive,
               };
             }
             return spell;

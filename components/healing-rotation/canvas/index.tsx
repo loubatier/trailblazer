@@ -56,6 +56,14 @@ export type BossTimelineRow = TimelineRow & { type: ETimelineRowType.BOSS };
 
 const ENCOUNTER_TIMER = 345;
 
+const calculateSpellPositionY = (spellRow: number) =>
+  32 +
+  TIMELINE_ROW_HEIGHT +
+  32 -
+  BASE_SPACING / 2 +
+  (spellRow + 1) * TIMELINE_ROW_HEIGHT +
+  (spellRow + 1) * BASE_SPACING;
+
 const Canvas = ({
   width,
   height,
@@ -103,9 +111,8 @@ const Canvas = ({
   const isShiftPressed = useIsKeyPressed("Shift");
 
   const handleTimeLineSpellDragStart = (spellIndex: number) => {
-    // NOTE: We set temporary spell row to -10 to avoid flickering to happen in the canvas visible scope
-    // Setting it to null causes a flicker of the spell at the top of the rows
-    updateTimelineSpellRow(spellIndex, -10);
+    // NOTE: We set temporary spell row to null so even when you drop on original row the spell snap back into place
+    updateTimelineSpellRow(spellIndex, null);
   };
 
   const handleTimelineSpellShiftMove = (
@@ -201,14 +208,7 @@ const Canvas = ({
           <CanvasSpell
             key={i}
             x={spell.x}
-            y={
-              32 +
-              TIMELINE_ROW_HEIGHT +
-              32 -
-              BASE_SPACING / 2 +
-              (spell.row + 1) * TIMELINE_ROW_HEIGHT +
-              (spell.row + 1) * BASE_SPACING
-            }
+            y={calculateSpellPositionY(spell.row)}
             spell={spell}
             timer={ENCOUNTER_TIMER}
             onClick={() => (spell.isActive ? selectTimelineSpell(i) : null)}
