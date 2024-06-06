@@ -11,12 +11,11 @@ interface IProps {
   onDragRowEnd?: () => void;
 }
 
-const Root = styled.div<{ isBossRow: boolean }>`
+const Root = styled.div`
   position: relative;
-  margin: ${({ isBossRow }) => (isBossRow ? "32px 0" : "0 0 8px")};
 `;
 
-const ActionsButton = styled.button`
+const ActionsButton = styled.button<{ isBossRow: boolean }>`
   width: 40px;
   height: 40px;
   padding: 0 8px;
@@ -27,6 +26,8 @@ const ActionsButton = styled.button`
   border: none;
   background-color: transparent;
   cursor: pointer;
+  box-sizing: content-box;
+  padding: ${({ isBossRow }) => (isBossRow ? "32px 0" : "0 0 8px")};
 
   svg {
     flex-shrink: 0;
@@ -107,8 +108,9 @@ const RowActions = ({ row, type, onDragRowStart, onDragRowEnd }: IProps) => {
   const rowIndex = rows.indexOf(row);
 
   return (
-    <Root isBossRow={isBossRow}>
+    <Root>
       <ActionsButton
+        isBossRow={isBossRow}
         draggable={!isBossRow}
         onDragStart={() => handleRowDragStart()}
         onDragOver={(e) => e.preventDefault()}

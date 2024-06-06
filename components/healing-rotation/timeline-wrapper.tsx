@@ -289,19 +289,21 @@ const TimelineWrapper = () => {
             onDrop={isDraggingRow ? handleRowActionsDrop : null}
           >
             {rows.map((row, i) => (
-              <RowActions
-                key={`row-actions-${i}`}
-                type={row.type}
-                row={row}
-                onDragRowStart={() => {
-                  setInitialRowIndex(i);
-                  setIsDraggingRow(true);
-                }}
-                onDragRowEnd={() => {
-                  setInitialRowIndex(null);
-                  setIsDraggingRow(false);
-                }}
-              />
+              <>
+                <RowActions
+                  key={`row-actions-${i}`}
+                  type={row.type}
+                  row={row}
+                  onDragRowStart={() => {
+                    setInitialRowIndex(i);
+                    setIsDraggingRow(true);
+                  }}
+                  onDragRowEnd={() => {
+                    setInitialRowIndex(null);
+                    setIsDraggingRow(false);
+                  }}
+                />
+              </>
             ))}
           </div>
         </RowActionsWrapper>
