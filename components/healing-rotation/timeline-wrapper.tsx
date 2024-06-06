@@ -70,30 +70,42 @@ export const BASE_SPACING = 8;
 
 // --------------------------- Move this to utils in a folder dedicated to planner functions
 export const calculateDestinationRowIndex = (y: number) => {
-  return Math.round(
-    Math.max(y - GRADUATED_TIMELINE_HEIGHT, 1) /
-      (TIMELINE_ROW_HEIGHT + BASE_SPACING)
+  const yPosWithoutHeader =
+    y - GRADUATED_TIMELINE_HEIGHT - 32 - TIMELINE_ROW_HEIGHT - 32;
+
+  const destinationRowIndex = Math.ceil(
+    yPosWithoutHeader / (TIMELINE_ROW_HEIGHT + BASE_SPACING)
   );
+
+  return destinationRowIndex;
 };
 
 export const calculateSpellDestinationRowIndex = (y: number) => {
+  // NOTE:
   // Both 32 is for spacing around boss row
   // 16 is to compensate for limit of Y drag
   // 4 is to make sure the switch between a destination row and another
   // is made at the middle of the 8px space between rows
   const yPosWithoutHeader =
-    y - GRADUATED_TIMELINE_HEIGHT - 32 - TIMELINE_ROW_HEIGHT - 32 + 16 + 4;
+    y -
+    GRADUATED_TIMELINE_HEIGHT -
+    32 -
+    TIMELINE_ROW_HEIGHT -
+    32 +
+    16 +
+    BASE_SPACING / 2;
 
-  const initialDestinationRowIndex = Math.floor(
+  const destinationRowIndex = Math.floor(
     yPosWithoutHeader / (TIMELINE_ROW_HEIGHT + BASE_SPACING)
   );
 
-  return initialDestinationRowIndex;
+  return destinationRowIndex;
 };
 // ---------------------------
 
 const TimelineWrapper = () => {
   const canvasRef = useRef<HTMLDivElement>(null);
+  const rowActionsRef = useRef<HTMLDivElement>(null);
 
   const {
     offset,
@@ -204,7 +216,10 @@ const TimelineWrapper = () => {
 
   // --------------------------- useDragRow
   const handleRowActionsDragOver = (event: React.DragEvent) => {
-    const y = event.clientY - canvasRef.current.getBoundingClientRect().top;
+    const y =
+      event.clientY -
+      GRADUATED_TIMELINE_HEIGHT -
+      canvasRef.current.getBoundingClientRect().top;
 
     setGhostRowY(y);
     setDestinationRowIndex(calculateDestinationRowIndex(y));
@@ -266,26 +281,29 @@ const TimelineWrapper = () => {
       </TimelineActionsWrapper>
 
       <TimelineContentWrapper>
-        <RowActionsWrapper
-          onDragOver={isDraggingRow ? handleRowActionsDragOver : null}
-          onDrop={isDraggingRow ? handleRowActionsDrop : null}
-        >
+        <RowActionsWrapper>
           <RowActions type={bossRow.type} row={bossRow} />
-          {rows.map((row, i) => (
-            <RowActions
-              key={`row-actions-${i}`}
-              type={row.type}
-              row={row}
-              onDragRowStart={() => {
-                setInitialRowIndex(i);
-                setIsDraggingRow(true);
-              }}
-              onDragRowEnd={() => {
-                setInitialRowIndex(null);
-                setIsDraggingRow(false);
-              }}
-            />
-          ))}
+          <div
+            ref={rowActionsRef}
+            onDragOver={isDraggingRow ? handleRowActionsDragOver : null}
+            onDrop={isDraggingRow ? handleRowActionsDrop : null}
+          >
+            {rows.map((row, i) => (
+              <RowActions
+                key={`row-actions-${i}`}
+                type={row.type}
+                row={row}
+                onDragRowStart={() => {
+                  setInitialRowIndex(i);
+                  setIsDraggingRow(true);
+                }}
+                onDragRowEnd={() => {
+                  setInitialRowIndex(null);
+                  setIsDraggingRow(false);
+                }}
+              />
+            ))}
+          </div>
         </RowActionsWrapper>
         <CanvasWrapper
           ref={canvasRef}

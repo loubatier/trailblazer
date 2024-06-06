@@ -116,7 +116,9 @@ const Canvas = ({
 
   const index = calculateDestinationRowIndex(ghostRowY);
   const moveRowIndicatorPosY =
+    32 +
     TIMELINE_ROW_HEIGHT +
+    32 -
     BASE_SPACING / 2 +
     index * TIMELINE_ROW_HEIGHT +
     index * BASE_SPACING;
