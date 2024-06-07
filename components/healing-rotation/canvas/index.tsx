@@ -44,16 +44,25 @@ export type TimelineSpell = Spell & {
 };
 
 export enum ETimelineRowType {
-  BASE = "base",
   BOSS = "boss",
+  ROSTER = "roster",
 }
 
-export type TimelineRow = {
+export interface BaseTimelineRow {
   type: ETimelineRowType;
-  isActive: boolean;
-};
+}
 
-export type BossTimelineRow = TimelineRow & { type: ETimelineRowType.BOSS };
+export interface BossTimelineRow extends BaseTimelineRow {
+  type: ETimelineRowType.BOSS;
+  isLocked: boolean;
+}
+
+export interface RosterTimelineRow extends BaseTimelineRow {
+  type: ETimelineRowType.ROSTER;
+  isActive: boolean;
+}
+
+export type TimelineRow = BossTimelineRow | RosterTimelineRow;
 
 const ENCOUNTER_TIMER = 345;
 
@@ -159,21 +168,13 @@ const Canvas = ({
         {/* TODO: Might be easier to set this to 0 but would mean setting rows x to -4 so off canvas */}
         <GraduatedTimeline x={0} y={0} timer={ENCOUNTER_TIMER} zoom={zoom} />
         <Group y={GRADUATED_TIMELINE_HEIGHT}>
-          <CanvasRow
-            index={null}
-            type={bossRow.type}
-            width={ENCOUNTER_TIMER * zoom}
-            isActive={bossRow.isActive}
-            isHovered={false}
-          />
+          <CanvasRow row={bossRow} width={ENCOUNTER_TIMER * zoom} />
 
-          {rows.map(({ type, isActive }, i) => (
+          {rows.map((row, i) => (
             <CanvasRow
-              key={i}
-              index={i}
-              type={type}
+              key={`canvas-row-${i}`}
+              row={row}
               width={ENCOUNTER_TIMER * zoom}
-              isActive={isActive}
               isHovered={i === hoveredRow}
             />
           ))}

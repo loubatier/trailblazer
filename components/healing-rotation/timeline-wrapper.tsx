@@ -279,7 +279,7 @@ const TimelineWrapper = () => {
 
       <TimelineContentWrapper>
         <RowActionsWrapper>
-          <RowActions type={bossRow.type} row={bossRow} />
+          <RowActions row={bossRow} />
           <div
             ref={rowActionsRef}
             onDragOver={isDraggingRow ? handleRowActionsDragOver : null}
@@ -289,7 +289,6 @@ const TimelineWrapper = () => {
               <>
                 <RowActions
                   key={`row-actions-${i}`}
-                  type={row.type}
                   row={row}
                   onDragRowStart={() => {
                     setInitialRowIndex(i);

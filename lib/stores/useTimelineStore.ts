@@ -4,8 +4,8 @@ import { persist } from "zustand/middleware";
 import {
   BossTimelineRow,
   ETimelineRowType,
+  RosterTimelineRow,
   Spell,
-  TimelineRow,
   TimelineSpell,
 } from "../../components/healing-rotation/canvas";
 
@@ -50,14 +50,14 @@ const SPELLS: TimelineSpell[] = [
 
 const BOSS_ROW: BossTimelineRow = {
   type: ETimelineRowType.BOSS,
-  isActive: true,
+  isLocked: false,
 };
 
-const ROWS: TimelineRow[] = [
-  { type: ETimelineRowType.BASE, isActive: true },
-  { type: ETimelineRowType.BASE, isActive: true },
-  { type: ETimelineRowType.BASE, isActive: false },
-  { type: ETimelineRowType.BASE, isActive: true },
+const ROWS: RosterTimelineRow[] = [
+  { type: ETimelineRowType.ROSTER, isActive: true },
+  { type: ETimelineRowType.ROSTER, isActive: true },
+  { type: ETimelineRowType.ROSTER, isActive: false },
+  { type: ETimelineRowType.ROSTER, isActive: true },
 ];
 
 interface TimelineStore {
@@ -66,7 +66,7 @@ interface TimelineStore {
   zoom: number;
   spells: TimelineSpell[];
   bossRow: BossTimelineRow;
-  rows: TimelineRow[];
+  rows: RosterTimelineRow[];
 
   updateTimelineZoom: (z: number) => void;
 
@@ -80,6 +80,8 @@ interface TimelineStore {
   deleteTimelineRow: (i: number) => void;
   updateTimelineRowStatus: (i: number, isActive: boolean) => void;
   updateTimelineRowPosition: (index: number, newIndex: number) => void;
+
+  updateBossTimelineRowStatus: (isLocked: boolean) => void;
 
   clearTimelineSpellSelection: () => void;
   clearTimeline: () => void;
@@ -168,7 +170,7 @@ export const useTimelineStore = create<TimelineStore>()(
           ...state,
           rows: [
             ...state.rows,
-            { type: ETimelineRowType.BASE, isActive: true },
+            { type: ETimelineRowType.ROSTER, isActive: true },
           ],
         }));
       },
@@ -237,6 +239,13 @@ export const useTimelineStore = create<TimelineStore>()(
             spells: state.spells,
           };
         });
+      },
+
+      updateBossTimelineRowStatus: (isLocked: boolean) => {
+        set((state) => ({
+          ...state,
+          bossRow: { ...state.bossRow, isLocked },
+        }));
       },
 
       updateTimelineSpellTiming: (spellIndex: number, x: number) => {
