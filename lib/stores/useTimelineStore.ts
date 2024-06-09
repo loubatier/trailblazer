@@ -94,7 +94,7 @@ export const useTimelineStore = create<TimelineStore>()(
     (set) => ({
       offset: 0,
       isDragging: false,
-      zoom: 3,
+      zoom: 4,
       spells: SPELLS,
       bossRow: BOSS_ROW,
       rows: ROWS,

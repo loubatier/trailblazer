@@ -42,9 +42,9 @@ const Zoom = () => {
   return (
     <ZoomInput
       type="range"
-      min="2"
+      min="4"
       max="5"
-      step="0.2"
+      step="0.01"
       value={zoom}
       onChange={(e) => updateTimelineZoom(parseFloat(e.target.value))}
     />
