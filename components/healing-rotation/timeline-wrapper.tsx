@@ -3,8 +3,9 @@ import { useEffect, useRef, useState } from "react";
 import { ListPlus } from "lucide-react";
 import styled from "styled-components";
 import { Player, Roster } from "../../data/models/player";
+import { useBossRowStore } from "../../lib/stores/useBossRowStore";
 import { useTimelineStore } from "../../lib/stores/useTimelineStore";
-import Canvas, { TimelineSpell } from "./canvas";
+import Canvas, { RosterTimelineSpell } from "./canvas";
 import RowActions from "./row-actions";
 
 const Root = styled.div`
@@ -108,13 +109,14 @@ const TimelineWrapper = () => {
   const {
     offset,
     spells,
-    bossRow,
     rows,
     clearTimelineSpellSelection,
     addTimelineRow,
     addTimelineSpell,
     updateTimelineRowPosition,
-  } = useTimelineStore((state) => state);
+  } = useTimelineStore();
+
+  const { row: bossRow } = useBossRowStore();
 
   const [roster, setRoster] = useState<Roster>({ players: [] });
   const [rosterSpells, setRosterSpells] = useState([]);
@@ -151,12 +153,12 @@ const TimelineWrapper = () => {
   // Switch between the 2 given we have selected the Everyone or specific player option on dropdown
   const getSpellsForPlayer = (
     player: Player,
-    spells: TimelineSpell[]
-  ): TimelineSpell[] => {
+    spells: RosterTimelineSpell[]
+  ): RosterTimelineSpell[] => {
     return spells[player.spec] || [];
   };
 
-  const renderSpellIcon = (spell: TimelineSpell): JSX.Element => {
+  const renderSpellIcon = (spell: RosterTimelineSpell): JSX.Element => {
     return (
       <SpellIcon
         draggable
@@ -177,7 +179,7 @@ const TimelineWrapper = () => {
   // --------------------------- useDragSpell
   const handleSpellDragStart = (
     event: React.DragEvent,
-    spell: TimelineSpell
+    spell: RosterTimelineSpell
   ) => {
     event.dataTransfer.setData("spell", JSON.stringify(spell));
     setIsDraggingSpell(true);
@@ -252,7 +254,8 @@ const TimelineWrapper = () => {
         GRADUATED_TIMELINE_HEIGHT +
         BOSS_TIMELINE_ROW_HEIGHT +
         rows.length * 8 +
-        rows.length * 40,
+        rows.length * 40 +
+        8,
     });
   };
 

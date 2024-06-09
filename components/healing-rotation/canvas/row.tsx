@@ -1,12 +1,13 @@
 import React from "react";
 import { Rect } from "react-konva";
+import { ETimelineRowType } from "../../../data/models/timeline";
 import { useTimelineStore } from "../../../lib/stores/useTimelineStore";
 import {
   BASE_SPACING,
   BOSS_TIMELINE_ROW_HEIGHT,
   TIMELINE_ROW_HEIGHT,
 } from "../timeline-wrapper";
-import { BossTimelineRow, ETimelineRowType, TimelineRow } from ".";
+import { BossTimelineRow, TimelineRow } from ".";
 
 interface IProps {
   row: TimelineRow | BossTimelineRow;

@@ -3,13 +3,13 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import {
   BossTimelineRow,
-  ETimelineRowType,
   RosterTimelineRow,
+  RosterTimelineSpell,
   Spell,
-  TimelineSpell,
 } from "../../components/healing-rotation/canvas";
+import { ETimelineRowType } from "../../data/models/timeline";
 
-const SPELLS: TimelineSpell[] = [
+const SPELLS: RosterTimelineSpell[] = [
   {
     duration: 8,
     cooldown: 120,
@@ -64,7 +64,7 @@ interface TimelineStore {
   offset: number;
   isDragging: boolean;
   zoom: number;
-  spells: TimelineSpell[];
+  spells: RosterTimelineSpell[];
   bossRow: BossTimelineRow;
   rows: RosterTimelineRow[];
 

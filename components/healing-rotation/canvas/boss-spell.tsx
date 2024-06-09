@@ -1,46 +1,34 @@
 import React, { useState } from "react";
 import Konva from "konva";
-import { isNil } from "lodash";
 import { Group, Image as KonvaImage, Rect, Text } from "react-konva";
-import { useIsKeyPressed } from "../../../lib/hooks/useIsKeyPressed";
+import { useBossRowStore } from "../../../lib/stores/useBossRowStore";
 import { useTimelineStore } from "../../../lib/stores/useTimelineStore";
-import {
-  BASE_SPACING,
-  BOSS_TIMELINE_ROW_HEIGHT,
-  GRADUATED_TIMELINE_HEIGHT,
-  TIMELINE_ROW_HEIGHT,
-} from "../timeline-wrapper";
-import { RosterTimelineSpell } from ".";
+import { BASE_SPACING, TIMELINE_ROW_HEIGHT } from "../timeline-wrapper";
+import { BossTimelineSpell } from ".";
 
 interface IProps {
   x: number;
   y: number;
-  spell: RosterTimelineSpell;
+  spell: BossTimelineSpell;
   timer: number;
   onClick: () => void;
-  onDragStart: () => void;
   onDragMove: (e: Konva.KonvaEventObject<DragEvent>) => void;
-  onDragEnd: () => void;
 }
 
-const CanvasSpell = ({
+const CanvasBossSpell = ({
   x,
   y,
   spell,
   timer,
   onClick,
-  onDragStart,
   onDragMove,
-  onDragEnd,
 }: IProps) => {
   const [spellOptions, setSpellOptions] = useState({ x, isDragging: false });
-  const isShiftPressed = useIsKeyPressed("Shift");
-  const { zoom, offset, rows } = useTimelineStore((state) => state);
+  const { zoom, offset } = useTimelineStore((state) => state);
+  const { row } = useBossRowStore();
 
   const img = new Image();
-  img.src = spell.isActive
-    ? spell.icon
-    : "https://assets.lorrgs.io/images/spells/ability_evoker_rewind.jpg";
+  img.src = spell.icon;
 
   const isAboveXMinimum = (x: number) => {
     return x >= 0 + offset;
@@ -48,21 +36,6 @@ const CanvasSpell = ({
 
   const isUnderXMaximum = (x: number) => {
     return x + spell.duration * zoom <= timer * zoom + offset;
-  };
-
-  const isAboveYMinimum = (y: number) => {
-    return y >= GRADUATED_TIMELINE_HEIGHT + BOSS_TIMELINE_ROW_HEIGHT - 16;
-  };
-
-  const isUnderYMaximum = (y: number) => {
-    return (
-      y <=
-      BOSS_TIMELINE_ROW_HEIGHT +
-        rows.length * BASE_SPACING +
-        rows.length * TIMELINE_ROW_HEIGHT -
-        BASE_SPACING / 2 +
-        16
-    );
   };
 
   const getSpellTiming = (timing: number) => {
@@ -84,35 +57,14 @@ const CanvasSpell = ({
     };
   };
 
-  const keyPressedDragBoundFunc = (pos) => {
-    return {
-      x: isAboveXMinimum(pos.x)
-        ? isUnderXMaximum(pos.x)
-          ? pos.x
-          : timer * zoom - spell.duration * zoom + offset
-        : 0 + offset,
-      y: isAboveYMinimum(pos.y)
-        ? isUnderYMaximum(pos.y)
-          ? pos.y
-          : BOSS_TIMELINE_ROW_HEIGHT +
-            rows.length * BASE_SPACING +
-            rows.length * TIMELINE_ROW_HEIGHT -
-            BASE_SPACING / 2 +
-            16
-        : 0 + GRADUATED_TIMELINE_HEIGHT + BOSS_TIMELINE_ROW_HEIGHT - 16,
-    };
-  };
-
   return (
     <Group
       x={x}
-      y={!isNil(spell.row) ? y : -10000} // NOTE: We offset the spell out of the view to avoid displaying a flicker
+      y={y}
       style={{ cursor: spellOptions.isDragging ? "grabbing" : "grab" }}
-      draggable={spell.isActive}
+      draggable={!row.isLocked}
       dragBoundFunc={(pos) => {
-        return isShiftPressed
-          ? keyPressedDragBoundFunc(pos)
-          : baseDragBoundFunc(pos);
+        return baseDragBoundFunc(pos);
       }}
       onDragStart={(e) => {
         e.cancelBubble = true;
@@ -120,7 +72,6 @@ const CanvasSpell = ({
           ...spellOptions,
           isDragging: true,
         });
-        isShiftPressed && onDragStart();
       }}
       onDragMove={(e) => {
         e.cancelBubble = true;
@@ -136,7 +87,6 @@ const CanvasSpell = ({
           ...spellOptions,
           isDragging: false,
         });
-        isShiftPressed && onDragEnd();
       }}
       onClick={onClick}
     >
@@ -153,17 +103,13 @@ const CanvasSpell = ({
       <Rect
         width={spell.cooldown * zoom}
         height={32}
-        fill={spell.isActive ? `${spell.color}50` : `${spell.color}25`}
+        fill={`${spell.color}50`}
       />
-      <Rect
-        width={spell.duration * zoom}
-        height={32}
-        fill={spell.isActive ? spell.color : `${spell.color}50`}
-      />
+      <Rect width={spell.duration * zoom} height={32} fill={spell.color} />
       <KonvaImage image={img} width={24} height={24} y={4} x={4} />
       <Text text={getSpellTiming(spell.timing)} y={10} x={32} fill="white" />
     </Group>
   );
 };
 
-export default CanvasSpell;
+export default CanvasBossSpell;

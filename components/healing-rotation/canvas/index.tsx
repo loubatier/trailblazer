@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
 import Konva from "konva";
 import { Group, Layer, Line, Rect, Stage } from "react-konva";
+import { ETimelineRowType } from "../../../data/models/timeline";
 import { useIsKeyPressed } from "../../../lib/hooks/useIsKeyPressed";
+import { useBossRowStore } from "../../../lib/stores/useBossRowStore";
 import { useTimelineStore } from "../../../lib/stores/useTimelineStore";
 import {
   BASE_SPACING,
@@ -11,6 +13,7 @@ import {
   calculateDestinationRowIndex,
   calculateSpellDestinationRowIndex,
 } from "../timeline-wrapper";
+import CanvasBossSpell from "./boss-spell";
 import GraduatedTimeline from "./graduated-timeline";
 import CanvasRow from "./row";
 import CanvasSpell from "./spell";
@@ -31,11 +34,7 @@ export type Spell = {
   icon: string;
 };
 
-export interface Spells {
-  [key: string]: Spell[];
-}
-
-export type TimelineSpell = Spell & {
+export type RosterTimelineSpell = Spell & {
   x: number;
   timing: number;
   row: number;
@@ -43,10 +42,11 @@ export type TimelineSpell = Spell & {
   isSelected: boolean;
 };
 
-export enum ETimelineRowType {
-  BOSS = "boss",
-  ROSTER = "roster",
-}
+export type BossTimelineSpell = Spell & {
+  x: number;
+  timing: number;
+  isSelected: boolean;
+};
 
 export interface BaseTimelineRow {
   type: ETimelineRowType;
@@ -84,7 +84,6 @@ const Canvas = ({
     isDragging,
     zoom,
     spells,
-    bossRow,
     rows,
     deleteTimelineSpell,
     updateTimelineSpellTiming,
@@ -92,7 +91,13 @@ const Canvas = ({
     selectTimelineSpell,
     moveTimeline,
     toggleTimelineDrag,
-  } = useTimelineStore((state) => state);
+  } = useTimelineStore();
+
+  const {
+    row: bossRow,
+    spells: bossSpells,
+    updateSpellTiming: updateBossSpellTiming,
+  } = useBossRowStore();
 
   useEffect(() => {
     const handleKeyPress = (e) => {
@@ -113,7 +118,7 @@ const Canvas = ({
     return () => {
       document.removeEventListener("keydown", handleKeyPress);
     };
-  }, [spells]);
+  }, []);
 
   // __________________ MOVE SPELL WITH SHIFT PRESSED
   const isShiftPressed = useIsKeyPressed("Shift");
@@ -211,6 +216,18 @@ const Canvas = ({
         </Group>
       </Layer>
       <Layer>
+        {bossSpells.map((spell, i) => (
+          <CanvasBossSpell
+            key={i}
+            x={spell.x}
+            y={40 + 32 + 4}
+            spell={spell}
+            timer={ENCOUNTER_TIMER}
+            onClick={() => console.error("Click boss spell")}
+            onDragMove={(e) => updateBossSpellTiming(i, e.target.x(), zoom)}
+          />
+        ))}
+
         {spells.map((spell, i) => (
           <CanvasSpell
             key={i}
