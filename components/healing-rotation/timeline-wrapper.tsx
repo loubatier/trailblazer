@@ -6,7 +6,6 @@ import { Player, Roster } from "../../data/models/player";
 import { useTimelineStore } from "../../lib/stores/useTimelineStore";
 import Canvas, { TimelineSpell } from "./canvas";
 import RowActions from "./row-actions";
-import Zoom from "./zoom";
 
 const Root = styled.div`
   flex: 1 0 500px;
@@ -248,7 +247,7 @@ const TimelineWrapper = () => {
 
   const handleWindowResize = () => {
     setDimensions({
-      width: window.innerWidth - 40 - 2 * 48,
+      width: window.innerWidth - 64 - 2 * 48,
       height:
         GRADUATED_TIMELINE_HEIGHT +
         BOSS_TIMELINE_ROW_HEIGHT +
@@ -273,7 +272,6 @@ const TimelineWrapper = () => {
         <AddRowButton isDisabled={false} onClick={() => addTimelineRow()}>
           <ListPlus />
         </AddRowButton>
-        <Zoom />
         <SpellsWrapper>{spellIcons}</SpellsWrapper>
       </TimelineActionsWrapper>
 
@@ -286,20 +284,18 @@ const TimelineWrapper = () => {
             onDrop={isDraggingRow ? handleRowActionsDrop : null}
           >
             {rows.map((row, i) => (
-              <>
-                <RowActions
-                  key={`row-actions-${i}`}
-                  row={row}
-                  onDragRowStart={() => {
-                    setInitialRowIndex(i);
-                    setIsDraggingRow(true);
-                  }}
-                  onDragRowEnd={() => {
-                    setInitialRowIndex(null);
-                    setIsDraggingRow(false);
-                  }}
-                />
-              </>
+              <RowActions
+                key={`row-actions-${i}`}
+                row={row}
+                onDragRowStart={() => {
+                  setInitialRowIndex(i);
+                  setIsDraggingRow(true);
+                }}
+                onDragRowEnd={() => {
+                  setInitialRowIndex(null);
+                  setIsDraggingRow(false);
+                }}
+              />
             ))}
           </div>
         </RowActionsWrapper>
