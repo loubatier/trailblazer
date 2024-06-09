@@ -13,15 +13,16 @@ const LINE_HEIGHT = 40;
 const GraduatedTimeline = ({ x, y, timer, zoom }: IProps) => {
   const lines = [];
 
-  for (let seconds = 0; seconds <= timer * zoom; seconds += 10 * zoom) {
-    const xPos = seconds;
-    const isThirdLine = seconds % (30 * zoom) === 0;
+  for (let seconds = 0; seconds <= timer; seconds += 10) {
+    const isThirdLine = seconds % 30 === 0;
+    const xPos = seconds === 0 ? seconds * zoom + 0.5 : seconds * zoom;
+
     lines.push(
       <Line
-        key={xPos}
+        key={`line-${seconds}`}
         x={xPos}
         y={LINE_HEIGHT}
-        points={[0, 0, 0, isThirdLine ? -20 * 2 : -20]}
+        points={[0, 0, 0, isThirdLine ? -40 : -20]}
         closed
         stroke="white"
         strokeWidth={0.5}

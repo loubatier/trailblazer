@@ -144,15 +144,24 @@ const Canvas = ({
     index * TIMELINE_ROW_HEIGHT +
     index * BASE_SPACING;
 
+  const isStageDraggable = ENCOUNTER_TIMER * zoom > width;
+
   return (
     <Stage
       width={width}
       height={height}
-      style={{ cursor: isDragging ? "grabbing" : "grab" }}
-      draggable
+      style={{
+        cursor: isDragging ? "grabbing" : isStageDraggable ? "grab" : "default",
+      }}
+      draggable={isStageDraggable}
       dragBoundFunc={(pos) => {
         return {
-          x: pos.x <= 0 ? pos.x : 0,
+          x:
+            pos.x >= 0
+              ? 0
+              : width - pos.x >= ENCOUNTER_TIMER * zoom
+                ? width - ENCOUNTER_TIMER * zoom
+                : pos.x,
           y: 0,
         };
       }}
