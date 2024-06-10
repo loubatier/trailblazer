@@ -32,7 +32,7 @@ const GraduatedTimeline = ({ x, y, timer, zoom }: IProps) => {
 
   return (
     <Group x={x} y={y}>
-      <Rect width={timer * zoom} height={LINE_HEIGHT} fill={"#1c1e20"} />
+      <Rect width={timer * zoom} height={LINE_HEIGHT} fill={"#23262B"} />
       <Line
         points={[0, LINE_HEIGHT, timer * zoom, LINE_HEIGHT]}
         closed

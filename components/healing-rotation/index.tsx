@@ -17,6 +17,8 @@ const TimelineContentWrapper = styled.div`
   display: flex;
   overflow: hidden;
   margin-top: 24px;
+  padding: 32px 0 16px;
+  background-color: #23262b;
 `;
 
 const RowActionsWrapper = styled.div`
@@ -244,7 +246,10 @@ const HealingRotation = () => {
 
   const handleWindowResize = () => {
     setDimensions({
-      width: window.innerWidth - 64 - 2 * 48,
+      // NOTE: 64 is width of row actions
+      // 2*48 is for both gutter on the sides
+      // 48 is to make sure canvas is smaller so we have a right space balancing row actions space
+      width: window.innerWidth - 64 - 2 * 48 - 48,
       height:
         GRADUATED_TIMELINE_HEIGHT +
         BOSS_TIMELINE_ROW_HEIGHT +

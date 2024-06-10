@@ -22,7 +22,7 @@ const CanvasRow = ({ width, row, isHovered = false }: IProps) => {
   const isActive = isBossRow || row.isActive;
   const index = isBossRow ? null : rows.indexOf(row);
 
-  const fill = isActive ? (isHovered ? "#2A2E34" : "#23262B") : "#23262B50";
+  const fill = isActive ? (isHovered ? "#191C1D" : "#151718") : "#15171850";
   const y = isBossRow
     ? 32
     : BOSS_TIMELINE_ROW_HEIGHT + index * (TIMELINE_ROW_HEIGHT + BASE_SPACING);
