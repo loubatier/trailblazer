@@ -113,7 +113,7 @@ const RowActions = ({ row, onDragRowStart, onDragRowEnd }: IProps) => {
       ]
     : [
         {
-          icon: row.isActive ? Eye : EyeOff,
+          icon: row.isActive ? EyeOff : Eye,
           onClick: () => updateTimelineRowStatus(index, !row.isActive),
           condition: row.isActive,
           activeIcon: EyeOff,
