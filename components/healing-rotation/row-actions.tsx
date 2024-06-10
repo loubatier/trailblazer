@@ -98,7 +98,7 @@ const RowActions = ({ row, onDragRowStart, onDragRowEnd }: IProps) => {
   const actions: Action[] = isBossRow
     ? [
         {
-          icon: row.isLocked ? Lock : Unlock,
+          icon: row.isLocked ? Unlock : Lock,
           onClick: () => updateBossRowStatus(!row.isLocked),
           condition: row.isLocked,
           activeIcon: Lock,
@@ -113,7 +113,7 @@ const RowActions = ({ row, onDragRowStart, onDragRowEnd }: IProps) => {
       ]
     : [
         {
-          icon: row.isActive ? EyeOff : Eye,
+          icon: row.isActive ? Eye : EyeOff,
           onClick: () => updateTimelineRowStatus(index, !row.isActive),
           condition: row.isActive,
           activeIcon: EyeOff,
