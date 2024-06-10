@@ -9,7 +9,7 @@ import {
   BOSS_TIMELINE_ROW_HEIGHT,
   GRADUATED_TIMELINE_HEIGHT,
   TIMELINE_ROW_HEIGHT,
-} from "../timeline-wrapper";
+} from "..";
 import { RosterTimelineSpell } from ".";
 
 interface IProps {

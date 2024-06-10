@@ -12,7 +12,7 @@ import {
   TIMELINE_ROW_HEIGHT,
   calculateDestinationRowIndex,
   calculateSpellDestinationRowIndex,
-} from "../timeline-wrapper";
+} from "..";
 import CanvasBossSpell from "./boss-spell";
 import GraduatedTimeline from "./graduated-timeline";
 import CanvasRow from "./row";

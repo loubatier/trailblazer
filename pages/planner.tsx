@@ -11,8 +11,8 @@ import Link from "next/link";
 import styled from "styled-components";
 import { Description, Main, Title } from "../components/sharedstyles";
 
-const TimelineWrapper = dynamic(
-  () => import("../components/healing-rotation/timeline-wrapper"),
+const HealingRotation = dynamic(
+  () => import("../components/healing-rotation"),
   {
     ssr: false,
   }
@@ -84,7 +84,7 @@ const Planner = () => {
         </InfosWrapper>
       </InfosContainer>
 
-      <TimelineWrapper />
+      <HealingRotation />
     </Main>
   );
 };

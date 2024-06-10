@@ -84,15 +84,10 @@ export const calculateDestinationRowIndex = (y: number) => {
 export const calculateSpellDestinationRowIndex = (y: number) => {
   // NOTE:
   // Both 32 is for spacing around boss row
-  // 16 is to compensate for limit of Y drag
   // 4 is to make sure the switch between a destination row and another
   // is made at the middle of the 8px space between rows
   const yPosWithoutHeader =
-    y -
-    GRADUATED_TIMELINE_HEIGHT -
-    BOSS_TIMELINE_ROW_HEIGHT +
-    16 +
-    BASE_SPACING / 2;
+    y - GRADUATED_TIMELINE_HEIGHT - BOSS_TIMELINE_ROW_HEIGHT + BASE_SPACING / 2;
 
   const destinationRowIndex = Math.floor(
     yPosWithoutHeader / (TIMELINE_ROW_HEIGHT + BASE_SPACING)
@@ -102,7 +97,7 @@ export const calculateSpellDestinationRowIndex = (y: number) => {
 };
 // ---------------------------
 
-const TimelineWrapper = () => {
+const HealingRotation = () => {
   const canvasRef = useRef<HTMLDivElement>(null);
   const rowActionsRef = useRef<HTMLDivElement>(null);
 
@@ -322,4 +317,4 @@ const TimelineWrapper = () => {
   );
 };
 
-export default TimelineWrapper;
+export default HealingRotation;

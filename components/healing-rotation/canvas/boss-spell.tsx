@@ -3,7 +3,7 @@ import Konva from "konva";
 import { Group, Image as KonvaImage, Rect, Text } from "react-konva";
 import { useBossRowStore } from "../../../lib/stores/useBossRowStore";
 import { useTimelineStore } from "../../../lib/stores/useTimelineStore";
-import { BASE_SPACING, TIMELINE_ROW_HEIGHT } from "../timeline-wrapper";
+import { BASE_SPACING, TIMELINE_ROW_HEIGHT } from "..";
 import { BossTimelineSpell } from ".";
 
 interface IProps {
@@ -100,11 +100,6 @@ const CanvasBossSpell = ({
           stroke={"white"}
         />
       )}
-      <Rect
-        width={spell.cooldown * zoom}
-        height={32}
-        fill={`${spell.color}50`}
-      />
       <Rect width={spell.duration * zoom} height={32} fill={spell.color} />
       <KonvaImage image={img} width={24} height={24} y={4} x={4} />
       <Text text={getSpellTiming(spell.timing)} y={10} x={32} fill="white" />

@@ -6,7 +6,7 @@ import {
   BASE_SPACING,
   BOSS_TIMELINE_ROW_HEIGHT,
   TIMELINE_ROW_HEIGHT,
-} from "../timeline-wrapper";
+} from "..";
 import { BossTimelineRow, TimelineRow } from ".";
 
 interface IProps {
