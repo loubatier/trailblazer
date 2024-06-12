@@ -21,12 +21,9 @@ const App = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => {
     <SessionProvider session={session}>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
-        {/* NOTE: Transition is still a WIP and won't be implemented for the moment */}
-        {/* <TransitionLayout> */}
         <QueryClientProvider client={queryClient}>
           <Component {...pageProps} />
         </QueryClientProvider>
-        {/* </TransitionLayout> */}
       </ThemeProvider>
     </SessionProvider>
   );
