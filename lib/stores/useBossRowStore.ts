@@ -7,47 +7,52 @@ import {
 import { ETimelineRowType } from "../../data/models/timeline";
 
 interface BossRowStore {
-  count: number;
+  boss: string;
   row: BossTimelineRow;
   spells: BossTimelineSpell[];
 
+  setBoss: (boss: string) => void;
   updateSpellTiming: (spellIndex: number, x: number, zoom: number) => void;
   updateBossRowStatus: (isLocked: boolean) => void;
   resetBossRowTimers: () => void;
 }
 
-const SPELLS: BossTimelineSpell[] = [
-  {
-    duration: 8,
-    cooldown: 120,
-    color: "#6843A2",
-    icon: "https://assets2.lorrgs.io/images/spells/ability_soulrenderdormazain_hellscream.jpg",
-
-    x: 0,
-    timing: 0,
-    isSelected: false,
-  },
-  {
-    duration: 8,
-    cooldown: 120,
-    color: "#6843A2",
-    icon: "https://assets2.lorrgs.io/images/spells/ability_soulrenderdormazain_hellscream.jpg",
-
-    x: 270,
-    timing: 135,
-    isSelected: false,
-  },
-  {
-    duration: 8,
-    cooldown: 120,
-    color: "#6843A2",
-    icon: "https://assets2.lorrgs.io/images/spells/ability_soulrenderdormazain_hellscream.jpg",
-
-    x: 200,
-    timing: 100,
-    isSelected: false,
-  },
-];
+const INITIAL_BOSS_SPELLS: { [bossName: string]: BossTimelineSpell[] } = {
+  Gnarlroot: [
+    {
+      duration: 8,
+      cooldown: 120,
+      color: "#6843A2",
+      icon: "https://assets2.lorrgs.io/images/spells/ability_soulrenderdormazain_hellscream.jpg",
+      x: 0,
+      timing: 0,
+      isSelected: false,
+    },
+    {
+      duration: 8,
+      cooldown: 120,
+      color: "#6843A2",
+      icon: "https://assets2.lorrgs.io/images/spells/ability_soulrenderdormazain_hellscream.jpg",
+      x: 270,
+      timing: 135,
+      isSelected: false,
+    },
+    // ... other spells for Boss1
+  ],
+  Smolderon: [
+    {
+      duration: 10,
+      cooldown: 150,
+      color: "#A2436A",
+      icon: "https://assets2.lorrgs.io/images/spells/ability_soulrenderdormazain_hellscream.jpg",
+      x: 50,
+      timing: 50,
+      isSelected: false,
+    },
+    // ... other spells for Boss2
+  ],
+  // Add more bosses and their spells as needed
+};
 
 const BOSS_ROW: BossTimelineRow = {
   type: ETimelineRowType.BOSS,
@@ -57,9 +62,16 @@ const BOSS_ROW: BossTimelineRow = {
 export const useBossRowStore = create<BossRowStore>()(
   persist(
     (set) => ({
-      count: 12,
+      boss: "",
       row: BOSS_ROW,
-      spells: SPELLS,
+      spells: [],
+
+      setBoss: (boss) => {
+        set({
+          boss,
+          spells: INITIAL_BOSS_SPELLS[boss],
+        });
+      },
 
       updateSpellTiming: (spellIndex: number, x: number, zoom: number) => {
         set((state) => ({
@@ -76,9 +88,9 @@ export const useBossRowStore = create<BossRowStore>()(
       },
 
       resetBossRowTimers: () => {
-        set({
-          spells: SPELLS,
-        });
+        set((state) => ({
+          spells: INITIAL_BOSS_SPELLS[state.boss],
+        }));
       },
     }),
     {

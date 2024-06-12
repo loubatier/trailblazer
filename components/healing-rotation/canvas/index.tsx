@@ -64,7 +64,7 @@ export interface RosterTimelineRow extends BaseTimelineRow {
 
 export type TimelineRow = BossTimelineRow | RosterTimelineRow;
 
-const ENCOUNTER_TIMER = 345;
+const ENCOUNTER_TIMER = 545;
 
 const calculateSpellPositionY = (spellRow: number) =>
   BOSS_TIMELINE_ROW_HEIGHT -
@@ -198,7 +198,7 @@ const Canvas = ({
               <Rect
                 x={0}
                 y={ghostRowY - TIMELINE_ROW_HEIGHT / 2}
-                fill={"#2A2E34"}
+                fill={"#2A2E3450"}
                 width={ENCOUNTER_TIMER * zoom}
                 height={TIMELINE_ROW_HEIGHT}
               />

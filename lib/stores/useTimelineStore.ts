@@ -2,7 +2,6 @@ import { isNil } from "lodash";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import {
-  BossTimelineRow,
   RosterTimelineRow,
   RosterTimelineSpell,
   Spell,
@@ -48,11 +47,6 @@ const SPELLS: RosterTimelineSpell[] = [
   },
 ];
 
-const BOSS_ROW: BossTimelineRow = {
-  type: ETimelineRowType.BOSS,
-  isLocked: false,
-};
-
 const ROWS: RosterTimelineRow[] = [
   { type: ETimelineRowType.ROSTER, isActive: true },
   { type: ETimelineRowType.ROSTER, isActive: true },
@@ -65,7 +59,6 @@ interface TimelineStore {
   isDragging: boolean;
   zoom: number;
   spells: RosterTimelineSpell[];
-  bossRow: BossTimelineRow;
   rows: RosterTimelineRow[];
 
   updateTimelineZoom: (z: number) => void;
@@ -81,8 +74,6 @@ interface TimelineStore {
   updateTimelineRowStatus: (i: number, isActive: boolean) => void;
   updateTimelineRowPosition: (index: number, newIndex: number) => void;
 
-  updateBossTimelineRowStatus: (isLocked: boolean) => void;
-
   clearTimelineSpellSelection: () => void;
   clearTimeline: () => void;
   moveTimeline: (x: number) => void;
@@ -96,7 +87,6 @@ export const useTimelineStore = create<TimelineStore>()(
       isDragging: false,
       zoom: 4,
       spells: SPELLS,
-      bossRow: BOSS_ROW,
       rows: ROWS,
 
       clearTimelineSpellSelection: () => {
@@ -239,13 +229,6 @@ export const useTimelineStore = create<TimelineStore>()(
             spells: state.spells,
           };
         });
-      },
-
-      updateBossTimelineRowStatus: (isLocked: boolean) => {
-        set((state) => ({
-          ...state,
-          bossRow: { ...state.bossRow, isLocked },
-        }));
       },
 
       updateTimelineSpellTiming: (spellIndex: number, x: number) => {

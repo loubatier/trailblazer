@@ -7,29 +7,11 @@ import { useBossRowStore } from "../../lib/stores/useBossRowStore";
 import { useTimelineStore } from "../../lib/stores/useTimelineStore";
 import Canvas, { RosterTimelineSpell } from "./canvas";
 import RowActions from "./row-actions";
+import Tab from "./tab";
 
 const Root = styled.div`
   flex: 1 0 500px;
   padding: 0 48px;
-`;
-
-const TimelineContentWrapper = styled.div`
-  display: flex;
-  overflow: hidden;
-  margin-top: 24px;
-  padding: 32px 0 16px;
-  background-color: #23262b;
-`;
-
-const RowActionsWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: fit-content;
-  margin-top: 40px;
-`;
-
-const CanvasWrapper = styled.div`
-  width: 100%;
 `;
 
 const TimelineActionsWrapper = styled.div`
@@ -47,6 +29,29 @@ const SpellIcon = styled.img`
   width: 32px;
   height: 32px;
   cursor: pointer;
+`;
+
+const TimelineTabWrapper = styled.div`
+  display: flex;
+  gap: 4px;
+`;
+
+const TimelineContentWrapper = styled.div`
+  display: flex;
+  overflow: hidden;
+  padding: 32px 0 16px;
+  background-color: #23262b;
+`;
+
+const RowActionsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  margin-top: 40px;
+`;
+
+const CanvasWrapper = styled.div`
+  width: 100%;
 `;
 
 const AddRowButton = styled.button<{ isDisabled: boolean }>`
@@ -113,10 +118,19 @@ const HealingRotation = () => {
     updateTimelineRowPosition,
   } = useTimelineStore();
 
-  const { row: bossRow } = useBossRowStore();
+  const [currentBossTab, setCurrentBossTab] = useState<string>("Smolderon");
+
+  const { row: bossRow, setBoss } = useBossRowStore((state) => ({
+    ...state,
+    boss: currentBossTab,
+  }));
+
+  useEffect(() => {
+    setBoss(currentBossTab);
+  }, [currentBossTab]);
 
   const [roster, setRoster] = useState<Roster>({ players: [] });
-  const [rosterSpells, setRosterSpells] = useState([]);
+  const [rosterSpells, setRosterSpells] = useState<RosterTimelineSpell[]>([]);
 
   const [isDraggingSpell, setIsDraggingSpell] = useState<boolean>(false);
   const [hoveredRow, setHoveredRow] = useState<number>(null);
@@ -277,6 +291,25 @@ const HealingRotation = () => {
         </AddRowButton>
         <SpellsWrapper>{spellIcons}</SpellsWrapper>
       </TimelineActionsWrapper>
+
+      <TimelineTabWrapper>
+        <Tab
+          name={"Gnarlroot"}
+          icon={
+            "https://assets2.lorrgs.io/images/bosses/amirdrassil-the-dreams-hope/gnarlroot.webp"
+          }
+          isCurrentTab={currentBossTab === "Gnarlroot"}
+          onClick={() => setCurrentBossTab("Gnarlroot")}
+        />
+        <Tab
+          name={"Smolderon"}
+          icon={
+            "https://assets2.lorrgs.io/images/bosses/amirdrassil-the-dreams-hope/smolderon.webp"
+          }
+          isCurrentTab={currentBossTab === "Smolderon"}
+          onClick={() => setCurrentBossTab("Smolderon")}
+        />
+      </TimelineTabWrapper>
 
       <TimelineContentWrapper>
         <RowActionsWrapper>
