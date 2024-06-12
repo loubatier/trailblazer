@@ -1,4 +1,5 @@
 import React from "react";
+import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { DefaultTheme, ThemeProvider } from "styled-components";
@@ -15,9 +16,9 @@ const theme: DefaultTheme = {
 
 const queryClient = new QueryClient();
 
-const App = ({ Component, pageProps }: AppProps) => {
+const App = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => {
   return (
-    <>
+    <SessionProvider session={session}>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
         {/* NOTE: Transition is still a WIP and won't be implemented for the moment */}
@@ -27,7 +28,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         </QueryClientProvider>
         {/* </TransitionLayout> */}
       </ThemeProvider>
-    </>
+    </SessionProvider>
   );
 };
 
