@@ -10,8 +10,8 @@ import { ETimelineRowType } from "../../data/models/timeline";
 
 const SPELLS: RosterTimelineSpell[] = [
   {
-    duration: 8,
-    cooldown: 120,
+    duration: 2,
+    cooldown: 30,
     color: "#33937f",
     icon: "https://assets.lorrgs.io/images/spells/ability_evoker_stasis.jpg",
 
@@ -24,7 +24,7 @@ const SPELLS: RosterTimelineSpell[] = [
   {
     duration: 8,
     cooldown: 120,
-    color: "#33937f",
+    color: "#6843A2",
     icon: "https://assets.lorrgs.io/images/spells/ability_evoker_stasis.jpg",
 
     x: 270,
@@ -34,9 +34,9 @@ const SPELLS: RosterTimelineSpell[] = [
     isSelected: false,
   },
   {
-    duration: 8,
-    cooldown: 120,
-    color: "#33937f",
+    duration: 12,
+    cooldown: 60,
+    color: "#A2436A",
     icon: "https://assets.lorrgs.io/images/spells/ability_evoker_stasis.jpg",
 
     x: 200,

@@ -102,7 +102,8 @@ const Canvas = ({
   useEffect(() => {
     const handleKeyPress = (e) => {
       const selectedSpellIndex = spells.findIndex((spell) => spell.isSelected);
-      const hasSelectedSpell = selectedSpellIndex !== -1;
+      const hasSelectedSpell = spells.some((spell) => spell.isSelected);
+
       if (!hasSelectedSpell) return;
       switch (e.key) {
         case "Backspace":
@@ -118,7 +119,7 @@ const Canvas = ({
     return () => {
       document.removeEventListener("keydown", handleKeyPress);
     };
-  }, []);
+  }, [spells]);
 
   // __________________ MOVE SPELL WITH SHIFT PRESSED
   const isShiftPressed = useIsKeyPressed("Shift");
@@ -235,7 +236,7 @@ const Canvas = ({
             y={calculateSpellPositionY(spell.row)}
             spell={spell}
             timer={ENCOUNTER_TIMER}
-            onClick={() => (spell.isActive ? selectTimelineSpell(i) : null)}
+            onClick={() => selectTimelineSpell(i)}
             onDragStart={() => handleTimeLineSpellDragStart(i)}
             onDragMove={(e) =>
               isShiftPressed
