@@ -1,11 +1,10 @@
 import React from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Head from "next/head";
 import styled from "styled-components";
-import Cards from "../components/cards";
-import { Title } from "../components/sharedstyles";
+import { Main, Title } from "../components/sharedstyles";
 
-const Root = styled.div`
+const Root = styled(Main)`
   display: flex;
   background-image: url("/app-background.webp");
   background-size: cover;
@@ -31,18 +30,15 @@ const Home = () => {
         </Head>
         <ContentWrapper>
           <Title>Trailblazer</Title>
-          Signed in as {session.user.name} <br />
-          <button onClick={() => signOut()}>Sign out</button>
-          <Cards />
         </ContentWrapper>
       </Root>
     );
   }
   return (
-    <>
+    <Main>
       Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
-    </>
+      <p onClick={() => signIn()}>Sign in</p>
+    </Main>
   );
 };
 

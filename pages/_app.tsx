@@ -1,9 +1,10 @@
-import React from "react";
-import { SessionProvider } from "next-auth/react";
+import React, { ReactNode } from "react";
+import { SessionProvider, useSession } from "next-auth/react";
 import type { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { DefaultTheme, ThemeProvider } from "styled-components";
 import GlobalStyle from "../components/globalstyles";
+import Sidebar from "../components/sidebar";
 
 const theme: DefaultTheme = {
   colors: {
@@ -22,10 +23,27 @@ const App = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => {
       <ThemeProvider theme={theme}>
         <GlobalStyle />
         <QueryClientProvider client={queryClient}>
-          <Component {...pageProps} />
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
         </QueryClientProvider>
       </ThemeProvider>
     </SessionProvider>
+  );
+};
+
+interface LayoutProps {
+  children: ReactNode;
+}
+
+const Layout = ({ children }: LayoutProps) => {
+  const { data: session } = useSession();
+
+  return (
+    <div>
+      {session && <Sidebar />}
+      <main>{children}</main>
+    </div>
   );
 };
 

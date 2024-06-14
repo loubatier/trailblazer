@@ -7,6 +7,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@nextui-org/select": "^2.2.1",
     "@react-spring/types": "^9.7.3",
     "@supabase/supabase-js": "^2.43.4",
     "@types/react-icons": "^3.0.0",

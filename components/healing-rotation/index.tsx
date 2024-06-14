@@ -260,10 +260,12 @@ const HealingRotation = () => {
 
   const handleWindowResize = () => {
     setDimensions({
-      // NOTE: 64 is width of row actions
+      // NOTE:
+      // 64 is width of sidebar
+      // 64 is width of row actions
       // 2*48 is for both gutter on the sides
       // 48 is to make sure canvas is smaller so we have a right space balancing row actions space
-      width: window.innerWidth - 64 - 2 * 48 - 48,
+      width: window.innerWidth - 64 - 64 - 2 * 48 - 48,
       height:
         GRADUATED_TIMELINE_HEIGHT +
         BOSS_TIMELINE_ROW_HEIGHT +
