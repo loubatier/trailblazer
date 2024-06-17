@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { DefaultTheme, ThemeProvider } from "styled-components";
 import GlobalStyle from "../components/globalstyles";
 import Sidebar from "../components/sidebar";
-
 const theme: DefaultTheme = {
   colors: {
     primary: "#fff",

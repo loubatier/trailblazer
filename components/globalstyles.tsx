@@ -36,7 +36,8 @@ const GlobalStyle = createGlobalStyle`
     padding: 0; 
     background: none; 
     border: none; 
-    outline: none; 
+    outline: none;
+    color: ${({ theme }) => theme.colors.primary};
   }
 `;
 

@@ -1,6 +1,7 @@
 import React from "react";
 import dynamic from "next/dynamic";
-import { Main } from "../components/sharedstyles";
+import { Main, Title } from "../components/sharedstyles";
+import { useGuildMemberStore } from "../lib/stores/useGuildStore";
 import withAuth from "./api/auth/withAuth";
 
 const HealingRotation = dynamic(
@@ -11,8 +12,10 @@ const HealingRotation = dynamic(
 );
 
 const Planner = () => {
+  const { currentGuild } = useGuildMemberStore();
   return (
     <Main>
+      <Title>{currentGuild.name} Healing Rotation</Title>
       <HealingRotation />
     </Main>
   );

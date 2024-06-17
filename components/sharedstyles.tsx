@@ -45,4 +45,53 @@ const CodeTag = styled.code`
     monospace;
 `;
 
-export { Main, Title, Description, CodeTag };
+const Select = styled.select`
+  padding: 8px 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: border-color 0.2s;
+
+  &:focus {
+    border-color: #0070f3;
+    outline: none;
+  }
+`;
+
+const Input = styled.input`
+  padding: 8px 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: border-color 0.2s;
+
+  &:focus {
+    border-color: #0070f3;
+    outline: none;
+  }
+`;
+
+const Button = styled.button`
+  padding: 8px 16px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  background-color: #0070f3;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #005bb5;
+  }
+
+  &:focus {
+    outline: none;
+    background-color: #005bb5;
+  }
+`;
+
+export { Main, Title, Description, CodeTag, Select, Input, Button };
