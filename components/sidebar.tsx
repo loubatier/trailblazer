@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { find } from "lodash";
 import { GanttChart, Home, LogOut } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import styled from "styled-components";
+import { useUserGuilds } from "../lib/hooks/useUserGuilds";
 import { useGuildMemberStore } from "../lib/stores/useGuildStore";
 import { Select } from "./sharedstyles";
 
@@ -29,14 +31,25 @@ const Sidebar = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const { currentGuild, guilds, setCurrentGuild, getUserGuilds } =
+  const userId = session?.user?.supabaseId;
+  const { data: fetchedGuilds } = useUserGuilds(userId);
+
+  const { currentGuild, guilds, setCurrentGuild, setGuilds } =
     useGuildMemberStore();
 
   useEffect(() => {
-    if (session) {
-      getUserGuilds(session.user.supabaseId);
+    if (fetchedGuilds) {
+      setGuilds(fetchedGuilds);
+      if (fetchedGuilds.length > 0) {
+        setCurrentGuild(fetchedGuilds[0]);
+      }
     }
-  }, [session]);
+  }, [fetchedGuilds, setCurrentGuild, setGuilds]);
+
+  const handleGuildChange = (guildId: string) => {
+    const guild = find(guilds, (guild) => guild.id === guildId);
+    setCurrentGuild(guild);
+  };
 
   const handleSignOut = async () => {
     await signOut({ redirect: false });
@@ -60,7 +73,7 @@ const Sidebar = () => {
         {guilds && (
           <Select
             value={currentGuild ? currentGuild.id : ""}
-            onChange={(e) => setCurrentGuild(e.target.value)}
+            onChange={(e) => handleGuildChange(e.target.value)}
           >
             <option value="" disabled selected hidden>
               Select a guild
