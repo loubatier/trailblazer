@@ -42,7 +42,6 @@ const Home = () => {
   const {
     data: guild,
     error: errorGuild,
-    isLoading,
     refetch,
   } = useGuildData(
     selectedRegion,
@@ -82,8 +81,11 @@ const Home = () => {
 
           {!currentGuild && (
             <>
-              <Select value={selectedRegion} onChange={handleRegionInputChange}>
-                <option value="" disabled selected hidden>
+              <Select
+                value={selectedRegion || ""}
+                onChange={handleRegionInputChange}
+              >
+                <option value="" disabled hidden>
                   Select a region
                 </option>
                 {regions.map((region) => (
@@ -95,10 +97,10 @@ const Home = () => {
               {realms && (
                 <Select
                   disabled={isLoadingRealms || isEmpty(realms)}
-                  value={selectedRealm}
+                  value={selectedRealm || ""}
                   onChange={handleRealmInputChange}
                 >
-                  <option value="" disabled selected hidden>
+                  <option value="" disabled hidden>
                     Select a realm
                   </option>
                   {realms.map((realm) => (

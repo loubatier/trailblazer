@@ -10,7 +10,8 @@ const fetchUserGuilds = async (userId) => {
         id,
         name,
         battlenet_id,
-        realm
+        realm,
+        region
       )
     `
     )
@@ -25,6 +26,6 @@ const fetchUserGuilds = async (userId) => {
 
 export const useUserGuilds = (userId) => {
   return useQuery(["userGuilds", userId], () => fetchUserGuilds(userId), {
-    enabled: !!userId, // Only run the query if userId is provided
+    enabled: !!userId,
   });
 };

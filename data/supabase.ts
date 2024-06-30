@@ -54,18 +54,21 @@ export type Database = {
           id: string;
           name: string;
           realm: string;
+          region: string | null;
         };
         Insert: {
           battlenet_id: number;
           id?: string;
           name: string;
           realm: string;
+          region?: string | null;
         };
         Update: {
           battlenet_id?: number;
           id?: string;
           name?: string;
           realm?: string;
+          region?: string | null;
         };
         Relationships: [];
       };

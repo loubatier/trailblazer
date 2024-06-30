@@ -5,6 +5,7 @@ interface Guild {
   name: string;
   battlenet_id: number;
   realm: string;
+  region: string;
 }
 
 export interface GuildMember {
