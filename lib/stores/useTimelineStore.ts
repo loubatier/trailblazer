@@ -2,50 +2,11 @@ import { isNil } from "lodash";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import {
+  CharacterTimelineSpell,
   RosterTimelineRow,
-  RosterTimelineSpell,
   Spell,
 } from "../../components/healing-rotation/canvas";
 import { ETimelineRowType } from "../../data/models/timeline";
-
-const SPELLS: RosterTimelineSpell[] = [
-  {
-    duration: 2,
-    cooldown: 30,
-    color: "#33937f",
-    icon: "https://assets.lorrgs.io/images/spells/ability_evoker_stasis.jpg",
-
-    x: 0,
-    timing: 0,
-    row: 0,
-    isActive: true,
-    isSelected: false,
-  },
-  {
-    duration: 8,
-    cooldown: 120,
-    color: "#6843A2",
-    icon: "https://assets.lorrgs.io/images/spells/ability_evoker_stasis.jpg",
-
-    x: 270,
-    timing: 135,
-    row: 1,
-    isActive: true,
-    isSelected: false,
-  },
-  {
-    duration: 12,
-    cooldown: 60,
-    color: "#A2436A",
-    icon: "https://assets.lorrgs.io/images/spells/ability_evoker_stasis.jpg",
-
-    x: 200,
-    timing: 100,
-    row: 2,
-    isActive: false,
-    isSelected: false,
-  },
-];
 
 const ROWS: RosterTimelineRow[] = [
   { type: ETimelineRowType.ROSTER, isActive: true },
@@ -58,7 +19,7 @@ interface TimelineStore {
   offset: number;
   isDragging: boolean;
   zoom: number;
-  spells: RosterTimelineSpell[];
+  spells: CharacterTimelineSpell[];
   rows: RosterTimelineRow[];
 
   updateTimelineZoom: (z: number) => void;
@@ -86,7 +47,7 @@ export const useTimelineStore = create<TimelineStore>()(
       offset: 0,
       isDragging: false,
       zoom: 4,
-      spells: SPELLS,
+      spells: [],
       rows: ROWS,
 
       clearTimelineSpellSelection: () => {

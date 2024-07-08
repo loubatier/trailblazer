@@ -9,24 +9,188 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      boss_spells: {
+        Row: {
+          boss_id: string;
+          duration: number;
+          icon: string;
+          id: number;
+          name: string;
+        };
+        Insert: {
+          boss_id: string;
+          duration: number;
+          icon: string;
+          id: number;
+          name: string;
+        };
+        Update: {
+          boss_id?: string;
+          duration?: number;
+          icon?: string;
+          id?: number;
+          name?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "boss_spells_boss_id_fkey";
+            columns: ["boss_id"];
+            isOneToOne: false;
+            referencedRelation: "bosses";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      bosses: {
+        Row: {
+          id: string;
+          name: string;
+          raid_id: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          raid_id: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          raid_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "bosses_raid_id_fkey";
+            columns: ["raid_id"];
+            isOneToOne: false;
+            referencedRelation: "raids";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      character_spells: {
+        Row: {
+          class_id: string | null;
+          cooldown: number;
+          duration: number;
+          icon: string;
+          id: number;
+          name: string;
+          spec_id: string | null;
+        };
+        Insert: {
+          class_id?: string | null;
+          cooldown: number;
+          duration: number;
+          icon: string;
+          id: number;
+          name: string;
+          spec_id?: string | null;
+        };
+        Update: {
+          class_id?: string | null;
+          cooldown?: number;
+          duration?: number;
+          icon?: string;
+          id?: number;
+          name?: string;
+          spec_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "spells_class_id_fkey";
+            columns: ["class_id"];
+            isOneToOne: false;
+            referencedRelation: "classes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "spells_spec_id_fkey";
+            columns: ["spec_id"];
+            isOneToOne: false;
+            referencedRelation: "specs";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      characters: {
+        Row: {
+          class_id: string | null;
+          guild_id: string | null;
+          id: string;
+          name: string;
+          spec_id: string | null;
+        };
+        Insert: {
+          class_id?: string | null;
+          guild_id?: string | null;
+          id?: string;
+          name: string;
+          spec_id?: string | null;
+        };
+        Update: {
+          class_id?: string | null;
+          guild_id?: string | null;
+          id?: string;
+          name?: string;
+          spec_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "characters_class_id_fkey";
+            columns: ["class_id"];
+            isOneToOne: false;
+            referencedRelation: "classes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "characters_guild_id_fkey";
+            columns: ["guild_id"];
+            isOneToOne: false;
+            referencedRelation: "guilds";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "characters_spec_id_fkey";
+            columns: ["spec_id"];
+            isOneToOne: false;
+            referencedRelation: "specs";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      classes: {
+        Row: {
+          color: string;
+          id: string;
+          name: string;
+        };
+        Insert: {
+          color: string;
+          id?: string;
+          name: string;
+        };
+        Update: {
+          color?: string;
+          id?: string;
+          name?: string;
+        };
+        Relationships: [];
+      };
       guild_members: {
         Row: {
           guild_id: string | null;
-          id: string;
           joined_at: string | null;
           role: string;
           user_id: string | null;
         };
         Insert: {
           guild_id?: string | null;
-          id?: string;
           joined_at?: string | null;
           role: string;
           user_id?: string | null;
         };
         Update: {
           guild_id?: string | null;
-          id?: string;
           joined_at?: string | null;
           role?: string;
           user_id?: string | null;
@@ -71,6 +235,103 @@ export type Database = {
           region?: string | null;
         };
         Relationships: [];
+      };
+      raids: {
+        Row: {
+          id: string;
+          name: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+        };
+        Relationships: [];
+      };
+      roster_characters: {
+        Row: {
+          character_id: string;
+          roster_id: string;
+        };
+        Insert: {
+          character_id: string;
+          roster_id: string;
+        };
+        Update: {
+          character_id?: string;
+          roster_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "roster_characters_character_id_fkey";
+            columns: ["character_id"];
+            isOneToOne: false;
+            referencedRelation: "characters";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "roster_characters_roster_id_fkey";
+            columns: ["roster_id"];
+            isOneToOne: false;
+            referencedRelation: "rosters";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      rosters: {
+        Row: {
+          guild_id: string;
+          id: string;
+          name: string;
+        };
+        Insert: {
+          guild_id: string;
+          id?: string;
+          name: string;
+        };
+        Update: {
+          guild_id?: string;
+          id?: string;
+          name?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "rosters_guild_id_fkey";
+            columns: ["guild_id"];
+            isOneToOne: true;
+            referencedRelation: "guilds";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      specs: {
+        Row: {
+          class_id: string;
+          id: string;
+          name: string;
+        };
+        Insert: {
+          class_id: string;
+          id?: string;
+          name: string;
+        };
+        Update: {
+          class_id?: string;
+          id?: string;
+          name?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "specs_class_id_fkey";
+            columns: ["class_id"];
+            isOneToOne: false;
+            referencedRelation: "classes";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       users: {
         Row: {

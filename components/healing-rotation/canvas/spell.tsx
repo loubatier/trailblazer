@@ -10,12 +10,12 @@ import {
   GRADUATED_TIMELINE_HEIGHT,
   TIMELINE_ROW_HEIGHT,
 } from "..";
-import { RosterTimelineSpell } from ".";
+import { CharacterTimelineSpell } from ".";
 
 interface IProps {
   x: number;
   y: number;
-  spell: RosterTimelineSpell;
+  spell: CharacterTimelineSpell;
   timer: number;
   onClick: () => void;
   onDragStart: () => void;

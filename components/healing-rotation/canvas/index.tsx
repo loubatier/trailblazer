@@ -28,13 +28,15 @@ interface IProps {
 }
 
 export type Spell = {
-  duration: number;
-  cooldown: number;
-  color: string;
+  id: number;
   icon: string;
+  name: string;
+  color: string;
+  duration: number;
+  cooldown?: number;
 };
 
-export type RosterTimelineSpell = Spell & {
+export type CharacterTimelineSpell = Spell & {
   x: number;
   timing: number;
   row: number;

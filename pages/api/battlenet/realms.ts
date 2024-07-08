@@ -44,10 +44,8 @@ export default async function handler(
   } catch (error) {
     console.error("API fetch error:", error);
     if (error.response && error.response.status === 404) {
-      return res
-        .status(404)
-        .json({ error: 404, message: "Servers not found." });
+      return res.status(404).json({ error: 404, message: "Realms not found." });
     }
-    return res.status(500).json({ error: "Failed to fetch servers data" });
+    return res.status(500).json({ error: "Failed to fetch realms data" });
   }
 }

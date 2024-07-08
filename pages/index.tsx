@@ -5,7 +5,7 @@ import Head from "next/head";
 import styled from "styled-components";
 import { Button, Input, Main, Select, Title } from "../components/sharedstyles";
 import { useGuildData } from "../lib/hooks/useGuildData";
-import { useServersData } from "../lib/hooks/useServersData";
+import { useRealmsData } from "../lib/hooks/useRealmsData";
 import { useGuildMemberStore } from "../lib/stores/useGuildStore";
 
 const Root = styled(Main)`
@@ -50,7 +50,7 @@ const Home = () => {
   );
 
   const { data: realmsData, isLoading: isLoadingRealms } =
-    useServersData(selectedRegion);
+    useRealmsData(selectedRegion);
 
   useEffect(() => {
     if (realmsData) setRealms(realmsData.realms);

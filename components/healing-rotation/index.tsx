@@ -1,13 +1,17 @@
 import React from "react";
 import { useEffect, useRef, useState } from "react";
+import { map } from "lodash";
 import { ListPlus } from "lucide-react";
 import styled from "styled-components";
-import { Player, Roster } from "../../data/models/player";
 import { useBossRowStore } from "../../lib/stores/useBossRowStore";
 import { useTimelineStore } from "../../lib/stores/useTimelineStore";
-import Canvas, { RosterTimelineSpell } from "./canvas";
+import Canvas, { Spell } from "./canvas";
 import RowActions from "./row-actions";
 import Tab from "./tab";
+
+interface IProps {
+  rosterSpells: Spell[];
+}
 
 const Root = styled.div`
   flex: 1 0 500px;
@@ -104,7 +108,7 @@ export const calculateSpellDestinationRowIndex = (y: number) => {
 };
 // ---------------------------
 
-const HealingRotation = () => {
+const HealingRotation = ({ rosterSpells }: IProps) => {
   const canvasRef = useRef<HTMLDivElement>(null);
   const rowActionsRef = useRef<HTMLDivElement>(null);
 
@@ -129,9 +133,6 @@ const HealingRotation = () => {
     setBoss(currentBossTab);
   }, [currentBossTab]);
 
-  const [roster, setRoster] = useState<Roster>({ players: [] });
-  const [rosterSpells, setRosterSpells] = useState<RosterTimelineSpell[]>([]);
-
   const [isDraggingSpell, setIsDraggingSpell] = useState<boolean>(false);
   const [hoveredRow, setHoveredRow] = useState<number>(null);
 
@@ -142,34 +143,7 @@ const HealingRotation = () => {
 
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
-  useEffect(() => {
-    async function fetchRosterAndSpells() {
-      try {
-        const roster = await fetch("/roster.json");
-        const spells = await fetch("/spells.json");
-        const rosterJson = await roster.json();
-        const spellsJson = await spells.json();
-
-        setRoster(rosterJson);
-        setRosterSpells(spellsJson);
-      } catch (error) {
-        console.error("Error fetching the JSON data:", error);
-      }
-    }
-
-    fetchRosterAndSpells();
-  }, []);
-
-  // --------------------------- useRosterSpells / usePlayerSpells
-  // Switch between the 2 given we have selected the Everyone or specific player option on dropdown
-  const getSpellsForPlayer = (
-    player: Player,
-    spells: RosterTimelineSpell[]
-  ): RosterTimelineSpell[] => {
-    return spells[player.spec] || [];
-  };
-
-  const renderSpellIcon = (spell: RosterTimelineSpell): JSX.Element => {
+  const renderSpellIcon = (spell: Spell): JSX.Element => {
     return (
       <SpellIcon
         draggable
@@ -181,17 +155,11 @@ const HealingRotation = () => {
     );
   };
 
-  const spellIcons = roster.players
-    .map((player) => getSpellsForPlayer(player, rosterSpells))
-    .reduce((acc, playerSpells) => acc.concat(playerSpells), [])
-    .map((spell) => renderSpellIcon(spell));
+  const spellIcons = map(rosterSpells, (spell) => renderSpellIcon(spell));
   // ---------------------------
 
   // --------------------------- useDragSpell
-  const handleSpellDragStart = (
-    event: React.DragEvent,
-    spell: RosterTimelineSpell
-  ) => {
+  const handleSpellDragStart = (event: React.DragEvent, spell: Spell) => {
     event.dataTransfer.setData("spell", JSON.stringify(spell));
     setIsDraggingSpell(true);
   };

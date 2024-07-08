@@ -17,43 +17,6 @@ interface BossRowStore {
   resetBossRowTimers: () => void;
 }
 
-const INITIAL_BOSS_SPELLS: { [bossName: string]: BossTimelineSpell[] } = {
-  Gnarlroot: [
-    {
-      duration: 8,
-      cooldown: 120,
-      color: "#6843A2",
-      icon: "https://assets2.lorrgs.io/images/spells/ability_soulrenderdormazain_hellscream.jpg",
-      x: 0,
-      timing: 0,
-      isSelected: false,
-    },
-    {
-      duration: 8,
-      cooldown: 120,
-      color: "#6843A2",
-      icon: "https://assets2.lorrgs.io/images/spells/ability_soulrenderdormazain_hellscream.jpg",
-      x: 270,
-      timing: 135,
-      isSelected: false,
-    },
-    // ... other spells for Boss1
-  ],
-  Smolderon: [
-    {
-      duration: 10,
-      cooldown: 150,
-      color: "#A2436A",
-      icon: "https://assets2.lorrgs.io/images/spells/ability_soulrenderdormazain_hellscream.jpg",
-      x: 50,
-      timing: 50,
-      isSelected: false,
-    },
-    // ... other spells for Boss2
-  ],
-  // Add more bosses and their spells as needed
-};
-
 const BOSS_ROW: BossTimelineRow = {
   type: ETimelineRowType.BOSS,
   isLocked: false,
@@ -69,7 +32,7 @@ export const useBossRowStore = create<BossRowStore>()(
       setBoss: (boss) => {
         set({
           boss,
-          spells: INITIAL_BOSS_SPELLS[boss],
+          spells: [],
         });
       },
 
@@ -88,9 +51,9 @@ export const useBossRowStore = create<BossRowStore>()(
       },
 
       resetBossRowTimers: () => {
-        set((state) => ({
-          spells: INITIAL_BOSS_SPELLS[state.boss],
-        }));
+        set({
+          spells: [],
+        });
       },
     }),
     {
