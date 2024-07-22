@@ -44,6 +44,12 @@ export type CharacterTimelineSpell = Spell & {
   isSelected: boolean;
 };
 
+export type Boss = {
+  id: string;
+  icon: string;
+  name: string;
+};
+
 export type BossTimelineSpell = Spell & {
   x: number;
   timing: number;
@@ -98,7 +104,7 @@ const Canvas = ({
   const {
     row: bossRow,
     spells: bossSpells,
-    updateSpellTiming: updateBossSpellTiming,
+    updateBossSpellTiming,
   } = useBossRowStore();
 
   useEffect(() => {

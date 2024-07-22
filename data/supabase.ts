@@ -43,16 +43,19 @@ export type Database = {
       };
       bosses: {
         Row: {
+          icon: string;
           id: string;
           name: string;
           raid_id: string;
         };
         Insert: {
+          icon: string;
           id?: string;
           name: string;
           raid_id: string;
         };
         Update: {
+          icon?: string;
           id?: string;
           name?: string;
           raid_id?: string;

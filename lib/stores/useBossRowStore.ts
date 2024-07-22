@@ -12,7 +12,7 @@ interface BossRowStore {
   spells: BossTimelineSpell[];
 
   setBoss: (boss: string) => void;
-  updateSpellTiming: (spellIndex: number, x: number, zoom: number) => void;
+  updateBossSpellTiming: (spellIndex: number, x: number, zoom: number) => void;
   updateBossRowStatus: (isLocked: boolean) => void;
   resetBossRowTimers: () => void;
 }
@@ -36,7 +36,7 @@ export const useBossRowStore = create<BossRowStore>()(
         });
       },
 
-      updateSpellTiming: (spellIndex: number, x: number, zoom: number) => {
+      updateBossSpellTiming: (spellIndex: number, x: number, zoom: number) => {
         set((state) => ({
           spells: state.spells.map((spell, i) =>
             i === spellIndex ? { ...spell, x, timing: x / zoom } : spell

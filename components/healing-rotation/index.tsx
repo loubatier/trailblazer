@@ -5,11 +5,12 @@ import { ListPlus } from "lucide-react";
 import styled from "styled-components";
 import { useBossRowStore } from "../../lib/stores/useBossRowStore";
 import { useTimelineStore } from "../../lib/stores/useTimelineStore";
-import Canvas, { Spell } from "./canvas";
+import Canvas, { Boss, Spell } from "./canvas";
 import RowActions from "./row-actions";
 import Tab from "./tab";
 
 interface IProps {
+  raidBosses: Boss[];
   rosterSpells: Spell[];
 }
 
@@ -20,7 +21,9 @@ const Root = styled.div`
 
 const TimelineActionsWrapper = styled.div`
   display: flex;
+  align-items: center;
   gap: 16px;
+  margin-bottom: 24px;
 `;
 
 const SpellsWrapper = styled.div`
@@ -108,7 +111,7 @@ export const calculateSpellDestinationRowIndex = (y: number) => {
 };
 // ---------------------------
 
-const HealingRotation = ({ rosterSpells }: IProps) => {
+const HealingRotation = ({ raidBosses, rosterSpells }: IProps) => {
   const canvasRef = useRef<HTMLDivElement>(null);
   const rowActionsRef = useRef<HTMLDivElement>(null);
 
@@ -257,28 +260,21 @@ const HealingRotation = ({ rosterSpells }: IProps) => {
     <Root>
       <TimelineActionsWrapper>
         <AddRowButton isDisabled={false} onClick={() => addTimelineRow()}>
-          <ListPlus />
+          <ListPlus color="black" />
         </AddRowButton>
         <SpellsWrapper>{spellIcons}</SpellsWrapper>
       </TimelineActionsWrapper>
 
       <TimelineTabWrapper>
-        <Tab
-          name={"Gnarlroot"}
-          icon={
-            "https://assets2.lorrgs.io/images/bosses/amirdrassil-the-dreams-hope/gnarlroot.webp"
-          }
-          isCurrentTab={currentBossTab === "Gnarlroot"}
-          onClick={() => setCurrentBossTab("Gnarlroot")}
-        />
-        <Tab
-          name={"Smolderon"}
-          icon={
-            "https://assets2.lorrgs.io/images/bosses/amirdrassil-the-dreams-hope/smolderon.webp"
-          }
-          isCurrentTab={currentBossTab === "Smolderon"}
-          onClick={() => setCurrentBossTab("Smolderon")}
-        />
+        {raidBosses.map((raidBoss, i) => (
+          <Tab
+            key={`raidboss-${i}-${raidBoss.name}`}
+            name={raidBoss.name}
+            icon={raidBoss.icon}
+            isCurrentTab={currentBossTab === raidBoss.name}
+            onClick={() => setCurrentBossTab(raidBoss.name)}
+          />
+        ))}
       </TimelineTabWrapper>
 
       <TimelineContentWrapper>
