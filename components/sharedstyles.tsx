@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const Main = styled.main`
   margin-left: 64px;
-  padding: 48px 0;
+  padding: 48px;
 `;
 
 const Title = styled.h1`

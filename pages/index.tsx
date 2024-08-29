@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { Button, Input, Main, Select, Title } from "../components/sharedstyles";
 import { useGuildData } from "../lib/hooks/useGuildData";
 import { useRealmsData } from "../lib/hooks/useRealmsData";
-import { useGuildMemberStore } from "../lib/stores/useGuildStore";
+import { useGuildStore } from "../lib/stores/useGuildStore";
 
 const Root = styled(Main)`
   display: flex;
@@ -24,7 +24,7 @@ const ContentWrapper = styled.div`
 
 const Home = () => {
   const { data: session } = useSession();
-  const { currentGuild } = useGuildMemberStore();
+  const { currentGuild } = useGuildStore();
 
   const regions = [
     { value: "us", name: "US" },

@@ -8,14 +8,6 @@ interface Guild {
   region: string;
 }
 
-export interface GuildMember {
-  guild_id: string;
-  user_id: string;
-  role: string;
-  joined_at: string;
-  guild: Guild;
-}
-
 interface GuildState {
   currentGuild: Guild | null;
   guilds: Guild[];
@@ -23,7 +15,7 @@ interface GuildState {
   setGuilds: (guilds: Guild[]) => void;
 }
 
-export const useGuildMemberStore = create<GuildState>((set) => ({
+export const useGuildStore = create<GuildState>((set) => ({
   currentGuild: null,
   guilds: [],
 

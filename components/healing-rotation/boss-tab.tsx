@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
+import { Boss } from "../../lib/types/planner/timeline";
 
 interface IProps {
-  name: string;
-  icon: string;
+  boss: Boss;
   isCurrentTab: boolean;
   onClick: () => void;
 }
@@ -27,13 +27,13 @@ const Label = styled.p`
   margin-left: 8px;
 `;
 
-const Tab = ({ name, icon, isCurrentTab, onClick }: IProps) => {
+const BossTab = ({ boss, isCurrentTab, onClick }: IProps) => {
   return (
     <Root isCurrentTab={isCurrentTab} onClick={onClick}>
-      <Icon src={icon} />
-      <Label>{name}</Label>
+      <Icon src={boss.icon} />
+      <Label>{boss.name}</Label>
     </Root>
   );
 };
 
-export default Tab;
+export default BossTab;

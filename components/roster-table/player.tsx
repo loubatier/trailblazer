@@ -2,7 +2,7 @@ import React from "react";
 import { lowerCase } from "lodash";
 import { CalendarX2, Sofa } from "lucide-react";
 import styled from "styled-components";
-import { EClassColor, RosterPlayer } from "../../data/models/roster";
+import { EClassColor, RosterPlayer } from "../../lib/types/roster-table/roster";
 import { replaceWhitespaceWithUnderscore } from "../../lib/utils";
 
 interface IProps {

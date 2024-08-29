@@ -3,11 +3,11 @@ import {
   ECharacterRole,
   ESignupStatus,
   Encounter,
-  Roster,
   RosterPlayer,
   Selection,
   Signup,
-} from "../data/models/roster";
+  WARoster,
+} from "./types/roster-table/roster";
 
 export const getPlayerFromSignup = (signup: Signup): RosterPlayer => {
   return {
@@ -100,10 +100,10 @@ export const getVaultAmountColor = (value: number): string => {
 export const getRosterKeyFromCharacterRole = (role: ECharacterRole): string =>
   role.toLowerCase();
 
-export const getRosterFromSignups = (signups: Signup[]): Roster => {
+export const getRosterFromSignups = (signups: Signup[]): WARoster => {
   return signups
     .filter((signup) => signup.status === ESignupStatus.PRESENT)
-    .reduce<Roster>(
+    .reduce<WARoster>(
       (acc, signup) => {
         acc[getRosterKeyFromCharacterRole(signup.role)].push(signup);
         return acc;
@@ -115,10 +115,10 @@ export const getRosterFromSignups = (signups: Signup[]): Roster => {
 export const getRosterFromEncounter = (
   signups: Signup[],
   encounter: Encounter
-): Roster => {
+): WARoster => {
   return encounter.selections
     .filter((selection) => selection.selected)
-    .reduce<Roster>(
+    .reduce<WARoster>(
       (acc, selection) => {
         const matchingSignup = signups.find(
           (signup) => signup.character.id === selection.character_id

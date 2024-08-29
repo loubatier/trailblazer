@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Boss } from "../../components/healing-rotation/canvas";
+import { Boss } from "../types/planner/timeline";
 
 export const fetchRaidBosses = async (raidId: string): Promise<Boss[]> => {
   const response = await fetch(`/api/raid-bosses?raidId=${raidId}`);

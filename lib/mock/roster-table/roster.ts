@@ -4,7 +4,7 @@ import {
   ESignupStatus,
   Encounter,
   Signup,
-} from "../models/roster";
+} from "../../types/roster-table/roster";
 
 const getRandomCharacter = (): Character => {
   return {

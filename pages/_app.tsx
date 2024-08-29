@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { DefaultTheme, ThemeProvider } from "styled-components";
 import GlobalStyle from "../components/globalstyles";
 import Sidebar from "../components/sidebar";
+import User from "../components/user";
 const theme: DefaultTheme = {
   colors: {
     primary: "#fff",
@@ -40,7 +41,12 @@ const Layout = ({ children }: LayoutProps) => {
 
   return (
     <div>
-      {session && <Sidebar />}
+      {session && (
+        <>
+          <Sidebar />
+          <User />
+        </>
+      )}
       <main>{children}</main>
     </div>
   );

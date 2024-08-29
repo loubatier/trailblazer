@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { Spell } from "../../components/healing-rotation/canvas";
+import { RosterSpell } from "../types/planner/timeline";
 
-export const fetchRosterSpells = async (rosterId: string): Promise<Spell[]> => {
+export const fetchRosterSpells = async (
+  rosterId: string
+): Promise<RosterSpell[]> => {
   const response = await fetch(`/api/roster-spells?rosterId=${rosterId}`);
 
   if (!response.ok) {
@@ -13,7 +15,7 @@ export const fetchRosterSpells = async (rosterId: string): Promise<Spell[]> => {
 };
 
 const useRosterSpells = (rosterId: string) => {
-  const [rosterSpells, setRosterSpells] = useState<Spell[]>([]);
+  const [rosterSpells, setRosterSpells] = useState<RosterSpell[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 

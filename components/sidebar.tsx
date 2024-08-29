@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import { ArrowRightFromLine, GanttChart, Home, LogOut } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
+import React from "react";
+import { GanttChart, Home } from "lucide-react";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import GuildSelect from "./guild-select";
 
 const Root = styled.div<{ isOpened: boolean }>`
-  position: absolute;
+  position: fixed;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -22,6 +21,7 @@ const Container = styled.div``;
 const Action = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
   padding: 16px;
 
   svg {
@@ -30,34 +30,22 @@ const Action = styled.div`
 `;
 
 const Sidebar = () => {
-  const { data: session } = useSession();
   const router = useRouter();
-  const [isOpened, setIsOpened] = useState(true);
+  // const [isOpened, setIsOpened] = useState(false);
 
-  const handleSignOut = async () => {
-    await signOut({ redirect: false });
-    router.push("/");
-  };
-
-  const handleOpenSidebar = () => setIsOpened(!isOpened);
+  // const handleOpenSidebar = () => setIsOpened(!isOpened);
 
   return (
-    <Root isOpened={isOpened}>
+    <Root isOpened={false}>
       <Container>
-        <Action>
-          {session && <p>{session.user.name}</p>}
-          <LogOut onClick={handleSignOut} color="red" />
-        </Action>
-        <Action>
+        {/* <Action>
           <ArrowRightFromLine onClick={handleOpenSidebar} />
-        </Action>
+        </Action> */}
         <Action>
           <Home onClick={() => router.push("/")} />
-          <p>Home</p>
         </Action>
         <Action>
           <GanttChart onClick={() => router.push("/planner")} />
-          <p>Planner</p>
         </Action>
       </Container>
       <Container>

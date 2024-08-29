@@ -1,31 +1,32 @@
 import React, { useState } from "react";
 import Konva from "konva";
 import { Group, Image as KonvaImage, Rect, Text } from "react-konva";
-import { useBossRowStore } from "../../../lib/stores/useBossRowStore";
-import { useTimelineStore } from "../../../lib/stores/useTimelineStore";
-import { BASE_SPACING, TIMELINE_ROW_HEIGHT } from "..";
-import { BossTimelineSpell } from ".";
+import { BASE_SPACING, TIMELINE_ROW_HEIGHT } from "../..";
+import { useTimelineStore } from "../../../../lib/stores/planner/useTimelineStore";
+import { TimelineBossSpell } from "../../../../lib/types/planner/timeline";
 
 interface IProps {
-  x: number;
-  y: number;
-  spell: BossTimelineSpell;
+  spell: TimelineBossSpell;
+  isLocked: boolean;
   timer: number;
+  x: number;
   onClick: () => void;
   onDragMove: (e: Konva.KonvaEventObject<DragEvent>) => void;
+  onDragEnd: (e: Konva.KonvaEventObject<DragEvent>) => void;
 }
 
 const CanvasBossSpell = ({
-  x,
-  y,
   spell,
+  isLocked,
   timer,
+  x,
   onClick,
   onDragMove,
+  onDragEnd,
 }: IProps) => {
   const [spellOptions, setSpellOptions] = useState({ x, isDragging: false });
-  const { zoom, offset } = useTimelineStore((state) => state);
-  const { row } = useBossRowStore();
+  const { zoom, offset } = useTimelineStore();
+  const y = TIMELINE_ROW_HEIGHT + BASE_SPACING * 4 + BASE_SPACING / 2;
 
   const img = new Image();
   img.src = spell.icon;
@@ -62,7 +63,7 @@ const CanvasBossSpell = ({
       x={x}
       y={y}
       style={{ cursor: spellOptions.isDragging ? "grabbing" : "grab" }}
-      draggable={!row.isLocked}
+      draggable={!isLocked}
       dragBoundFunc={(pos) => {
         return baseDragBoundFunc(pos);
       }}
@@ -87,22 +88,13 @@ const CanvasBossSpell = ({
           ...spellOptions,
           isDragging: false,
         });
+        onDragEnd(e);
       }}
       onClick={onClick}
     >
-      {spell.isSelected && (
-        <Rect
-          x={-4}
-          y={-4}
-          width={spell.cooldown * zoom + BASE_SPACING}
-          height={TIMELINE_ROW_HEIGHT}
-          strokeWidth={2}
-          stroke={"white"}
-        />
-      )}
       <Rect width={spell.duration * zoom} height={32} fill={spell.color} />
       <KonvaImage image={img} width={24} height={24} y={4} x={4} />
-      <Text text={getSpellTiming(spell.timing)} y={10} x={32} fill="white" />
+      <Text text={getSpellTiming(spell.timing)} y={10} x={32} fill={"white"} />
     </Group>
   );
 };

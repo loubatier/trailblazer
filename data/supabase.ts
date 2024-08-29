@@ -12,6 +12,7 @@ export type Database = {
       boss_spells: {
         Row: {
           boss_id: string;
+          color: string;
           duration: number;
           icon: string;
           id: number;
@@ -19,6 +20,7 @@ export type Database = {
         };
         Insert: {
           boss_id: string;
+          color?: string;
           duration: number;
           icon: string;
           id: number;
@@ -26,6 +28,7 @@ export type Database = {
         };
         Update: {
           boss_id?: string;
+          color?: string;
           duration?: number;
           icon?: string;
           id?: number;
@@ -46,19 +49,25 @@ export type Database = {
           icon: string;
           id: string;
           name: string;
+          position: number;
           raid_id: string;
+          slug: string;
         };
         Insert: {
           icon: string;
           id?: string;
           name: string;
+          position: number;
           raid_id: string;
+          slug?: string;
         };
         Update: {
           icon?: string;
           id?: string;
           name?: string;
+          position?: number;
           raid_id?: string;
+          slug?: string;
         };
         Relationships: [
           {
@@ -70,98 +79,7 @@ export type Database = {
           },
         ];
       };
-      character_spells: {
-        Row: {
-          class_id: string | null;
-          cooldown: number;
-          duration: number;
-          icon: string;
-          id: number;
-          name: string;
-          spec_id: string | null;
-        };
-        Insert: {
-          class_id?: string | null;
-          cooldown: number;
-          duration: number;
-          icon: string;
-          id: number;
-          name: string;
-          spec_id?: string | null;
-        };
-        Update: {
-          class_id?: string | null;
-          cooldown?: number;
-          duration?: number;
-          icon?: string;
-          id?: number;
-          name?: string;
-          spec_id?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "spells_class_id_fkey";
-            columns: ["class_id"];
-            isOneToOne: false;
-            referencedRelation: "classes";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "spells_spec_id_fkey";
-            columns: ["spec_id"];
-            isOneToOne: false;
-            referencedRelation: "specs";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      characters: {
-        Row: {
-          class_id: string | null;
-          guild_id: string | null;
-          id: string;
-          name: string;
-          spec_id: string | null;
-        };
-        Insert: {
-          class_id?: string | null;
-          guild_id?: string | null;
-          id?: string;
-          name: string;
-          spec_id?: string | null;
-        };
-        Update: {
-          class_id?: string | null;
-          guild_id?: string | null;
-          id?: string;
-          name?: string;
-          spec_id?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "characters_class_id_fkey";
-            columns: ["class_id"];
-            isOneToOne: false;
-            referencedRelation: "classes";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "characters_guild_id_fkey";
-            columns: ["guild_id"];
-            isOneToOne: false;
-            referencedRelation: "guilds";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "characters_spec_id_fkey";
-            columns: ["spec_id"];
-            isOneToOne: false;
-            referencedRelation: "specs";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      classes: {
+      character_classes: {
         Row: {
           color: string;
           id: string;
@@ -179,24 +97,101 @@ export type Database = {
         };
         Relationships: [];
       };
-      guild_members: {
+      character_specs: {
         Row: {
-          guild_id: string | null;
-          joined_at: string | null;
-          role: string;
-          user_id: string | null;
+          class_id: string;
+          color: string;
+          id: string;
+          name: string;
         };
         Insert: {
-          guild_id?: string | null;
-          joined_at?: string | null;
-          role: string;
-          user_id?: string | null;
+          class_id: string;
+          color?: string;
+          id?: string;
+          name: string;
         };
         Update: {
-          guild_id?: string | null;
+          class_id?: string;
+          color?: string;
+          id?: string;
+          name?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "specs_class_id_fkey";
+            columns: ["class_id"];
+            isOneToOne: false;
+            referencedRelation: "character_classes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      character_spells: {
+        Row: {
+          class_id: string | null;
+          color: string;
+          cooldown: number;
+          duration: number;
+          icon: string;
+          id: number;
+          name: string;
+          spec_id: string | null;
+        };
+        Insert: {
+          class_id?: string | null;
+          color: string;
+          cooldown: number;
+          duration: number;
+          icon: string;
+          id: number;
+          name: string;
+          spec_id?: string | null;
+        };
+        Update: {
+          class_id?: string | null;
+          color?: string;
+          cooldown?: number;
+          duration?: number;
+          icon?: string;
+          id?: number;
+          name?: string;
+          spec_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "spells_class_id_fkey";
+            columns: ["class_id"];
+            isOneToOne: false;
+            referencedRelation: "character_classes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "spells_spec_id_fkey";
+            columns: ["spec_id"];
+            isOneToOne: false;
+            referencedRelation: "character_specs";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      guild_members: {
+        Row: {
+          guild_id: string;
+          joined_at: string | null;
+          role: string;
+          user_id: string;
+        };
+        Insert: {
+          guild_id: string;
+          joined_at?: string | null;
+          role: string;
+          user_id: string;
+        };
+        Update: {
+          guild_id?: string;
           joined_at?: string | null;
           role?: string;
-          user_id?: string | null;
+          user_id?: string;
         };
         Relationships: [
           {
@@ -243,36 +238,48 @@ export type Database = {
         Row: {
           id: string;
           name: string;
+          slug: string;
         };
         Insert: {
           id?: string;
           name: string;
+          slug?: string;
         };
         Update: {
           id?: string;
           name?: string;
+          slug?: string;
         };
         Relationships: [];
       };
       roster_characters: {
         Row: {
-          character_id: string;
+          class_id: string;
+          id: string;
+          name: string;
           roster_id: string;
+          spec_id: string;
         };
         Insert: {
-          character_id: string;
+          class_id: string;
+          id?: string;
+          name: string;
           roster_id: string;
+          spec_id: string;
         };
         Update: {
-          character_id?: string;
+          class_id?: string;
+          id?: string;
+          name?: string;
           roster_id?: string;
+          spec_id?: string;
         };
         Relationships: [
           {
-            foreignKeyName: "roster_characters_character_id_fkey";
-            columns: ["character_id"];
+            foreignKeyName: "roster_characters_class_id_fkey";
+            columns: ["class_id"];
             isOneToOne: false;
-            referencedRelation: "characters";
+            referencedRelation: "character_classes";
             referencedColumns: ["id"];
           },
           {
@@ -280,6 +287,13 @@ export type Database = {
             columns: ["roster_id"];
             isOneToOne: false;
             referencedRelation: "rosters";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "roster_characters_spec_id_fkey";
+            columns: ["spec_id"];
+            isOneToOne: false;
+            referencedRelation: "character_specs";
             referencedColumns: ["id"];
           },
         ];
@@ -310,28 +324,162 @@ export type Database = {
           },
         ];
       };
-      specs: {
+      timeline_boss_spells: {
         Row: {
-          class_id: string;
           id: string;
-          name: string;
+          spell_id: number;
+          timeline_id: string;
+          timing: number;
         };
         Insert: {
-          class_id: string;
           id?: string;
-          name: string;
+          spell_id: number;
+          timeline_id?: string;
+          timing: number;
         };
         Update: {
-          class_id?: string;
           id?: string;
-          name?: string;
+          spell_id?: number;
+          timeline_id?: string;
+          timing?: number;
         };
         Relationships: [
           {
-            foreignKeyName: "specs_class_id_fkey";
-            columns: ["class_id"];
+            foreignKeyName: "timeline_boss_spells_spell_id_fkey";
+            columns: ["spell_id"];
             isOneToOne: false;
-            referencedRelation: "classes";
+            referencedRelation: "boss_spells";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "timeline_boss_spells_timeline_id_fkey";
+            columns: ["timeline_id"];
+            isOneToOne: false;
+            referencedRelation: "timelines";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      timeline_character_spells: {
+        Row: {
+          character_id: string;
+          id: string;
+          row_id: string;
+          spell_id: number;
+          timeline_id: string;
+          timing: number;
+        };
+        Insert: {
+          character_id: string;
+          id?: string;
+          row_id: string;
+          spell_id: number;
+          timeline_id?: string;
+          timing?: number;
+        };
+        Update: {
+          character_id?: string;
+          id?: string;
+          row_id?: string;
+          spell_id?: number;
+          timeline_id?: string;
+          timing?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "timeline_character_spells_character_id_fkey";
+            columns: ["character_id"];
+            isOneToOne: false;
+            referencedRelation: "roster_characters";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "timeline_character_spells_row_id_fkey";
+            columns: ["row_id"];
+            isOneToOne: false;
+            referencedRelation: "timeline_roster_rows";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "timeline_character_spells_spell_id_fkey";
+            columns: ["spell_id"];
+            isOneToOne: false;
+            referencedRelation: "character_spells";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "timeline_character_spells_timeline_id_fkey";
+            columns: ["timeline_id"];
+            isOneToOne: false;
+            referencedRelation: "timelines";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      timeline_roster_rows: {
+        Row: {
+          id: string;
+          is_active: boolean;
+          position: number;
+          timeline_id: string;
+        };
+        Insert: {
+          id?: string;
+          is_active?: boolean;
+          position: number;
+          timeline_id: string;
+        };
+        Update: {
+          id?: string;
+          is_active?: boolean;
+          position?: number;
+          timeline_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "fk_timeline";
+            columns: ["timeline_id"];
+            isOneToOne: false;
+            referencedRelation: "timelines";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      timelines: {
+        Row: {
+          boss_id: string;
+          difficulty: Database["public"]["Enums"]["difficulty_enum"];
+          id: string;
+          roster_id: string;
+          timer: number;
+        };
+        Insert: {
+          boss_id: string;
+          difficulty: Database["public"]["Enums"]["difficulty_enum"];
+          id?: string;
+          roster_id: string;
+          timer?: number;
+        };
+        Update: {
+          boss_id?: string;
+          difficulty?: Database["public"]["Enums"]["difficulty_enum"];
+          id?: string;
+          roster_id?: string;
+          timer?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "timelines_boss_id_fkey";
+            columns: ["boss_id"];
+            isOneToOne: false;
+            referencedRelation: "bosses";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "timelines_roster_id_fkey";
+            columns: ["roster_id"];
+            isOneToOne: false;
+            referencedRelation: "rosters";
             referencedColumns: ["id"];
           },
         ];
@@ -359,10 +507,39 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      delete_timeline_roster_row: {
+        Args: {
+          row_id: string;
+        };
+        Returns: undefined;
+      };
+      update_timeline_character_spell: {
+        Args: {
+          tcs_id: string;
+          new_timing: number;
+          new_row: string;
+          new_character: string;
+        };
+        Returns: {
+          updated_timing: number;
+          updated_row_id: string;
+          updated_character_id: string;
+        }[];
+      };
+      update_timeline_roster_row: {
+        Args: {
+          row_id: string;
+          new_position: number;
+          new_is_active: boolean;
+        };
+        Returns: {
+          updated_position: number;
+          updated_is_active: boolean;
+        }[];
+      };
     };
     Enums: {
-      [_ in never]: never;
+      difficulty_enum: "normal" | "heroic" | "mythic";
     };
     CompositeTypes: {
       [_ in never]: never;

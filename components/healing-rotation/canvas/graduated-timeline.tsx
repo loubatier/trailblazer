@@ -1,5 +1,6 @@
 import React from "react";
 import { Group, Line, Rect } from "react-konva";
+import { useTimelineStore } from "../../../lib/stores/planner/useTimelineStore";
 
 interface IProps {
   x: number;
@@ -10,10 +11,11 @@ interface IProps {
 
 const LINE_HEIGHT = 40;
 
-const GraduatedTimeline = ({ x, y, timer, zoom }: IProps) => {
-  const lines = [];
+const GraduatedTimeline = ({ x, y }: IProps) => {
+  const { timeline, zoom } = useTimelineStore();
 
-  for (let seconds = 0; seconds <= timer; seconds += 10) {
+  const lines = [];
+  for (let seconds = 0; seconds <= timeline.timer; seconds += 10) {
     const isThirdLine = seconds % 30 === 0;
     const xPos = seconds === 0 ? seconds * zoom + 0.5 : seconds * zoom;
 
@@ -32,9 +34,13 @@ const GraduatedTimeline = ({ x, y, timer, zoom }: IProps) => {
 
   return (
     <Group x={x} y={y}>
-      <Rect width={timer * zoom} height={LINE_HEIGHT} fill={"#23262B"} />
+      <Rect
+        width={timeline.timer * zoom}
+        height={LINE_HEIGHT}
+        fill={"#23262B"}
+      />
       <Line
-        points={[0, LINE_HEIGHT, timer * zoom, LINE_HEIGHT]}
+        points={[0, LINE_HEIGHT, timeline.timer * zoom, LINE_HEIGHT]}
         closed
         stroke="white"
         strokeWidth={0.5}

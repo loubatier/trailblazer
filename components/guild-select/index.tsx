@@ -3,7 +3,7 @@ import { find } from "lodash";
 import { useSession } from "next-auth/react";
 import styled from "styled-components";
 import { useUserGuilds } from "../../lib/hooks/useUserGuilds";
-import { useGuildMemberStore } from "../../lib/stores/useGuildStore";
+import { useGuildStore } from "../../lib/stores/useGuildStore";
 
 const Root = styled.select`
   width: 100%;
@@ -17,8 +17,7 @@ const GuildSelect = () => {
   const userId = session?.user?.supabaseId;
   const { data: fetchedGuilds } = useUserGuilds(userId);
 
-  const { currentGuild, guilds, setCurrentGuild, setGuilds } =
-    useGuildMemberStore();
+  const { currentGuild, guilds, setCurrentGuild, setGuilds } = useGuildStore();
 
   useEffect(() => {
     if (fetchedGuilds) {

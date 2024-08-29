@@ -37,7 +37,7 @@ export interface RosterPlayer {
   class: string;
 }
 
-export interface Roster {
+export interface WARoster {
   tank: Signup[];
   heal: Signup[];
   melee: Signup[];

@@ -1,50 +1,35 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useEffect, useRef, useState } from "react";
-import { map } from "lodash";
+import { isUndefined, map } from "lodash";
 import { ListPlus } from "lucide-react";
 import styled from "styled-components";
-import { useBossRowStore } from "../../lib/stores/useBossRowStore";
-import { useTimelineStore } from "../../lib/stores/useTimelineStore";
-import Canvas, { Boss, Spell } from "./canvas";
-import RowActions from "./row-actions";
-import Tab from "./tab";
+import useRosterSpells from "../../lib/hooks/useRosterSpells";
+import { useBossStore } from "../../lib/stores/planner/useBossStore";
+import { useTimelineCharacterSpellStore } from "../../lib/stores/planner/useTimelineCharacterSpellsStore";
+import { useTimelineRosterRowStore } from "../../lib/stores/planner/useTimelineRosterRowsStore";
+import { useTimelineStore } from "../../lib/stores/planner/useTimelineStore";
+import {
+  Boss,
+  RosterSpell,
+  TimelineRosterRow,
+} from "../../lib/types/planner/timeline";
+import BossRowActions from "./boss-row-actions";
+import BossTab from "./boss-tab";
+import TimelineCanvas from "./canvas";
+import DifficultySelect from "./difficulty-select";
+import RowActions from "./roster-row-actions";
 
 interface IProps {
   raidBosses: Boss[];
-  rosterSpells: Spell[];
 }
 
 const Root = styled.div`
   flex: 1 0 500px;
-  padding: 0 48px;
-`;
-
-const TimelineActionsWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 24px;
-`;
-
-const SpellsWrapper = styled.div`
-  display: flex;
-  gap: 8px;
-`;
-
-const SpellIcon = styled.img`
-  border: 1px solid white;
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
-`;
-
-const TimelineTabWrapper = styled.div`
-  display: flex;
-  gap: 4px;
 `;
 
 const TimelineContentWrapper = styled.div`
   display: flex;
+  min-height: 300px;
   overflow: hidden;
   padding: 32px 0 16px;
   background-color: #23262b;
@@ -59,6 +44,18 @@ const RowActionsWrapper = styled.div`
 
 const CanvasWrapper = styled.div`
   width: 100%;
+`;
+
+const SpellIcon = styled.img`
+  border: 1px solid white;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+`;
+
+const TimelineTabWrapper = styled.div`
+  display: flex;
+  gap: 4px;
 `;
 
 const AddRowButton = styled.button<{ isDisabled: boolean }>`
@@ -78,6 +75,23 @@ const AddRowButton = styled.button<{ isDisabled: boolean }>`
   }
 `;
 
+const TimelineActionsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+`;
+
+const SpellsWrapper = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+const DifficultyBossWrapper = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
 export const GRADUATED_TIMELINE_HEIGHT = 40;
 export const BOSS_TIMELINE_ROW_HEIGHT = 32 + 40 + 32;
 export const TIMELINE_ROW_HEIGHT = 40;
@@ -86,7 +100,7 @@ export const BASE_SPACING = 8;
 // --------------------------- Move this to utils in a folder dedicated to planner functions
 export const calculateDestinationRowIndex = (y: number) => {
   const yPosWithoutHeader =
-    y - GRADUATED_TIMELINE_HEIGHT - BOSS_TIMELINE_ROW_HEIGHT;
+    y - GRADUATED_TIMELINE_HEIGHT - BOSS_TIMELINE_ROW_HEIGHT + BASE_SPACING / 8;
 
   const destinationRowIndex = Math.ceil(
     yPosWithoutHeader / (TIMELINE_ROW_HEIGHT + BASE_SPACING)
@@ -107,62 +121,50 @@ export const calculateSpellDestinationRowIndex = (y: number) => {
     yPosWithoutHeader / (TIMELINE_ROW_HEIGHT + BASE_SPACING)
   );
 
-  return destinationRowIndex;
+  return Math.max(0, destinationRowIndex);
 };
 // ---------------------------
 
-const HealingRotation = ({ raidBosses, rosterSpells }: IProps) => {
+const HealingRotation = ({ raidBosses }: IProps) => {
   const canvasRef = useRef<HTMLDivElement>(null);
-  const rowActionsRef = useRef<HTMLDivElement>(null);
 
-  const {
-    offset,
-    spells,
-    rows,
-    clearTimelineSpellSelection,
-    addTimelineRow,
-    addTimelineSpell,
-    updateTimelineRowPosition,
-  } = useTimelineStore();
+  const { timeline, isLoading, zoom } = useTimelineStore();
 
-  const [currentBossTab, setCurrentBossTab] = useState<string>("Smolderon");
+  const { boss, difficulty, setBoss } = useBossStore();
 
-  const { row: bossRow, setBoss } = useBossRowStore((state) => ({
-    ...state,
-    boss: currentBossTab,
-  }));
+  const rosterId = "7f640200-4659-4431-9dc6-23c659dc8be0"; // Santa maria main roster ID
+  const { fetchTimeline, createTimeline } = useTimelineStore();
+
+  const handleFetchTimeline = useCallback(() => {
+    if (boss && difficulty) {
+      fetchTimeline(rosterId, boss.id, difficulty);
+    }
+  }, [boss, difficulty, fetchTimeline]);
 
   useEffect(() => {
-    setBoss(currentBossTab);
-  }, [currentBossTab]);
+    handleFetchTimeline();
+  }, [handleFetchTimeline]);
+
+  useEffect(() => {
+    if (!boss) setBoss(raidBosses[0]);
+  }, [raidBosses]);
+
+  const { timelineRosterRows, updateRosterRowPosition } =
+    useTimelineRosterRowStore();
+  const { createCharacterSpell } = useTimelineCharacterSpellStore();
+  const { isCreating, createRosterRow } = useTimelineRosterRowStore();
 
   const [isDraggingSpell, setIsDraggingSpell] = useState<boolean>(false);
   const [hoveredRow, setHoveredRow] = useState<number>(null);
 
   const [isDraggingRow, setIsDraggingRow] = useState<boolean>(false);
   const [ghostRowY, setGhostRowY] = useState<number>(0);
-  const [initialRowIndex, setInitialRowIndex] = useState<number>(0);
-  const [destinationRowIndex, setDestinationRowIndex] = useState<number>(0);
+  const [indicatorPosition, setIndicatorPosition] = useState<number>(0);
 
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
-  const renderSpellIcon = (spell: Spell): JSX.Element => {
-    return (
-      <SpellIcon
-        draggable
-        onDragStart={(e) => handleSpellDragStart(e, spell)}
-        onDragEnd={() => handleSpellDragEnd()}
-        key={spell.icon}
-        src={spell.icon}
-      />
-    );
-  };
-
-  const spellIcons = map(rosterSpells, (spell) => renderSpellIcon(spell));
-  // ---------------------------
-
-  // --------------------------- useDragSpell
-  const handleSpellDragStart = (event: React.DragEvent, spell: Spell) => {
+  // --------------------------- Drag roster spell
+  const handleSpellDragStart = (event: React.DragEvent, spell: RosterSpell) => {
     event.dataTransfer.setData("spell", JSON.stringify(spell));
     setIsDraggingSpell(true);
   };
@@ -180,15 +182,15 @@ const HealingRotation = ({ raidBosses, rosterSpells }: IProps) => {
   const handleCanvasDrop = (event: React.DragEvent) => {
     event.preventDefault();
 
-    const spell = JSON.parse(event.dataTransfer.getData("spell"));
+    const spell: RosterSpell = JSON.parse(event.dataTransfer.getData("spell"));
     const x = event.clientX - canvasRef.current.getBoundingClientRect().left;
 
     if (
       hoveredRow >= 0 &&
-      hoveredRow <= rows.length - 1 &&
-      rows[hoveredRow].isActive
+      hoveredRow <= timelineRosterRows.length - 1 &&
+      timelineRosterRows[hoveredRow].isActive
     ) {
-      addTimelineSpell(spell, hoveredRow, x - 12 - offset);
+      createCharacterSpell(spell, x / zoom, timelineRosterRows[hoveredRow].id);
     }
 
     setHoveredRow(null);
@@ -196,22 +198,52 @@ const HealingRotation = ({ raidBosses, rosterSpells }: IProps) => {
   };
   // ---------------------------
 
-  // --------------------------- useDragRow
-  const handleRowActionsDragOver = (event: React.DragEvent) => {
+  // --------------------------- Render roster spells
+  const { rosterSpells } = useRosterSpells(
+    "7f640200-4659-4431-9dc6-23c659dc8be0"
+  );
+  const renderSpellIcon = (spell: RosterSpell): JSX.Element => {
+    return (
+      <SpellIcon
+        draggable
+        onDragStart={(e) => handleSpellDragStart(e, spell)}
+        onDragEnd={() => handleSpellDragEnd()}
+        key={spell.icon}
+        src={spell.icon}
+      />
+    );
+  };
+
+  const spellIcons = map(rosterSpells, (rs) => renderSpellIcon(rs));
+  // ---------------------------
+
+  // --------------------------- Drag roster row
+  const handleRowDragOver = (event: React.DragEvent) => {
+    event.preventDefault();
+
     const y =
       event.clientY -
       GRADUATED_TIMELINE_HEIGHT -
       canvasRef.current.getBoundingClientRect().top;
 
     setGhostRowY(y);
-    setDestinationRowIndex(calculateDestinationRowIndex(y));
+    setIndicatorPosition(calculateDestinationRowIndex(y));
   };
 
-  const handleRowActionsDrop = (event: React.DragEvent) => {
+  const handleRowDrop = (event: React.DragEvent, row: TimelineRosterRow) => {
     event.preventDefault();
 
-    if (destinationRowIndex >= 0 && destinationRowIndex <= rows.length) {
-      updateTimelineRowPosition(initialRowIndex, destinationRowIndex);
+    if (
+      indicatorPosition >= 0 &&
+      indicatorPosition <= timelineRosterRows.length
+    ) {
+      // NOTE : The position of the indicator is the not the real new position we want for the row
+      // Immediate spaces around the dragged row should be associated with the current row position
+      const newPosition =
+        indicatorPosition > row.position
+          ? indicatorPosition - 1
+          : indicatorPosition;
+      updateRosterRowPosition(row.id, newPosition);
     }
 
     setGhostRowY(null);
@@ -219,17 +251,8 @@ const HealingRotation = ({ raidBosses, rosterSpells }: IProps) => {
   };
   // ---------------------------
 
-  const handleWindowClick = () => {
-    const isAnySpellSelected = spells.some((spell) => spell.isSelected);
-    isAnySpellSelected && clearTimelineSpellSelection();
-  };
-
-  useEffect(() => {
-    window.addEventListener("click", handleWindowClick);
-    return () => window.removeEventListener("click", handleWindowClick);
-  }, [spells, clearTimelineSpellSelection]);
-
-  const handleWindowResize = () => {
+  // --------------------------- Window resize
+  const handleWindowResize = (rowAmount: number) => {
     setDimensions({
       // NOTE:
       // 64 is width of sidebar
@@ -240,82 +263,104 @@ const HealingRotation = ({ raidBosses, rosterSpells }: IProps) => {
       height:
         GRADUATED_TIMELINE_HEIGHT +
         BOSS_TIMELINE_ROW_HEIGHT +
-        rows.length * 8 +
-        rows.length * 40 +
+        rowAmount * 8 +
+        rowAmount * 40 +
         8,
     });
   };
 
   useEffect(() => {
-    handleWindowResize();
-    window.addEventListener("resize", handleWindowResize);
-    return () => window.removeEventListener("resize", handleWindowResize);
-  }, []);
-
-  useEffect(() => {
-    handleWindowResize();
-  }, [rows]);
+    if (!timelineRosterRows || timelineRosterRows.length === 0) return;
+    const handler = () => handleWindowResize(timelineRosterRows.length);
+    window.addEventListener("resize", handler);
+    handler();
+    return () => {
+      window.removeEventListener("resize", handler);
+    };
+  }, [timelineRosterRows]);
+  // ---------------------------
 
   return (
     <Root>
       <TimelineActionsWrapper>
-        <AddRowButton isDisabled={false} onClick={() => addTimelineRow()}>
+        <AddRowButton
+          isDisabled={isCreating || isUndefined(timeline)}
+          onClick={createRosterRow}
+        >
           <ListPlus color="black" />
         </AddRowButton>
         <SpellsWrapper>{spellIcons}</SpellsWrapper>
       </TimelineActionsWrapper>
-
-      <TimelineTabWrapper>
-        {raidBosses.map((raidBoss, i) => (
-          <Tab
-            key={`raidboss-${i}-${raidBoss.name}`}
-            name={raidBoss.name}
-            icon={raidBoss.icon}
-            isCurrentTab={currentBossTab === raidBoss.name}
-            onClick={() => setCurrentBossTab(raidBoss.name)}
-          />
-        ))}
-      </TimelineTabWrapper>
-
+      <DifficultyBossWrapper>
+        <DifficultySelect />
+        <TimelineTabWrapper>
+          {raidBosses.map((rb, i) => (
+            <BossTab
+              key={`raidboss-${i}-${rb.name}`}
+              boss={rb}
+              isCurrentTab={rb.name === boss?.name}
+              onClick={() => setBoss(rb)}
+            />
+          ))}
+        </TimelineTabWrapper>
+      </DifficultyBossWrapper>
       <TimelineContentWrapper>
-        <RowActionsWrapper>
-          <RowActions row={bossRow} />
-          <div
-            ref={rowActionsRef}
-            onDragOver={isDraggingRow ? handleRowActionsDragOver : null}
-            onDrop={isDraggingRow ? handleRowActionsDrop : null}
-          >
-            {rows.map((row, i) => (
-              <RowActions
-                key={`row-actions-${i}`}
-                row={row}
-                onDragRowStart={() => {
-                  setInitialRowIndex(i);
-                  setIsDraggingRow(true);
-                }}
-                onDragRowEnd={() => {
-                  setInitialRowIndex(null);
-                  setIsDraggingRow(false);
-                }}
-              />
-            ))}
-          </div>
-        </RowActionsWrapper>
-        <CanvasWrapper
-          ref={canvasRef}
-          onDragOver={isDraggingSpell ? handleCanvasDragOver : null}
-          onDrop={isDraggingSpell ? handleCanvasDrop : null}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <Canvas
-            width={dimensions.width}
-            height={dimensions.height}
-            hoveredRow={hoveredRow}
-            isDraggingRow={isDraggingRow}
-            ghostRowY={ghostRowY}
-            setHoveredRow={(i) => setHoveredRow(i)}
-          />
-        </CanvasWrapper>
+        {isLoading ? (
+          <>Is Loading ...</>
+        ) : isUndefined(timeline) ? (
+          <>
+            No timeline existing for given roster boss difficulty combo
+            <button
+              onClick={() =>
+                createTimeline(
+                  rosterId,
+                  "amirdrassil",
+                  boss.id,
+                  boss.slug,
+                  difficulty
+                )
+              }
+            >
+              Create a new one
+            </button>
+          </>
+        ) : (
+          <>
+            <RowActionsWrapper>
+              <BossRowActions />
+              <div>
+                {timelineRosterRows?.map((row, i) => (
+                  <RowActions
+                    key={`row-actions-${i}`}
+                    row={row}
+                    onDragRowStart={() => {
+                      setIsDraggingRow(true);
+                    }}
+                    onDragRowOver={isDraggingRow ? handleRowDragOver : null}
+                    onDragRowEnd={(e) => handleRowDrop(e, row)}
+                  />
+                ))}
+              </div>
+            </RowActionsWrapper>
+            <CanvasWrapper
+              ref={canvasRef}
+              onDragOver={isDraggingSpell ? handleCanvasDragOver : null}
+              onDrop={isDraggingSpell ? handleCanvasDrop : null}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {timeline && (
+                <TimelineCanvas
+                  width={dimensions.width}
+                  height={dimensions.height}
+                  isDraggingRow={isDraggingRow}
+                  ghostRowY={ghostRowY}
+                  hoveredRow={hoveredRow}
+                  setHoveredRow={(i) => setHoveredRow(i)}
+                />
+              )}
+            </CanvasWrapper>
+          </>
+        )}
       </TimelineContentWrapper>
     </Root>
   );

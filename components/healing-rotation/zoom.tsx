@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { useTimelineStore } from "../../lib/stores/useTimelineStore";
+// import { useTimelineStore } from "../../lib/stores/planner/useTimelineStore";
 
 const ZoomInput = styled.input`
   -webkit-appearance: none;
@@ -37,7 +37,7 @@ const ZoomInput = styled.input`
 `;
 
 const Zoom = () => {
-  const { zoom, updateTimelineZoom } = useTimelineStore((state) => state);
+  // const { zoom, updateTimelineZoom } = useTimelineStore((state) => state);
 
   return (
     <ZoomInput
@@ -45,8 +45,8 @@ const Zoom = () => {
       min="4"
       max="5"
       step="0.01"
-      value={zoom}
-      onChange={(e) => updateTimelineZoom(parseFloat(e.target.value))}
+      // value={zoom}
+      // onChange={(e) => updateTimelineZoom(parseFloat(e.target.value))}
     />
   );
 };

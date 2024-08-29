@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { supabase } from "../../lib/supabaseClient";
+import { Boss } from "../../lib/types/planner/timeline";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { raidId } = req.query;
@@ -9,15 +10,23 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    // Fetch bosses for the given raid ID
     const { data: bosses, error: bossesError } = await supabase
       .from("bosses")
       .select("*")
-      .eq("raid_id", raidId);
+      .eq("raid_id", raidId)
+      .order("position", { ascending: true });
 
     if (bossesError) throw bossesError;
 
-    res.status(200).json(bosses);
+    const raidBosses: Boss[] = bosses.map((boss) => ({
+      id: boss.id,
+      raidId: boss.raid_id,
+      icon: boss.icon,
+      name: boss.name,
+      slug: boss.slug,
+    }));
+
+    res.status(200).json(raidBosses);
   } catch (error) {
     res
       .status(500)

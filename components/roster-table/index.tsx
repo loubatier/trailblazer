@@ -3,7 +3,11 @@ import axios from "axios";
 import { map } from "lodash";
 import { useQuery } from "react-query";
 import styled from "styled-components";
-import { Encounter, Roster, Signup } from "../../data/models/roster";
+import {
+  Encounter,
+  WARoster,
+  Signup,
+} from "../../lib/types/roster-table/roster";
 import {
   getAllAbsentSignups,
   getAllNonSelectedForEncounter,
@@ -60,7 +64,7 @@ const EncounterPortrait = styled.img`
 
 const RosterTable = ({ raidId }: IProps) => {
   const [signups, setSignups] = useState<Signup[]>();
-  const [roster, setRoster] = useState<Roster>();
+  const [roster, setRoster] = useState<WARoster>();
   const [encounters, setEncounters] = useState<Encounter[]>();
 
   const [hasOnlyOneEncounter, setHasOnlyOneEncounter] = useState<boolean>();

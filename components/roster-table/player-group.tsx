@@ -1,7 +1,7 @@
 import React from "react";
 import { map } from "lodash";
 import styled from "styled-components";
-import { Encounter, Signup } from "../../data/models/roster";
+import { Encounter, Signup } from "../../lib/types/roster-table/roster";
 import {
   getVaultAmountColor,
   isPlayerSelectedForEncounter,
