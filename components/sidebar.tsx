@@ -1,5 +1,5 @@
 import React from "react";
-import { GanttChart, Home } from "lucide-react";
+import { GanttChart, Home, Users } from "lucide-react";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import GuildSelect from "./guild-select";
@@ -31,18 +31,15 @@ const Action = styled.div`
 
 const Sidebar = () => {
   const router = useRouter();
-  // const [isOpened, setIsOpened] = useState(false);
-
-  // const handleOpenSidebar = () => setIsOpened(!isOpened);
 
   return (
     <Root isOpened={false}>
       <Container>
-        {/* <Action>
-          <ArrowRightFromLine onClick={handleOpenSidebar} />
-        </Action> */}
         <Action>
           <Home onClick={() => router.push("/")} />
+        </Action>
+        <Action>
+          <Users onClick={() => router.push("/roster")} />
         </Action>
         <Action>
           <GanttChart onClick={() => router.push("/planner")} />
