@@ -22,12 +22,11 @@ const CanvasBossSpells = () => {
   } = useTimelineBossSpellsStore();
 
   useEffect(() => {
-    setTimelineId(timeline.id);
-    setBossId(timeline.bossId);
+    setTimelineId(timeline?.id);
+    setBossId(timeline?.bossId);
     fetchTimelineBossSpells();
     fetchAllBossSpells();
     subscribeToRealtimeUpdates();
-
     return () => {
       unsubscribeFromRealtimeUpdates();
     };

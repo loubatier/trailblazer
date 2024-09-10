@@ -8,13 +8,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { spellId, timelineId, timing, rowId, characterId } = req.body;
 
-  if (
-    !spellId ||
-    !timelineId ||
-    timing === undefined ||
-    rowId === undefined ||
-    characterId === undefined
-  ) {
+  if (!spellId || !timelineId || timing === undefined || rowId === undefined) {
     return res.status(400).json({ error: "Invalid request parameters" });
   }
 
@@ -27,7 +21,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           timeline_id: timelineId,
           timing,
           row_id: rowId,
-          character_id: characterId,
+          character_id: characterId ?? null,
         },
       ])
       .select()

@@ -13,7 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // Fetch characters and their classes and specs in a single query
     const { data: rosterCharacters, error: rosterError } = await supabase
       .from("roster_characters")
-      .select("id, class_id, spec_id")
+      .select("id, name, class_id, spec_id")
       .eq("roster_id", rosterId);
 
     if (rosterError) throw rosterError;
@@ -34,23 +34,25 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       .from("character_spells")
       .select("*")
       .or(
-        `class_id.in.(${classIds.join(",")}),spec_id.in.(${specIds.join(",")})`
+        `class_id.in.(${classIds.join(",")}),spec_id.in.(${specIds.join(",")}),and(class_id.is.null,spec_id.is.null)`
       );
 
     if (spellsError) throw spellsError;
 
-    const characterMap = new Map<string, string>();
+    const characterMap = new Map<string, { id: string; name: string }>();
     rosterCharacters.forEach((char) => {
-      if (char.class_id) characterMap.set(char.class_id, char.id);
-      if (char.spec_id) characterMap.set(char.spec_id, char.id);
+      if (char.class_id)
+        characterMap.set(char.class_id, { id: char.id, name: char.name });
+      if (char.spec_id)
+        characterMap.set(char.spec_id, { id: char.id, name: char.name });
     });
 
-    // Transform spells into RosterSpell format
     const rosterSpells: RosterSpell[] = spells.map((spell) => {
-      const characterId =
-        characterMap.get(spell.class_id || "") ||
-        characterMap.get(spell.spec_id || "") ||
-        "Unknown";
+      const character = characterMap.get(spell.class_id || "") ||
+        characterMap.get(spell.spec_id || "") || {
+          id: "unknown",
+          name: "unknown",
+        };
 
       return {
         id: spell.id,
@@ -58,8 +60,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         name: spell.name,
         color: spell.color,
         duration: spell.duration,
-        cooldown: spell.cooldown ?? undefined,
-        characterId,
+        cooldown: spell.cooldown ?? 0,
+        character,
       };
     });
 

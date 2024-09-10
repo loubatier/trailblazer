@@ -8,19 +8,21 @@ interface IProps {
   onClick: () => void;
 }
 
-const Root = styled.div<{ isCurrentTab: boolean }>`
+const Root = styled.button<{ isCurrentTab: boolean }>`
   display: flex;
   align-items: center;
   width: 200px;
   padding: 8px;
   background-color: #23262b;
+  font-size: 16px;
   opacity: ${({ isCurrentTab }) => (isCurrentTab ? 1 : 0.5)};
   cursor: pointer;
 `;
 
-const Icon = styled.img`
+const Icon = styled.img<{ isDisabled: boolean }>`
   width: 24px;
   height: 24px;
+  filter: ${({ isDisabled }) => (isDisabled ? "grayscale(1)" : "none")};
 `;
 
 const Label = styled.p`
@@ -28,9 +30,14 @@ const Label = styled.p`
 `;
 
 const BossTab = ({ boss, isCurrentTab, onClick }: IProps) => {
+  const isDisabled =
+    boss.slug === "ky-veza" ||
+    boss.slug === "silken-court" ||
+    boss.slug === "queen-ansurek";
+
   return (
-    <Root isCurrentTab={isCurrentTab} onClick={onClick}>
-      <Icon src={boss.icon} />
+    <Root isCurrentTab={isCurrentTab} onClick={onClick} disabled={isDisabled}>
+      <Icon src={boss.icon} isDisabled={isDisabled} />
       <Label>{boss.name}</Label>
     </Root>
   );

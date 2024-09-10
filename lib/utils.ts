@@ -132,3 +132,9 @@ export const getRosterFromEncounter = (
       { tank: [], heal: [], melee: [], ranged: [] }
     );
 };
+
+export const omitId = <T extends { id: number }>(obj: T): Omit<T, "id"> => {
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  const { id, ...rest } = obj;
+  return rest;
+};

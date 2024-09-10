@@ -85,7 +85,7 @@ export const useTimelineStore = create<TimelineStore>()(
         set({ isLoading: true });
         try {
           const { defaultBossConfig } = await import(
-            `../../../data/default-boss-spells/${raidSlug}/${bossSlug}.ts`
+            `../../../data/default-boss-spells/${raidSlug}/${difficulty}/${bossSlug}.ts`
           );
 
           if (!defaultBossConfig) return;

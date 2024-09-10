@@ -19,12 +19,19 @@ const CanvasRow = ({
   isActive = true,
   isHovered = false,
 }: IProps) => {
-  const fill = isActive ? (isHovered ? "#191C1D" : "#151718") : "#15171850";
+  const fill = isHovered ? "#191C1D" : "#151718";
   const y =
     BOSS_TIMELINE_ROW_HEIGHT + position * (TIMELINE_ROW_HEIGHT + BASE_SPACING);
 
   return (
-    <Rect x={0} y={y} fill={fill} width={width} height={TIMELINE_ROW_HEIGHT} />
+    <Rect
+      x={0}
+      y={y}
+      fill={fill}
+      width={width}
+      height={TIMELINE_ROW_HEIGHT}
+      opacity={isActive ? 1 : 0.5}
+    />
   );
 };
 

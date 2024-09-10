@@ -106,6 +106,7 @@ const TimelineCanvas = ({
           setHoveredRow={setHoveredRow}
         />
       </Layer>
+      <Layer name="top-layer" />
     </Stage>
   );
 };

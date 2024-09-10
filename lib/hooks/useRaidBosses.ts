@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { Boss } from "../types/planner/timeline";
 
 export const fetchRaidBosses = async (raidId: string): Promise<Boss[]> => {
@@ -13,31 +13,14 @@ export const fetchRaidBosses = async (raidId: string): Promise<Boss[]> => {
 };
 
 const useRaidBosses = (raidId: string) => {
-  const [raidBosses, setRaidBosses] = useState<Boss[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!raidId) return;
-
-    const fetchData = async () => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        const data = await fetchRaidBosses(raidId);
-        setRaidBosses(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [raidId]);
-
-  return { raidBosses, isLoading, error };
+  return useQuery<Boss[], Error>(
+    ["raidBosses", raidId],
+    () => fetchRaidBosses(raidId),
+    {
+      enabled: !!raidId,
+      retry: 1,
+    }
+  );
 };
 
 export default useRaidBosses;

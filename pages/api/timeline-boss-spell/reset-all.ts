@@ -1,4 +1,3 @@
-// pages/api/timeline-boss-spell/reset-all.ts
 import { NextApiRequest, NextApiResponse } from "next";
 import { supabase } from "../../../lib/supabaseClient";
 import { DefaultBossSpell } from "../../../lib/types/planner/timeline";

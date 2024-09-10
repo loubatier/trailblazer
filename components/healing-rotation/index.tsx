@@ -3,25 +3,26 @@ import { useEffect, useRef, useState } from "react";
 import { isUndefined, map } from "lodash";
 import { ListPlus } from "lucide-react";
 import styled from "styled-components";
+import useRaidBosses from "../../lib/hooks/useRaidBosses";
+import useRosterCharacters from "../../lib/hooks/useRosterCharacters";
 import useRosterSpells from "../../lib/hooks/useRosterSpells";
 import { useBossStore } from "../../lib/stores/planner/useBossStore";
 import { useTimelineCharacterSpellStore } from "../../lib/stores/planner/useTimelineCharacterSpellsStore";
 import { useTimelineRosterRowStore } from "../../lib/stores/planner/useTimelineRosterRowsStore";
 import { useTimelineStore } from "../../lib/stores/planner/useTimelineStore";
+import { Character, roleSpecMapping } from "../../lib/types/planner/roster";
 import {
-  Boss,
   RosterSpell,
+  SpellFilter,
   TimelineRosterRow,
 } from "../../lib/types/planner/timeline";
 import BossRowActions from "./boss-row-actions";
 import BossTab from "./boss-tab";
 import TimelineCanvas from "./canvas";
+import SpellFilterSelect from "./character-select";
 import DifficultySelect from "./difficulty-select";
+import EmptyTimeline from "./empty-timeline";
 import RowActions from "./roster-row-actions";
-
-interface IProps {
-  raidBosses: Boss[];
-}
 
 const Root = styled.div`
   flex: 1 0 500px;
@@ -53,8 +54,15 @@ const SpellIcon = styled.img`
   cursor: pointer;
 `;
 
-const TimelineTabWrapper = styled.div`
+const TimelineBossWrapper = styled.div`
+  overflow: scroll;
+  padding-bottom: 20px;
+  margin-bottom: -20px;
+`;
+
+const TimelineBossContainer = styled.div`
   display: flex;
+  width: fit-content;
   gap: 4px;
 `;
 
@@ -90,6 +98,7 @@ const SpellsWrapper = styled.div`
 const DifficultyBossWrapper = styled.div`
   display: flex;
   gap: 8px;
+  overflow: hidden;
 `;
 
 export const GRADUATED_TIMELINE_HEIGHT = 40;
@@ -125,34 +134,44 @@ export const calculateSpellDestinationRowIndex = (y: number) => {
 };
 // ---------------------------
 
-const HealingRotation = ({ raidBosses }: IProps) => {
+const HealingRotation = () => {
   const canvasRef = useRef<HTMLDivElement>(null);
 
-  const { timeline, isLoading, zoom } = useTimelineStore();
-
-  const { boss, difficulty, setBoss } = useBossStore();
-
   const rosterId = "7f640200-4659-4431-9dc6-23c659dc8be0"; // Santa maria main roster ID
-  const { fetchTimeline, createTimeline } = useTimelineStore();
+
+  const { data: raidBosses } = useRaidBosses(
+    "042405a9-9226-4abf-9282-3e23e30afecf"
+  ); // ATDH ID
+
+  useEffect(() => {
+    if (raidBosses) setBosses(raidBosses);
+  }, [raidBosses]);
+
+  const { bosses, currentBoss, difficulty, setBosses, setCurrentBoss } =
+    useBossStore();
+  const { timeline, isLoading, zoom, fetchTimeline, createTimeline } =
+    useTimelineStore();
+  const {
+    timelineRosterRows,
+    isLoading: isLoadingRosterRow,
+    createRosterRow,
+    updateRosterRowPosition,
+  } = useTimelineRosterRowStore();
+  const { createCharacterSpell } = useTimelineCharacterSpellStore();
 
   const handleFetchTimeline = useCallback(() => {
-    if (boss && difficulty) {
-      fetchTimeline(rosterId, boss.id, difficulty);
+    if (currentBoss && difficulty) {
+      fetchTimeline(rosterId, currentBoss.id, difficulty);
     }
-  }, [boss, difficulty, fetchTimeline]);
+  }, [currentBoss, difficulty, fetchTimeline]);
 
   useEffect(() => {
     handleFetchTimeline();
   }, [handleFetchTimeline]);
 
   useEffect(() => {
-    if (!boss) setBoss(raidBosses[0]);
-  }, [raidBosses]);
-
-  const { timelineRosterRows, updateRosterRowPosition } =
-    useTimelineRosterRowStore();
-  const { createCharacterSpell } = useTimelineCharacterSpellStore();
-  const { isCreating, createRosterRow } = useTimelineRosterRowStore();
+    if (!currentBoss) setCurrentBoss(bosses[0]);
+  }, [bosses]);
 
   const [isDraggingSpell, setIsDraggingSpell] = useState<boolean>(false);
   const [hoveredRow, setHoveredRow] = useState<number>(null);
@@ -199,9 +218,55 @@ const HealingRotation = ({ raidBosses }: IProps) => {
   // ---------------------------
 
   // --------------------------- Render roster spells
+
+  const { rosterCharacters } = useRosterCharacters(
+    "7f640200-4659-4431-9dc6-23c659dc8be0"
+  );
+
   const { rosterSpells } = useRosterSpells(
     "7f640200-4659-4431-9dc6-23c659dc8be0"
   );
+
+  const [displayedRosterSpells, setDisplayedRosterSpells] = useState<
+    RosterSpell[]
+  >([]);
+  const [spellFilter, setSpellFilter] = useState<SpellFilter>("everyone");
+
+  const handleSpellFilterChange = (value: string) => {
+    setSpellFilter(value);
+  };
+
+  const filterRosterSpells = (
+    characters: Character[],
+    spells: RosterSpell[],
+    spellFilter: SpellFilter
+  ): RosterSpell[] => {
+    if (spellFilter === "everyone") {
+      // Return spells where character is null
+      return spells.filter((spell) => spell.character.id === "unknown");
+    }
+
+    if (spellFilter in roleSpecMapping) {
+      // Return spells where the spec_id of the character matches the role
+      const validSpecIds = roleSpecMapping[spellFilter];
+      return spells.filter((spell) =>
+        characters.some(
+          (char) =>
+            char.id === spell.character.id && validSpecIds.includes(char.specId)
+        )
+      );
+    }
+
+    // If filter is a specific characterId
+    return spells.filter((spell) => spell.character.id === spellFilter);
+  };
+
+  useEffect(() => {
+    setDisplayedRosterSpells(
+      filterRosterSpells(rosterCharacters, rosterSpells, spellFilter)
+    );
+  }, [spellFilter, rosterSpells]);
+
   const renderSpellIcon = (spell: RosterSpell): JSX.Element => {
     return (
       <SpellIcon
@@ -214,7 +279,7 @@ const HealingRotation = ({ raidBosses }: IProps) => {
     );
   };
 
-  const spellIcons = map(rosterSpells, (rs) => renderSpellIcon(rs));
+  const spellIcons = map(displayedRosterSpells, (rs) => renderSpellIcon(rs));
   // ---------------------------
 
   // --------------------------- Drag roster row
@@ -284,46 +349,47 @@ const HealingRotation = ({ raidBosses }: IProps) => {
     <Root>
       <TimelineActionsWrapper>
         <AddRowButton
-          isDisabled={isCreating || isUndefined(timeline)}
+          isDisabled={isLoadingRosterRow || isUndefined(timeline)}
           onClick={createRosterRow}
         >
           <ListPlus color="black" />
         </AddRowButton>
+        <SpellFilterSelect
+          spellFilter={spellFilter}
+          onSpellFilterChange={handleSpellFilterChange}
+        />
         <SpellsWrapper>{spellIcons}</SpellsWrapper>
       </TimelineActionsWrapper>
       <DifficultyBossWrapper>
         <DifficultySelect />
-        <TimelineTabWrapper>
-          {raidBosses.map((rb, i) => (
-            <BossTab
-              key={`raidboss-${i}-${rb.name}`}
-              boss={rb}
-              isCurrentTab={rb.name === boss?.name}
-              onClick={() => setBoss(rb)}
-            />
-          ))}
-        </TimelineTabWrapper>
+        <TimelineBossWrapper>
+          <TimelineBossContainer>
+            {bosses?.map((rb, i) => (
+              <BossTab
+                key={`raidboss-${i}-${rb.name}`}
+                boss={rb}
+                isCurrentTab={rb.name === currentBoss?.name}
+                onClick={() => setCurrentBoss(rb)}
+              />
+            ))}
+          </TimelineBossContainer>
+        </TimelineBossWrapper>
       </DifficultyBossWrapper>
       <TimelineContentWrapper>
         {isLoading ? (
           <>Is Loading ...</>
         ) : isUndefined(timeline) ? (
-          <>
-            No timeline existing for given roster boss difficulty combo
-            <button
-              onClick={() =>
-                createTimeline(
-                  rosterId,
-                  "amirdrassil",
-                  boss.id,
-                  boss.slug,
-                  difficulty
-                )
-              }
-            >
-              Create a new one
-            </button>
-          </>
+          <EmptyTimeline
+            onClick={() =>
+              createTimeline(
+                rosterId,
+                "nerubar-palace",
+                currentBoss.id,
+                currentBoss.slug,
+                difficulty
+              )
+            }
+          />
         ) : (
           <>
             <RowActionsWrapper>

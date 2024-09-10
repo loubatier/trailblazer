@@ -56,7 +56,7 @@ type TimelineRosterRowStore = {
   timelineRosterRows: TimelineRosterRow[];
   lastId: TimelineRosterRow["id"];
   realtimeChannel: RealtimeChannel;
-  isCreating: boolean;
+  isLoading: boolean;
   setTimelineId: (timelineId: string) => void;
   fetchTimelineRosterRows: () => Promise<void>;
   subscribeToRealtimeUpdates: () => void;
@@ -82,7 +82,7 @@ export const useTimelineRosterRowStore = create<TimelineRosterRowStore>(
     timelineRosterRows: [],
     lastId: null,
     realtimeChannel: null,
-    isCreating: false,
+    isLoading: false,
 
     setTimelineId: (timelineId: string) => {
       set({ timelineId });
@@ -95,6 +95,7 @@ export const useTimelineRosterRowStore = create<TimelineRosterRowStore>(
         return;
       }
 
+      set({ isLoading: true });
       try {
         const response = await fetch(
           `/api/timeline-roster-row/fetch-all?timelineId=${timelineId}`
@@ -111,6 +112,8 @@ export const useTimelineRosterRowStore = create<TimelineRosterRowStore>(
         set({ timelineRosterRows });
       } catch (error) {
         console.error("Error fetching roster rows:", error);
+      } finally {
+        set({ isLoading: false });
       }
     },
 
@@ -202,13 +205,10 @@ export const useTimelineRosterRowStore = create<TimelineRosterRowStore>(
         return;
       }
 
-      set({ isCreating: true });
-
-      // Determine the new position by finding the max position in the current state
       const maxPosition =
         timelineRosterRows.length > 0
           ? Math.max(...timelineRosterRows.map((row) => row.position))
-          : -1; // If no rows exist, start at position 0
+          : -1;
 
       const newPosition = maxPosition + 1;
 
@@ -243,13 +243,12 @@ export const useTimelineRosterRowStore = create<TimelineRosterRowStore>(
             (r) => r.id !== tempId
           ),
         }));
-      } finally {
-        set({ isCreating: false });
       }
     },
 
     updateRosterRowPosition: async (id, newPosition) => {
       const previousRows = get().timelineRosterRows;
+
       set((state) => {
         const rowToUpdate = state.timelineRosterRows.find(
           (row) => row.id === id
@@ -296,6 +295,7 @@ export const useTimelineRosterRowStore = create<TimelineRosterRowStore>(
 
     updateRosterRowActiveState: async (id, isActive) => {
       const previousRows = get().timelineRosterRows;
+
       set((state) => ({
         timelineRosterRows: state.timelineRosterRows.map((row) =>
           row.id === id ? { ...row, isActive } : row

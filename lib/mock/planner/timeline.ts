@@ -1,4 +1,5 @@
 import {
+  RosterSpell,
   Spell,
   TimelineBossSpell,
   TimelineCharacterSpell,
@@ -7,10 +8,9 @@ import {
 
 export const getBaseTimelineCharacterSpell = (
   id: string,
-  spell: Spell,
+  spell: RosterSpell,
   timing: number,
-  rowId: TimelineRosterRow["id"],
-  characterId: string
+  rowId: TimelineRosterRow["id"]
 ): TimelineCharacterSpell => {
   return {
     icon: spell.icon,
@@ -22,7 +22,7 @@ export const getBaseTimelineCharacterSpell = (
     spellId: spell.id,
     timing,
     rowId,
-    characterId,
+    character: spell.character,
     isSelected: false,
   };
 };

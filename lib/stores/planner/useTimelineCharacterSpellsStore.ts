@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { RealtimeChannel } from "@supabase/supabase-js";
-import { omitId } from "../../../pages/api/timeline";
 import { getBaseTimelineCharacterSpell } from "../../mock/planner/timeline";
 import { supabase } from "../../supabaseClient";
 import {
@@ -9,6 +8,7 @@ import {
   TimelineCharacterSpell,
   TimelineRosterRow,
 } from "../../types/planner/timeline";
+import { omitId } from "../../utils";
 
 const createTimelineCharacterSpell = async (
   timelineId: string,
@@ -69,6 +69,7 @@ type TimelineCharacterSpellStore = {
   lastId: TimelineCharacterSpell["id"];
   allCharacterSpells: Spell[];
   realtimeChannel: RealtimeChannel;
+  isLoading: boolean;
   setTimelineId: (timelineId: string) => void;
   fetchTimelineCharacterSpells: () => Promise<void>;
   fetchAllCharacterSpells: () => Promise<void>;
@@ -108,6 +109,7 @@ export const useTimelineCharacterSpellStore =
     lastId: null,
     allCharacterSpells: [],
     realtimeChannel: null,
+    isLoading: false,
 
     setTimelineId: (timelineId: string) => {
       set({ timelineId });
@@ -120,6 +122,7 @@ export const useTimelineCharacterSpellStore =
         return;
       }
 
+      set({ isLoading: true });
       try {
         set({ timelineCharacterSpells: [] });
 
@@ -134,7 +137,12 @@ export const useTimelineCharacterSpellStore =
             spellId: spell.character_spells.id,
             timing: spell.timing,
             rowId: spell.timeline_roster_rows.id,
-            characterName: spell.roster_characters.name,
+            character: spell.roster_characters
+              ? {
+                  id: spell.roster_characters.id,
+                  name: spell.roster_characters.name,
+                }
+              : null,
             isSelected: false,
             ...omitId(spell.character_spells),
           })
@@ -143,6 +151,8 @@ export const useTimelineCharacterSpellStore =
         set({ timelineCharacterSpells });
       } catch (error) {
         console.error("Error fetching character spells:", error);
+      } finally {
+        set({ isLoading: false });
       }
     },
 
@@ -193,7 +203,6 @@ export const useTimelineCharacterSpellStore =
               );
 
               if (associatedSpell) {
-                // TODO: Maybe find another way of doing this ?
                 const { data: row } = await supabase
                   .from("timeline_roster_rows")
                   .select("id")
@@ -202,16 +211,15 @@ export const useTimelineCharacterSpellStore =
 
                 const { data: character } = await supabase
                   .from("roster_characters")
-                  .select("id")
+                  .select("id, name")
                   .eq("id", newSpell.character_id)
                   .single();
 
                 const transformedSpell = getBaseTimelineCharacterSpell(
                   newSpell.id,
-                  associatedSpell,
+                  { ...associatedSpell, character },
                   newSpell.timing,
-                  row.id,
-                  character.id
+                  row.id
                 );
 
                 set((state) => ({
@@ -224,7 +232,6 @@ export const useTimelineCharacterSpellStore =
             } else if (eventType === "UPDATE") {
               if (newSpell.id === get().lastId) return;
 
-              // TODO: Maybe find another way of doing this ?
               const { data: row } = await supabase
                 .from("timeline_roster_rows")
                 .select("id")
@@ -233,7 +240,7 @@ export const useTimelineCharacterSpellStore =
 
               const { data: character } = await supabase
                 .from("roster_characters")
-                .select("id")
+                .select("id, name")
                 .eq("id", newSpell.character_id)
                 .single();
 
@@ -245,7 +252,7 @@ export const useTimelineCharacterSpellStore =
                           ...spell,
                           timing: newSpell.timing,
                           rowId: row.id,
-                          characterId: character.id,
+                          character: { id: character.id, name: character.name },
                         }
                       : spell
                 ),
@@ -288,8 +295,7 @@ export const useTimelineCharacterSpellStore =
         tempId,
         spell,
         timing,
-        rowId,
-        spell.characterId
+        rowId
       );
 
       set((state) => ({
@@ -305,7 +311,7 @@ export const useTimelineCharacterSpellStore =
           spell.id,
           timing,
           rowId,
-          spell.characterId
+          spell.character.id
         );
 
         set((state) => ({
@@ -394,6 +400,7 @@ export const useTimelineCharacterSpellStore =
 
     deleteCharacterSpell: async (id) => {
       const previousSpells = get().timelineCharacterSpells;
+
       set((state) => ({
         timelineCharacterSpells: state.timelineCharacterSpells.filter(
           (spell) => spell.id !== id

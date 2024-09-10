@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { RealtimeChannel } from "@supabase/supabase-js";
-import { omitId } from "../../../pages/api/timeline";
 import { getBaseTimelineBossSpell } from "../../mock/planner/timeline";
 import { supabase } from "../../supabaseClient";
 import {
@@ -9,6 +8,7 @@ import {
   Spell,
   TimelineBossSpell,
 } from "../../types/planner/timeline";
+import { omitId } from "../../utils";
 
 const updateTimelineBossSpell = async (id: string, newTiming?: number) => {
   const response = await fetch("/api/timeline-boss-spell/update", {
@@ -50,6 +50,7 @@ type TimelineBossSpellsStore = {
   timelineId: string;
   bossId: Boss["id"];
   isLocked: boolean;
+  isLoading: boolean;
   timelineBossSpells: TimelineBossSpell[];
   lastId: TimelineBossSpell["id"];
   allBossSpells: Spell[];
@@ -74,6 +75,7 @@ export const useTimelineBossSpellsStore = create<TimelineBossSpellsStore>(
     timelineId: null,
     bossId: null,
     isLocked: true,
+    isLoading: false,
     timelineBossSpells: [],
     lastId: null,
     allBossSpells: [],
@@ -115,7 +117,7 @@ export const useTimelineBossSpellsStore = create<TimelineBossSpellsStore>(
 
         set({ timelineBossSpells });
       } catch (error) {
-        console.error("Error fetching character spells:", error);
+        console.error("Error fetching boss spells:", error);
       }
     },
 
@@ -216,7 +218,7 @@ export const useTimelineBossSpellsStore = create<TimelineBossSpellsStore>(
     updateBossSpellTiming: async (id, newTiming) => {
       const previousSpells = get().timelineBossSpells;
       set((state) => ({
-        timelineCharacterSpells: state.timelineBossSpells.map((tbs) =>
+        timelineBossSpells: state.timelineBossSpells.map((tbs) =>
           tbs.id === id ? { ...tbs, timing: newTiming } : tbs
         ),
         lastId: id,
@@ -225,7 +227,7 @@ export const useTimelineBossSpellsStore = create<TimelineBossSpellsStore>(
       try {
         await updateTimelineBossSpell(id, newTiming);
       } catch (error) {
-        console.error("Error updating character spell timing:", error);
+        console.error("Error updating boss spell timing:", error);
         set({ timelineBossSpells: previousSpells, lastId: null });
       }
     },
@@ -247,24 +249,23 @@ export const useTimelineBossSpellsStore = create<TimelineBossSpellsStore>(
       }
 
       try {
-        const { defaultBossSpells } = await import(
+        const { defaultBossConfig } = await import(
           `../../../data/default-boss-spells/${raidSlug}/${bossSlug}.ts`
         );
 
-        if (!defaultBossSpells) {
+        if (!defaultBossConfig) {
           set({
             timelineBossSpells: [],
           });
           return;
         }
 
-        const tempSpells: TimelineBossSpell[] = defaultBossSpells.map(
-          (spell, index) => ({
+        const tempSpells: TimelineBossSpell[] =
+          defaultBossConfig.defaultSpells.map((spell, index) => ({
             ...spell,
             id: `temp-${Date.now()}-${index}`,
             timelineId: timelineId,
-          })
-        );
+          }));
 
         set({
           timelineBossSpells: [...tempSpells],
@@ -272,7 +273,7 @@ export const useTimelineBossSpellsStore = create<TimelineBossSpellsStore>(
 
         const { data } = await resetTimelineBossSpells(
           timelineId,
-          defaultBossSpells
+          defaultBossConfig.defaultSpells
         );
 
         const savedSpells = data.map((spell) =>

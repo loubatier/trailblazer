@@ -53,7 +53,7 @@ interface Action {
 }
 
 const BossRowActions = () => {
-  const { boss } = useBossStore();
+  const { currentBoss } = useBossStore();
   const { isLocked, setIsLocked, resetBossSpells } =
     useTimelineBossSpellsStore();
 
@@ -76,7 +76,7 @@ const BossRowActions = () => {
     {
       icon: TimerReset,
       onClick: () => {
-        resetBossSpells(boss.slug, "amirdrassil");
+        resetBossSpells(currentBoss.slug, "amirdrassil");
         setIsOpen(false);
       },
       bgColor: "#ff3535",

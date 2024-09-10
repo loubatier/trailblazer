@@ -123,9 +123,6 @@ const CanvasCharacterSpells = ({ hoveredRow, setHoveredRow }: IProps) => {
           onDragStart={() => handleDragStart(spell.id)}
           onDragMove={(e) => handleDragMove(e, spell.id)}
           onDragEnd={(e) => handleDragEnd(e, spell.id)}
-          // TODO: Remove these props, values should be accessible from store
-          timer={timeline.timer}
-          rosterRows={timelineRosterRows}
         />
       ))}
     </>

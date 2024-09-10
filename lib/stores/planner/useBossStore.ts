@@ -3,19 +3,23 @@ import { persist } from "zustand/middleware";
 import { Boss, Difficulty } from "../../types/planner/timeline";
 
 interface BossStore {
-  boss: Boss;
+  bosses: Boss[];
+  currentBoss: Boss;
   difficulty: Difficulty;
-  setBoss: (boss: Boss) => void;
+  setBosses: (bosses: Boss[]) => void;
+  setCurrentBoss: (boss: Boss) => void;
   setDifficulty: (difficulty: Difficulty) => void;
 }
 
 export const useBossStore = create<BossStore>()(
   persist(
     (set) => ({
-      boss: null,
+      bosses: [],
+      currentBoss: null,
       difficulty: Difficulty.Heroic,
 
-      setBoss: (boss: Boss) => set({ boss }),
+      setBosses: (bosses: Boss[]) => set({ bosses }),
+      setCurrentBoss: (boss: Boss) => set({ currentBoss: boss }),
       setDifficulty: (difficulty: Difficulty) => set({ difficulty }),
     }),
     {

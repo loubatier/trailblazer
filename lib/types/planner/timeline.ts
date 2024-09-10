@@ -19,51 +19,7 @@
 // TimelineRosterSpell
 // - RosterSpell & { - id - timeline_id - spell_id - row - timing - x }
 
-export type TimelineWithRelations = {
-  id: string;
-  boss_id: string;
-  roster_id: string;
-  timer: number;
-  difficulty: "normal" | "heroic" | "mythic";
-  timeline_boss_spells: {
-    id: string;
-    spell_id: number;
-    timeline_id: string;
-    timing: number;
-    x: number;
-    boss_spells: {
-      boss_id: string;
-      color: string;
-      duration: number;
-      icon: string;
-      id: number;
-      name: string;
-    };
-  }[];
-  timeline_roster_rows: {
-    is_active: boolean;
-    position: number;
-    timeline_id: string;
-  }[];
-  timeline_character_spells: {
-    id: string;
-    row: number;
-    spell_id: number;
-    timeline_id: string;
-    timing: number;
-    x: number;
-    character_spells: {
-      class_id: string | null;
-      color: string;
-      cooldown: number;
-      duration: number;
-      icon: string;
-      id: number;
-      name: string;
-      spec_id: string | null;
-    };
-  }[];
-};
+import { Character, Role } from "./roster";
 
 export type Timeline = {
   id: string;
@@ -73,11 +29,7 @@ export type Timeline = {
   timer: number;
 };
 
-export type EnrichedTimeline = Timeline & {
-  // bossSpells: TimelineBossSpell[];
-  // rosterRows: TimelineRosterRow[];
-  // characterSpells: TimelineCharacterSpell[];
-};
+// ------------------------- SPELLS
 
 export type Spell = {
   id: number;
@@ -89,10 +41,9 @@ export type Spell = {
 };
 
 export type RosterSpell = Spell & {
-  characterId: string;
+  character?: Pick<Character, "id" | "name">;
 };
 
-// TODO: timelineBossSpellId becomes id and Spell Omit id replaced by spellId
 export type TimelineBossSpell = Omit<Spell, "id"> & {
   id: string;
   spellId: number;
@@ -109,17 +60,13 @@ export type TimelineCharacterSpell = Omit<RosterSpell, "id"> & {
   isSelected: boolean;
 };
 
+export type SpellFilter = "everyone" | Role | Character["id"];
+
 export type TimelineRosterRow = {
   id: string;
   timelineId: string;
   position: number;
   isActive: boolean;
-};
-
-export type Roster = {
-  id: string;
-  guildId: string;
-  name: string;
 };
 
 export type Raid = {
@@ -141,3 +88,30 @@ export enum Difficulty {
   Heroic = "heroic",
   Mythic = "mythic",
 }
+
+export enum BossSpellType {
+  AOE = "Raid AOE",
+  DOT = "Raid DOT",
+  Soak = "Raid Soak",
+  Targeted = "Targeted",
+  Dispell = "Dispell",
+  Event = "Event",
+  Movement = "Movement",
+}
+
+export enum CharacterSpellType {
+  Major = "Major cooldown",
+  Minor = "Minor cooldown",
+  External = "External",
+  Mobility = "Mobility",
+}
+
+export const bossSpellTypeColors = {
+  "Raid AOE": "#FF5733",
+  "Raid DOT": "#8B00FF",
+  "Raid Soak": "#0077BE",
+  Targeted: "#E67e22",
+  Dispell: "#32CD32",
+  Event: "#FF69B4",
+  Movement: "#1E90FF",
+};

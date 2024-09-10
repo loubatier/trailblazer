@@ -16,9 +16,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const { data, error } = await supabase
       .from("timeline_character_spells")
       .select(
-        "*, character_spells(*), timeline_roster_rows(id), roster_characters(name)"
+        "*, character_spells(*), timeline_roster_rows(id), roster_characters(*)"
       )
-      .eq("timeline_id", timelineId);
+      .eq("timeline_id", timelineId)
+      .order("timing", { ascending: true });
 
     if (error) throw error;
 
